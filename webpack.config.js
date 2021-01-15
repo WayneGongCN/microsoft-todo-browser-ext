@@ -1,20 +1,29 @@
-const path = require("path");
-const webpack = require("webpack");
+const path = require('path');
+// const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CopyPlugin = require("copy-webpack-plugin");
-
+const CopyPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
-  mode: "development",
+  mode: 'development',
+
+  /**
+   * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP
+   * https://stackoverflow.com/questions/48047150/chrome-extension-compiled-by-webpack-throws-unsafe-eval-error
+   * https://webpack.docschina.org/configuration/devtool/#root
+   */
+  devtool: 'cheap-module-source-map',
 
   entry: {
-    background: './src/background.js',
-    popup: 'popup.js',
-    options: 'options.js'
+    background: './src/background/index.js',
+    popup: './src/popup.js',
+    options: './src/options.js',
   },
+
   output: {
     path: path.resolve('./dist'),
-    filename: "[name].js"
+    filename: '[name].js',
   },
 
   module: {
@@ -22,23 +31,43 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loader: "babel-loader",
-        options: { presets: ["@babel/env"] }
+        loader: 'babel-loader',
+        options: { presets: ['@babel/env'] },
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
-      }
-    ]
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
-  resolve: { extensions: ["*", ".js", ".jsx"] },
+  resolve: { extensions: ['*', '.js', '.jsx'] },
 
   plugins: [
-    new CleanWebpackPlugin(),
+    new ESLintPlugin({
+      extensions: ['js', 'jsx'],
+      eslintPath: require.resolve('eslint'),
+      context: './src',
+      cache: true,
+      fix: true,
+    }),
+
+    new HtmlWebpackPlugin({
+      filename: 'popup.html',
+      template: 'public/template.html',
+      chunks: ['popup'],
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'options.html',
+      template: 'public/template.html',
+      chunks: ['options'],
+    }),
+
     new CopyPlugin({
       patterns: [
-        { from: "src/manifest.json", to: "" },
+        { from: 'src/manifest.json', to: '' },
       ],
     }),
-  ]
+
+    new CleanWebpackPlugin(),
+  ],
 };
