@@ -13,14 +13,14 @@ export const getOAuthToken = (options) => (dispatch, getState) => {
   const { token } = state.account;
 
   if (!token || Date.now() >= token.expiresOn.getTime()) {
-    dispatch({ type: types.GET_OAUTH_TOKEN_START });
+    dispatch({ type: types.FETCH_OAUTH_TOKEN_START });
     return msalInstance.getToken(options)
       .then((res) => {
-        dispatch({ type: types.GET_OAUTH_TOKEN_SUCCESS, payload: res });
+        dispatch({ type: types.FETCH_OAUTH_TOKEN_SUCCESS, payload: res });
         return res;
       })
       .catch((error) => {
-        dispatch({ type: types.GET_OAUTH_TOKEN_ERROR, payload: error });
+        dispatch({ type: types.FETCH_OAUTH_TOKEN_ERROR, payload: error });
         return Promise.reject(error);
       });
   }

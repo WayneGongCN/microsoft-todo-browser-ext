@@ -39,7 +39,6 @@ export const updateTask = (taskListId, taskId) => (dispatch, getState) => {
   const taskList = state.taskList.find((x) => x.id === taskListId) || [];
   const task = taskList.getTask(taskId);
   return task.update()
-    // eslint-disable-next-line no-shadow
     .then((task) => dispatch({ type: types.UPDATE_TASK_SUCCESS, payload: { task } }))
     .catch((error) => dispatch({ type: types.UPDATE_TASK_ERROR, error }));
 };
@@ -47,7 +46,6 @@ export const updateTask = (taskListId, taskId) => (dispatch, getState) => {
 // Tasklist
 export const addNewTasklist = () => ({ type: types.ADD_NEW_TASK_LIST });
 
-// eslint-disable-next-line max-len
 export const editNewTasklist = (key, value) => ({ type: types.EDIT_NEW_TASK, payload: { key, value } });
 
 export const deleteNewTasklist = () => ({ type: types.RESET_NEW_TASK_LIST });
@@ -70,7 +68,6 @@ export const deleteTasklist = (taskListId) => (dispatch, getState) => {
     .catch((error) => dispatch({ type: types.DELETE_TASK_LIST_ERROR, error }));
 };
 
-// eslint-disable-next-line max-len
 export const editSelectedTask = (taskListId, key, value) => ({ type: types.EDIT_TASK_LIST, payload: { taskListId, key, value } });
 
 export const updateTasklist = (taskListId) => (dispatch, getState) => {

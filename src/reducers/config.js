@@ -1,6 +1,5 @@
-import { CHANGE_ENABLE_BG_UPDATE, CHANGE_ENABLE_BG_UPDATE_INTERVAL } from "../constants/ConfigTypes";
+import { EDIT_ENABLE_BG_UPDATE, EDIT_ENABLE_BG_UPDATE_INTERVAL } from '../constants/ConfigTypes';
 
-// import Todo from '../models/Todo';
 const initialState = {
   enableBackgroundUpdate: true,
   backgroundUpdateInterval: 60 * 1000,
@@ -8,11 +7,11 @@ const initialState = {
 
 function config(state = initialState, action) {
   switch (action.type) {
-    case CHANGE_ENABLE_BG_UPDATE: {
+    case EDIT_ENABLE_BG_UPDATE: {
       return { ...state.todo, enableBackgroundUpdate: action.payload };
     }
 
-    case CHANGE_ENABLE_BG_UPDATE_INTERVAL: {
+    case EDIT_ENABLE_BG_UPDATE_INTERVAL: {
       return { ...state, backgroundUpdateInterval: action.payload };
     }
 

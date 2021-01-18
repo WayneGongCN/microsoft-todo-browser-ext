@@ -108,9 +108,30 @@ function Popup(props) {
         disabled={taskCreating}
       />
 
-      <Button size="small" variant="outlined" color="secondary" startIcon={<RotateLeft />} onClick={resetTask} onKeyUp={resetTask} disableElevation>Reset</Button>
+      <Button
+        size="small"
+        variant="outlined"
+        color="secondary"
+        startIcon={<RotateLeft />}
+        onClick={resetTask}
+        onKeyUp={resetTask}
+        disableElevation
+      >
+        Reset
+      </Button>
 
-      <Button size="small" variant="contained" color="primary" endIcon={<Add />} onClick={createTask} onKeyUp={createTask} disabled={taskCreating} disableElevation>Add</Button>
+      <Button
+        size="small"
+        variant="contained"
+        color="primary"
+        endIcon={<Add />}
+        onClick={createTask}
+        onKeyUp={createTask}
+        disabled={taskCreating}
+        disableElevation
+      >
+        Add
+      </Button>
     </div>
   );
 }

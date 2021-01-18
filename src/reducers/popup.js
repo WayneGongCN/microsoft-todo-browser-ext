@@ -1,12 +1,8 @@
 import {
-  CREATE_TASK_ERROR,
-  CREATE_TASK_START,
-  CREATE_TASK_SUCCESS,
-  RESET_TASK,
-  FETCH_TASKLIST_LIST_START,
-  FETCH_TASKLIST_LIST_SUCCESS,
-  FETCH_TASKLIST_LIST_ERROR,
+  CREATE_TASK_ERROR, CREATE_TASK_START, CREATE_TASK_SUCCESS,
+  FETCH_TASKLIST_LIST_START, FETCH_TASKLIST_LIST_SUCCESS, FETCH_TASKLIST_LIST_ERROR,
   EDIT_TASK,
+  RESET_TASK,
   EDIT_SELECTED_TASKLIST,
   EDIT_BOOKMARKED,
 } from '../constants/PopupTypes';
@@ -33,7 +29,6 @@ const initialState = {
 
 function popup(state = initialState, action) {
   switch (action.type) {
-    // Task
     case EDIT_TASK: {
       const { task } = action.payload;
       return { ...state, task };

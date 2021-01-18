@@ -20,7 +20,6 @@ export const fetchTasklistList = () => (dispatch, getState) => {
   if (state.popup.tasklistListLoading) return Promise.reject();
   dispatch({ type: types.FETCH_TASKLIST_LIST_START });
   return new window.Tasklist().listTasklist()
-    // eslint-disable-next-line max-len
     .then((res) => dispatch({ type: types.FETCH_TASKLIST_LIST_SUCCESS, payload: { tasklistList: res } }))
     .catch((error) => dispatch({ type: types.FETCH_TASKLIST_LIST_ERROR, payload: { error } }));
 };

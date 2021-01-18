@@ -1,7 +1,5 @@
 import {
-  GET_OAUTH_TOKEN_ERROR,
-  GET_OAUTH_TOKEN_START,
-  GET_OAUTH_TOKEN_SUCCESS,
+  FETCH_OAUTH_TOKEN_ERROR, FETCH_OAUTH_TOKEN_START, FETCH_OAUTH_TOKEN_SUCCESS,
   LOG_OUT_ERROR, LOG_OUT_START, LOG_OUT_SUCCESS,
 } from '../constants/AccountTypes';
 
@@ -22,13 +20,13 @@ function account(state = initialState, action) {
       return { ...state, pending: false, token: null };
     }
 
-    case GET_OAUTH_TOKEN_START: {
+    case FETCH_OAUTH_TOKEN_START: {
       return { ...state, pending: true };
     }
-    case GET_OAUTH_TOKEN_SUCCESS: {
+    case FETCH_OAUTH_TOKEN_SUCCESS: {
       return { ...state, pending: false, token: action.payload };
     }
-    case GET_OAUTH_TOKEN_ERROR: {
+    case FETCH_OAUTH_TOKEN_ERROR: {
       return { ...state, pending: false, token: null };
     }
 

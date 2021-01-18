@@ -1,5 +1,6 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/no-cycle */
 import ModelBase from './ModelBase';
-// eslint-disable-next-line import/no-cycle
 import Tasklist from './Tasklist';
 
 // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/resources/todotask.md
@@ -33,7 +34,7 @@ class Task extends ModelBase {
   // Create task
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotasklist-post-tasks.md
   create() {
-    const endPoint = `https://graph.microsoft.com/v1.0/me/todo/lists/${this.taskListId}/tasks`;
+    const endPoint = `${this.endPointPrefix}todo/lists/${this.taskListId}/tasks`;
     const data = Task.mapping(this);
     return this.post(endPoint, data).then((task) => new Task(task));
   }
@@ -41,13 +42,13 @@ class Task extends ModelBase {
   // Get task
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotask-get.md
   getTask() {
-    return this.get(`/me/todo/lists/${this.taskListId}/tasks/${this.id}`).then((task) => new Task(task));
+    return this.get(`${this.endPointPrefix}/me/todo/lists/${this.taskListId}/tasks/${this.id}`).then((task) => new Task(task));
   }
 
   // Update todoTask
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotask-update.md
   update() {
-    const endPoint = `https://graph.microsoft.com/v1.0/me/todo/lists/${this.taskListId}/tasks/${this.id}`;
+    const endPoint = `${this.endPointPrefix}todo/lists/${this.taskListId}/tasks/${this.id}`;
     const data = Task.mapping(this);
     return this.patch(endPoint, data).then((task) => new Task(task));
   }
@@ -55,19 +56,19 @@ class Task extends ModelBase {
   // Delete todoTask
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotask-delete.md
   delete() {
-    return super.delete(`https://graph.microsoft.com/v1.0/me/todo/lists/${this.taskListId}/tasks/${this.id}`);
+    return super.delete(`${this.endPointPrefix}todo/lists/${this.taskListId}/tasks/${this.id}`);
   }
 
   // List linkedResources
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotask-list-linkedresources.md
   listLinkedResources() {
-    return this.get(`https://graph.microsoft.com/v1.0/me/todo/lists/${this.taskListId}/tasks/${this.id}/linkedResources`);
+    return this.get(`${this.endPointPrefix}todo/lists/${this.taskListId}/tasks/${this.id}/linkedResources`);
   }
 
   // Create linkedResource
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotask-post-linkedresources.md
   createLinkedResource() {
-    const endPoint = `https://graph.microsoft.com/v1.0/me/todo/lists/${this.taskListId}/tasks/${this.id}/linkedResources`;
+    const endPoint = `${this.endPointPrefix}todo/lists/${this.taskListId}/tasks/${this.id}/linkedResources`;
     const data = {
       webUrl: '',
       applicationName: '',
@@ -78,7 +79,7 @@ class Task extends ModelBase {
   }
 
   delta() {
-    return this.get(`/me/todo/lists/${this.id}/tasks/delta`);
+    return this.get(`${this.endPointPrefix}/me/todo/lists/${this.id}/tasks/delta`);
   }
 
   static mapping(task) {

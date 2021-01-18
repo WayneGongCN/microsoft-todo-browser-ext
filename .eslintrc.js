@@ -22,4 +22,14 @@ module.exports = {
   plugins: [
     'react',
   ],
+
+  rules: {
+    'max-len': ['error', { code: 150 }],
+    'eol-last': ['error', 'always'],
+    'no-shadow': ['off'],
+    'no-nested-ternary': ['off'],
+    'no-console': ['off'],
+    // 'react/jsx-props-no-spreading': ['off'],
+    // 'class-methods-use-this': ['off'],
+  },
 };

@@ -44,7 +44,6 @@ class PopupContainer extends Component {
 
   editReminderDateTime(e) {
     const { task, actions } = this.props;
-
     const newTask = { ...task, reminderDateTime: new Date(e.target.value).toISOString() };
     actions.editTask(newTask);
   }

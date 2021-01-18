@@ -7,7 +7,6 @@ function Account(props) {
     pending, account, handlerLogin, handlerLogout,
   } = props;
 
-  // eslint-disable-next-line no-shadow
   const renderAccountInfo = (account) => (
     <>
       <h2>
@@ -17,7 +16,6 @@ function Account(props) {
     </>
   );
 
-  // eslint-disable-next-line no-shadow
   const renderSubmitBtn = (account) => {
     const submitFn = account ? handlerLogout : handlerLogin;
     const btnText = account ? 'LOGOUT' : 'LOGIN';

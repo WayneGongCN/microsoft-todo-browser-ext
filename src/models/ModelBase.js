@@ -3,6 +3,7 @@ import { getOAuthToken } from '../actions/account';
 class ModelBase {
   constructor() {
     this.tokenOptions = { scopes: ['User.Read', 'Tasks.ReadWrite.Shared'] };
+    this.endPointPrefix = 'https://graph.microsoft.com/v1.0/';
   }
 
   // eslint-disable-next-line class-methods-use-this
