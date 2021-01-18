@@ -2,7 +2,8 @@
   "name": "Getting Started Example",
   "version": "1.0",
   "description": "Build an Extension!",
-  "permissions": ["storage"],
+  "permissions": ["storage", "identity", "cookies"],
+  "host_permissions": ["https://graph.microsoft.com", "https://login.live.com/"],
   "options_page": "options.html",
   "background": {
     "scripts": ["background.js"],

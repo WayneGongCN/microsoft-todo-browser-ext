@@ -1,0 +1,10 @@
+import { applyMiddleware, createStore, combineReducers } from 'redux';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
+
+import popup from './popup';
+import account from './account';
+// import todo from './todo';
+
+const reducers = combineReducers({ account, popup });
+export default createStore(reducers, applyMiddleware(thunk, logger));

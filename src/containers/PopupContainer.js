@@ -1,13 +1,48 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/jsx-props-no-spreading */
 import { connect } from 'react-redux';
-import { addTodo } from '../actions/popup';
+import React, { Component } from 'react';
 import Popup from '../components/Popup';
+import {
+  editTitle,
+  editBody,
+  editTasklist,
+  editReminderDate,
+  editBookmarks,
+  editImportance,
+  resetTask,
+  createTask,
+  fetchTasklistList,
+} from '../actions/popup';
 
-const mapStateToProps = (state) => ({
-  nums: state.nums,
-});
+class PopupContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-const mapDispatchToProps = (dispatch) => ({
-  addTodo: dispatch(addTodo()),
-});
+  componentDidMount() {
+    // eslint-disable-next-line react/destructuring-assignment
+    this.props.fetchTasklistList();
+  }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Popup);
+  render() {
+    return <Popup {...this.props} />;
+  }
+}
+
+const mapStateToProps = (state) => ({ ...state.popup });
+const mapDispatchToProps = {
+  editTitle,
+  editBody,
+  editTasklist,
+  editReminderDate,
+  editBookmarks,
+  editImportance,
+  resetTask,
+  createTask,
+  fetchTasklistList,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PopupContainer);

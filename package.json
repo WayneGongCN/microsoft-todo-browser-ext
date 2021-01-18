@@ -13,12 +13,17 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
+    "@types/chrome": "0.0.128",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^7.0.0",
     "css-loader": "^5.0.1",
     "eslint": "^7.17.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-webpack-plugin": "^2.4.1",
     "html-webpack-plugin": "^5.0.0-beta.5",
     "style-loader": "^2.0.0",
@@ -26,15 +31,15 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@types/chrome": "0.0.128",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react-hooks": "^4.2.0",
+    "@azure/msal-browser": "^2.9.0",
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0"
   }
 }
