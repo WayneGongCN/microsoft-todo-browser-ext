@@ -1,10 +1,7 @@
 // Task
-export const EDIT_TITLE = 'EDIT_TITLE';
-export const EDIT_BODY = 'EDIT_BODY';
-export const EDIT_TASKLIST = 'EDIT_TASKLIST';
-export const EDIT_REMINDER_DATE = 'EDIT_REMINED_DATE';
-export const EDIT_BOOKMARKS = 'EDIT_BOOKMARKS';
-export const EDIT_IMPORTANCE = 'EDIT_IMPORTANCE';
+export const EDIT_TASK = 'EDIT_TASK';
+export const EDIT_SELECTED_TASKLIST = 'EDIT_SELECTED_TASKLIST';
+export const EDIT_BOOKMARKED = 'EDIT_BOOKMARKED';
 
 export const RESET_TASK = 'RESET_TASK';
 

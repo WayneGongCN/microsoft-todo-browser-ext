@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -11,11 +11,11 @@ import BookmarksOutlined from '@material-ui/icons/BookmarksOutlined';
 import Star from '@material-ui/icons/Star';
 import StarOutline from '@material-ui/icons/StarOutline';
 import Bookmarks from '@material-ui/icons/Bookmarks';
-import Fab from '@material-ui/core/Fab';
 import PropTypes from 'prop-types';
-import { Button } from '@material-ui/core';
-import Tasklist from '../models/Tasklist';
+import Button from '@material-ui/core/Button';
+import RotateLeft from '@material-ui/icons/RotateLeft';
 
+const { Tasklist } = window;
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -36,49 +36,50 @@ function Popup(props) {
   const {
     taskCreating,
     tasklistListLoading,
-    selectedBookmarks,
+    bookmarked,
 
     tasklistList,
-    selectedTasklist,
+    selectedTasklistId,
 
     task,
-    editTitle,
-    editBody,
-    editTasklist,
-    editReminderDate,
-    editBookmarks,
+    editTaskTitle,
+    editTaskDescribe,
+    editSelectedTasklist,
+    editReminderDateTime,
+    editBookmarked,
     editImportance,
     resetTask,
     createTask,
+
+    importance,
   } = props;
 
   const classes = useStyles();
 
   return (
     <div className={classes.popupPage}>
-      <TextField id="outlined-basic" label="Title" onChange={(e) => editTitle(e.target.value)} disabled={taskCreating} />
-      <TextField id="outlined-basic" label="Describe" onChange={(e) => editBody(e.target.value)} disabled={taskCreating} />
+      <TextField id="outlined-basic" label="Title" value={task.title} onChange={editTaskTitle} disabled={taskCreating} />
+      <TextField id="outlined-basic" label="Describe" value={task.body.content} onChange={editTaskDescribe} disabled={taskCreating} />
 
       <FormControl className={classes.formControl}>
         <InputLabel id="task-list-label">Task List</InputLabel>
         <Select
-          labelId="task-list"
+          labelId="task-list-label"
           id="task-list-select"
-          value={selectedTasklist}
-          onChange={(e) => editTasklist(e.target.value)}
+          value={selectedTasklistId}
+          onChange={editSelectedTasklist}
           disabled={taskCreating || tasklistListLoading}
         >
-          {tasklistList.map((x) => <MenuItem key={x.id} value={x}>{x.displayName}</MenuItem>)}
+          {tasklistList.map((x) => <MenuItem key={x.id} value={x.id}>{x.displayName}</MenuItem>)}
         </Select>
       </FormControl>
 
       <TextField
-        id="date"
         label="Reminder Date"
-        type="date"
-        defaultValue="2017-05-24"
+        type="datetime-local"
+        value={task.reminderDateTime}
         className={classes.textField}
-        onChange={(e) => editReminderDate(e.target.value)}
+        onChange={editReminderDateTime}
         disabled={taskCreating}
         InputLabelProps={{
           shrink: true,
@@ -90,9 +91,9 @@ function Popup(props) {
         checkedIcon={<Star />}
         color="primary"
         name="checkedH"
-        value={task.importance === 'high' ? 'normal' : 'high'}
-        checked={task.importance === 'high'}
-        onChange={(e) => editImportance(e.target.value)}
+        checked={importance}
+        onChange={editImportance}
+        onKeyUp={editImportance}
         disabled={taskCreating}
       />
 
@@ -101,42 +102,43 @@ function Popup(props) {
         checkedIcon={<Bookmarks />}
         color="primary"
         name="checkedH"
-        value={selectedBookmarks}
-        onChange={(e) => editBookmarks(e.target.value)}
+        checked={bookmarked}
+        onChange={editBookmarked}
+        onKeyUp={editBookmarked}
         disabled={taskCreating}
       />
 
-      <Button onClick={resetTask}>Reset</Button>
+      <Button size="small" variant="outlined" color="secondary" startIcon={<RotateLeft />} onClick={resetTask} onKeyUp={resetTask} disableElevation>Reset</Button>
 
-      <Fab size="small" color="primary" onClick={() => createTask(selectedTasklist, task)} disabled={taskCreating}>
-        <Add />
-      </Fab>
+      <Button size="small" variant="contained" color="primary" endIcon={<Add />} onClick={createTask} onKeyUp={createTask} disabled={taskCreating} disableElevation>Add</Button>
     </div>
   );
 }
 
 Popup.propTypes = {
-  taskCreating: PropTypes.bool.isRequired,
-  tasklistListLoading: PropTypes.bool.isRequired,
-  selectedBookmarks: PropTypes.bool.isRequired,
-  tasklistList: PropTypes.arrayOf(Tasklist).isRequired,
-  selectedTasklist: PropTypes.instanceOf(Tasklist).isRequired,
-
   task: PropTypes.shape({
     title: PropTypes.string.isRequired,
     body: PropTypes.shape({
       content: PropTypes.string,
-      contentType: PropTypes.oneOf(['text', 'htmlq']),
+      contentType: PropTypes.oneOf(['text', 'html']),
     }),
-    reminderDateTime: PropTypes.instanceOf(Date),
-    importance: PropTypes.oneOf(['high', 'normal', '']),
+    reminderDateTime: PropTypes.string.isRequired,
+    importance: PropTypes.oneOf(['high', 'normal']),
   }).isRequired,
 
-  editTitle: PropTypes.func.isRequired,
-  editBody: PropTypes.func.isRequired,
-  editTasklist: PropTypes.func.isRequired,
-  editReminderDate: PropTypes.func.isRequired,
-  editBookmarks: PropTypes.func.isRequired,
+  tasklistList: PropTypes.arrayOf(PropTypes.instanceOf(Tasklist)).isRequired,
+  selectedTasklistId: PropTypes.string.isRequired,
+
+  importance: PropTypes.bool.isRequired,
+  bookmarked: PropTypes.bool.isRequired,
+  taskCreating: PropTypes.bool.isRequired,
+  tasklistListLoading: PropTypes.bool.isRequired,
+
+  editTaskTitle: PropTypes.func.isRequired,
+  editTaskDescribe: PropTypes.func.isRequired,
+  editReminderDateTime: PropTypes.func.isRequired,
+  editSelectedTasklist: PropTypes.func.isRequired,
+  editBookmarked: PropTypes.func.isRequired,
   editImportance: PropTypes.func.isRequired,
   resetTask: PropTypes.func.isRequired,
   createTask: PropTypes.func.isRequired,

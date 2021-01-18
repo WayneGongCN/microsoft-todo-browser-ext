@@ -2,16 +2,20 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import PopupContainer from './containers/PopupContainer';
 
-const backgroundPage = chrome.extension.getBackgroundPage();
-const { store } = backgroundPage;
+chrome.runtime.getBackgroundPage((backgroundPage) => {
+  window.Tasklist = backgroundPage.Tasklist;
+  window.Task = backgroundPage.Task;
+  window.store = backgroundPage.store;
 
-render(
-  <Provider store={store}>
-    {/* <PopupContainer />
-    <AccountContainer /> */}
-    <PopupContainer />
-  </Provider>,
-  document.getElementById('root'),
-);
+  import('./containers/PopupContainer')
+    .then((res) => res.default)
+    .then((PopupContainer) => {
+      render(
+        <Provider store={window.store}>
+          <PopupContainer />
+        </Provider>,
+        document.getElementById('root'),
+      );
+    });
+});

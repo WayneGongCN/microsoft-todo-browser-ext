@@ -4,7 +4,7 @@ const DEFAULT_MSAL_CONF = {
   auth: {
     clientId: 'a5491fb2-111a-4c43-976c-280a507814dc',
     authority: 'https://login.microsoftonline.com/consumers',
-    redirectUri: 'https://dkfapmepkafhkkdcgakgmojlggodpaml.chromiumapp.org/',
+    redirectUri: chrome.identity.getRedirectURL(),
   },
   cache: {
     cacheLocation: 'sessionStorage',
@@ -32,8 +32,9 @@ const msalInstance = new PublicClientApplication(DEFAULT_MSAL_CONF);
 });
 
 msalInstance.getToken = function getToken(options) {
-  return this.acquireTokenSilent(options)
-    .catch(() => this.acquireTokenRedirect(options));
+  // return this.acquireTokenSilent(options)
+  //   .catch(() => this.acquireTokenRedirect(options));
+  return this.acquireTokenRedirect(options);
 };
 
 export default msalInstance;

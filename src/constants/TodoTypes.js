@@ -16,7 +16,7 @@ export const UPDATE_TASK_SUCCESS = '';
 export const UPDATE_TASK_ERROR = '';
 
 // Task list
-export const ADD_NEW_TASK_LIST = ''
+export const ADD_NEW_TASK_LIST = '';
 export const EDIT_NEW_TASK_LIST = '';
 export const RESET_NEW_TASK_LIST = '';
 

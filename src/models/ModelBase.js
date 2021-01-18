@@ -8,8 +8,12 @@ class ModelBase {
   // eslint-disable-next-line class-methods-use-this
   fetch(url, options) {
     return fetch(url, options)
-      // eslint-disable-next-line no-nested-ternary
-      .then((res) => (res.ok ? res.status === 204 ? res : res.json() : res));
+      .then((res) => {
+        if (res.ok) {
+          return res.status === 200 ? res.json() : res;
+        }
+        return Promise.reject(res);
+      });
   }
 
   authFetch(url, options) {

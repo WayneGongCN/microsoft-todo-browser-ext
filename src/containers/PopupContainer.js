@@ -3,46 +3,143 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import Popup from '../components/Popup';
-import {
-  editTitle,
-  editBody,
-  editTasklist,
-  editReminderDate,
-  editBookmarks,
-  editImportance,
-  resetTask,
-  createTask,
-  fetchTasklistList,
-} from '../actions/popup';
+import * as popupActions from '../actions/popup';
 
 class PopupContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+
+    this.editTaskTitle = this.editTaskTitle.bind(this);
+    this.editTaskDescribe = this.editTaskDescribe.bind(this);
+    this.editReminderDateTime = this.editReminderDateTime.bind(this);
+    this.editSelectedTasklist = this.editSelectedTasklist.bind(this);
+    this.editImportance = this.editImportance.bind(this);
+    this.editBookmarked = this.editBookmarked.bind(this);
+    this.createTask = this.createTask.bind(this);
+    this.resetTask = this.resetTask.bind(this);
   }
 
   componentDidMount() {
-    // eslint-disable-next-line react/destructuring-assignment
-    this.props.fetchTasklistList();
+    const { actions } = this.props;
+    actions.fetchTasklistList();
+  }
+
+  // shouldComponentUpdate() {
+  //   // can submit
+  // }
+
+  editTaskTitle(e) {
+    const { task, actions } = this.props;
+    actions.editTask({ ...task, title: e.target.value });
+  }
+
+  editTaskDescribe(e) {
+    const { task, actions } = this.props;
+    const newTask = { ...task };
+    newTask.body.content = e.target.value;
+    actions.editTask(newTask);
+  }
+
+  editReminderDateTime(e) {
+    const { task, actions } = this.props;
+
+    const newTask = { ...task, reminderDateTime: new Date(e.target.value).toISOString() };
+    actions.editTask(newTask);
+  }
+
+  editSelectedTasklist(e) {
+    const { actions } = this.props;
+    actions.editSelectedTasklist(e.target.value);
+  }
+
+  editImportance(e) {
+    if (e.type === 'keyup' && e.code !== 'Enter') return;
+    const { task, actions } = this.props;
+    let { importance } = this.props;
+    importance = !importance;
+    importance = importance ? 'high' : 'normal';
+    actions.editTask({ ...task, importance });
+  }
+
+  editBookmarked(e) {
+    if (e.type === 'keyup' && e.code !== 'Enter') return;
+    const { bookmarked, actions } = this.props;
+    actions.editBookmarked(!bookmarked);
+  }
+
+  createTask(e) {
+    if (e.type === 'keyup' && e.code !== 'Enter') return;
+    const {
+      props: {
+        task, bookmarked, selectedTasklistId, actions,
+      },
+    } = this;
+
+    const newTask = { ...task };
+    if (bookmarked) {
+      newTask.linkedRe = {};
+    }
+
+    actions.createTask(selectedTasklistId, newTask);
+  }
+
+  resetTask(e) {
+    if (e.type === 'keyup' && e.code !== 'Enter') return;
+    const { actions } = this.props;
+    actions.resetTask();
   }
 
   render() {
-    return <Popup {...this.props} />;
+    const {
+      props: {
+        task,
+        tasklistList,
+        selectedTasklistId,
+        taskCreating,
+        tasklistListLoading,
+
+        importance,
+        bookmarked,
+      },
+
+      editTaskTitle,
+      editTaskDescribe,
+      editReminderDateTime,
+      editSelectedTasklist,
+      editBookmarked,
+      editImportance,
+      createTask,
+      resetTask,
+    } = this;
+
+    return (
+      <Popup
+        task={task}
+        tasklistList={tasklistList}
+        selectedTasklistId={selectedTasklistId}
+        importance={importance}
+        bookmarked={bookmarked}
+        taskCreating={taskCreating}
+        tasklistListLoading={tasklistListLoading}
+        editTaskTitle={editTaskTitle}
+        editTaskDescribe={editTaskDescribe}
+        editReminderDateTime={editReminderDateTime}
+        editSelectedTasklist={editSelectedTasklist}
+        editBookmarked={editBookmarked}
+        editImportance={editImportance}
+        resetTask={resetTask}
+        createTask={createTask}
+      />
+    );
   }
 }
 
-const mapStateToProps = (state) => ({ ...state.popup });
-const mapDispatchToProps = {
-  editTitle,
-  editBody,
-  editTasklist,
-  editReminderDate,
-  editBookmarks,
-  editImportance,
-  resetTask,
-  createTask,
-  fetchTasklistList,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PopupContainer);
+export default connect(
+  (state) => ({
+    ...state.popup,
+    importance: state.popup.task.importance === 'high',
+  }),
+  (dispatch) => ({ actions: bindActionCreators(popupActions, dispatch) }),
+)(PopupContainer);

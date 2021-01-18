@@ -7,4 +7,5 @@ import account from './account';
 // import todo from './todo';
 
 const reducers = combineReducers({ account, popup });
-export default createStore(reducers, applyMiddleware(thunk, logger));
+const store = createStore(reducers, applyMiddleware(thunk, logger));
+export default store;

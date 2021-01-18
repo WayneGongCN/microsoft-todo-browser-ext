@@ -1,8 +1,5 @@
 import * as types from '../constants/TodoTypes';
 
-const backgroundPage = chrome.extension.getBackgroundPage();
-const { Tasklist } = backgroundPage;
-
 // Task
 export const editNewTask = (key, value) => ({ type: types.EDIT_NEW_TASK, payload: { key, value } });
 
@@ -59,7 +56,7 @@ export const createNewTasklist = (taskListId) => (dispatch, getState) => {
   dispatch({ type: types.CREATE_NEW_TASK_LIST_START, payload: { taskListId } });
   const state = getState();
   const taskList = state.newTasklist;
-  return new Tasklist(taskList).create()
+  return new window.Tasklist(taskList).create()
     .then((res) => dispatch({ type: types.CREATE_NEW_TASK_LIST_SUCCESS, payload: res }))
     .catch((error) => dispatch({ type: types.CREATE_NEW_TASK_LIST_ERROR, error }));
 };
@@ -74,7 +71,7 @@ export const deleteTasklist = (taskListId) => (dispatch, getState) => {
 };
 
 // eslint-disable-next-line max-len
-export const editTasklist = (taskListId, key, value) => ({ type: types.EDIT_TASK_LIST, payload: { taskListId, key, value } });
+export const editSelectedTask = (taskListId, key, value) => ({ type: types.EDIT_TASK_LIST, payload: { taskListId, key, value } });
 
 export const updateTasklist = (taskListId) => (dispatch, getState) => {
   dispatch({ type: types.DELETE_TASK_LIST_START, payload: { taskListId } });
