@@ -12,7 +12,10 @@ export const createTask = (selectedTasklistId, task) => (dispatch, getState) => 
   dispatch({ type: types.CREATE_TASK_START, payload: { task } });
   return tasklist.createTask(task)
     .then((res) => dispatch({ type: types.CREATE_TASK_SUCCESS, payload: { task: res } }))
-    .catch((error) => dispatch({ type: types.CREATE_TASK_ERROR, error }));
+    .catch((error) => {
+      dispatch({ type: types.CREATE_TASK_ERROR, error });
+      return Promise.reject(error);
+    });
 };
 
 export const fetchTasklistList = () => (dispatch, getState) => {
@@ -21,5 +24,8 @@ export const fetchTasklistList = () => (dispatch, getState) => {
   dispatch({ type: types.FETCH_TASKLIST_LIST_START });
   return new window.Tasklist().listTasklist()
     .then((res) => dispatch({ type: types.FETCH_TASKLIST_LIST_SUCCESS, payload: { tasklistList: res } }))
-    .catch((error) => dispatch({ type: types.FETCH_TASKLIST_LIST_ERROR, payload: { error } }));
+    .catch((error) => {
+      dispatch({ type: types.FETCH_TASKLIST_LIST_ERROR, payload: { error } });
+      return Promise.reject(error);
+    });
 };

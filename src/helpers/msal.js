@@ -31,10 +31,4 @@ const msalInstance = new PublicClientApplication(DEFAULT_MSAL_CONF);
   msalInstance[fnName] = promisifyFn;
 });
 
-msalInstance.getToken = function getToken(options) {
-  // return this.acquireTokenSilent(options)
-  //   .catch(() => this.acquireTokenRedirect(options));
-  return this.acquireTokenRedirect(options);
-};
-
 export default msalInstance;

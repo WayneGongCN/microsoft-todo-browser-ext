@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -6,31 +8,21 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+
 import Add from '@material-ui/icons/Add';
 import BookmarksOutlined from '@material-ui/icons/BookmarksOutlined';
 import Star from '@material-ui/icons/Star';
 import StarOutline from '@material-ui/icons/StarOutline';
 import Bookmarks from '@material-ui/icons/Bookmarks';
-import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
 import RotateLeft from '@material-ui/icons/RotateLeft';
 
 const { Tasklist } = window;
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 80,
-  },
-
-  msColor: {
-    color: '#346fef',
-  },
-
-  popupPage: {
-    width: 400,
-    height: 300,
-  },
-}));
+// eslint-disable-next-line no-unused-vars
+const useStyles = makeStyles((theme) => ({}));
 
 function Popup(props) {
   const {
@@ -57,82 +49,115 @@ function Popup(props) {
   const classes = useStyles();
 
   return (
-    <div className={classes.popupPage}>
-      <TextField id="outlined-basic" label="Title" value={task.title} onChange={editTaskTitle} disabled={taskCreating} />
-      <TextField id="outlined-basic" label="Describe" value={task.body.content} onChange={editTaskDescribe} disabled={taskCreating} />
+    <Grid container direction="column" spacing={2} className={classes.popupPage}>
+      <Grid item xs={12}>
+        <TextField
+          id="outlined-basic"
+          label="Title"
+          value={task.title}
+          onChange={editTaskTitle}
+          disabled={taskCreating}
+        />
+      </Grid>
 
-      <FormControl className={classes.formControl}>
-        <InputLabel id="task-list-label">Task List</InputLabel>
-        <Select
-          labelId="task-list-label"
-          id="task-list-select"
-          value={selectedTasklistId}
-          onChange={editSelectedTasklist}
-          disabled={taskCreating || tasklistListLoading}
-        >
-          {tasklistList.map((x) => <MenuItem key={x.id} value={x.id}>{x.displayName}</MenuItem>)}
-        </Select>
-      </FormControl>
+      <Grid item xs={12}>
+        <TextField
+          id="outlined-basic"
+          label="Describe"
+          multiline
+          rowsMax={4}
+          value={task.body.content}
+          onChange={editTaskDescribe}
+          disabled={taskCreating}
+        />
+      </Grid>
 
-      <TextField
-        label="Reminder Date"
-        type="datetime-local"
-        value={task.reminderDateTime}
-        className={classes.textField}
-        onChange={editReminderDateTime}
-        disabled={taskCreating}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
+      <Grid item xs={12}>
+        <TextField
+          label="Reminder Date"
+          type="datetime-local"
+          value={task.reminderDateTime.dateTime}
+          className={classes.textField}
+          onChange={editReminderDateTime}
+          disabled={taskCreating}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+      </Grid>
 
-      <Checkbox
-        icon={<StarOutline />}
-        checkedIcon={<Star />}
-        color="primary"
-        name="checkedH"
-        checked={importance}
-        onChange={editImportance}
-        onKeyUp={editImportance}
-        disabled={taskCreating}
-      />
+      <Grid container item direction="row" alignItems="center" spacing={2} xs={12}>
+        <Grid item xs={8}>
+          <FormControl style={{ width: '100%' }}>
+            <InputLabel id="task-list-label">Task List</InputLabel>
+            <Select
+              labelId="task-list-label"
+              id="task-list-select"
+              value={selectedTasklistId}
+              onChange={editSelectedTasklist}
+              disabled={taskCreating || tasklistListLoading}
+            >
+              {tasklistList.map((x) => <MenuItem key={x.id} value={x.id}>{x.displayName}</MenuItem>)}
+            </Select>
+          </FormControl>
+        </Grid>
 
-      <Checkbox
-        icon={<BookmarksOutlined />}
-        checkedIcon={<Bookmarks />}
-        color="primary"
-        name="checkedH"
-        checked={bookmarked}
-        onChange={editBookmarked}
-        onKeyUp={editBookmarked}
-        disabled={taskCreating}
-      />
+        <Grid item xs={2}>
+          <Checkbox
+            icon={<StarOutline fontSize="default" />}
+            checkedIcon={<Star fontSize="default" />}
+            color="secondary"
+            name="checkedH"
+            checked={importance}
+            onChange={editImportance}
+            onKeyUp={editImportance}
+            disabled={taskCreating}
+          />
+        </Grid>
 
-      <Button
-        size="small"
-        variant="outlined"
-        color="secondary"
-        startIcon={<RotateLeft />}
-        onClick={resetTask}
-        onKeyUp={resetTask}
-        disableElevation
-      >
-        Reset
-      </Button>
+        <Grid item xs={2}>
+          <Checkbox
+            icon={<BookmarksOutlined fontSize="small" />}
+            checkedIcon={<Bookmarks fontSize="small" />}
+            color="secondary"
+            name="checkedH"
+            checked={bookmarked}
+            onChange={editBookmarked}
+            onKeyUp={editBookmarked}
+            disabled={taskCreating}
+          />
+        </Grid>
+      </Grid>
 
-      <Button
-        size="small"
-        variant="contained"
-        color="primary"
-        endIcon={<Add />}
-        onClick={createTask}
-        onKeyUp={createTask}
-        disabled={taskCreating}
-        disableElevation
-      >
-        Add
-      </Button>
-    </div>
+      <Grid container item direction="row" alignItems="center" xs={12}>
+        <Grid item xs>
+          <IconButton
+            size="small"
+            color="secondary"
+            onClick={resetTask}
+            onKeyUp={resetTask}
+          >
+            <RotateLeft />
+          </IconButton>
+        </Grid>
+
+        <Grid item xs={10}>
+          <Button
+            style={{ width: '100%' }}
+            size="small"
+            variant="contained"
+            color="primary"
+            endIcon={taskCreating ? <CircularProgress size={20} /> : <Add />}
+            onClick={createTask}
+            onKeyUp={createTask}
+            disabled={Boolean(taskCreating || tasklistListLoading || !selectedTasklistId)}
+            disableElevation
+          >
+            { taskCreating ? '' : 'Add'}
+          </Button>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 
@@ -143,7 +168,10 @@ Popup.propTypes = {
       content: PropTypes.string,
       contentType: PropTypes.oneOf(['text', 'html']),
     }),
-    reminderDateTime: PropTypes.string.isRequired,
+    reminderDateTime: PropTypes.shape({
+      dateTime: PropTypes.string,
+      timeZone: PropTypes.string.isRequired,
+    }),
     importance: PropTypes.oneOf(['high', 'normal']),
   }).isRequired,
 

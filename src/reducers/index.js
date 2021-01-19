@@ -6,6 +6,9 @@ import popup from './popup';
 import account from './account';
 
 const reducers = combineReducers({ account, popup });
-const store = createStore(reducers, applyMiddleware(thunk, logger));
+let storeInstance = null;
 
-export default store;
+export default function getStore(flag) {
+  if (flag) storeInstance = createStore(reducers, applyMiddleware(thunk, logger));
+  return storeInstance;
+}

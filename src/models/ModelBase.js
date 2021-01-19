@@ -1,4 +1,5 @@
 import { getOAuthToken } from '../actions/account';
+import getStore from '../reducers';
 
 class ModelBase {
   constructor() {
@@ -11,7 +12,7 @@ class ModelBase {
     return fetch(url, options)
       .then((res) => {
         if (res.ok) {
-          return res.status === 200 ? res.json() : res;
+          return res.status === 200 || res.status === 201 ? res.json() : res;
         }
         return Promise.reject(res);
       });
@@ -19,7 +20,7 @@ class ModelBase {
 
   authFetch(url, options) {
     const action = getOAuthToken(this.tokenOptions);
-    return window.store.dispatch(action)
+    return getStore().dispatch(action)
       .then((res) => res.accessToken)
       .then((token) => {
         const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };

@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 chrome.runtime.getBackgroundPage((backgroundPage) => {
   window.Tasklist = backgroundPage.Tasklist;
   window.Task = backgroundPage.Task;
-  window.store = backgroundPage.store;
+  window.store = backgroundPage.getStore(true);
 
   import('./containers/PopupContainer')
     .then((res) => res.default)
@@ -19,3 +19,19 @@ chrome.runtime.getBackgroundPage((backgroundPage) => {
       );
     });
 });
+
+// import PopupContainer from './containers/PopupContainer';
+// import store from './reducers/index';
+// import Task from './models/Task';
+// import Tasklist from './models/Tasklist';
+
+// window.store = store;
+// window.Task = Task;
+// window.Tasklist = Tasklist;
+
+// render(
+//   <Provider store={store}>
+//     <PopupContainer />
+//   </Provider>,
+//   document.getElementById('root'),
+// );

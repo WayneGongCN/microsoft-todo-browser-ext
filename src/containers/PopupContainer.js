@@ -44,7 +44,8 @@ class PopupContainer extends Component {
 
   editReminderDateTime(e) {
     const { task, actions } = this.props;
-    const newTask = { ...task, reminderDateTime: new Date(e.target.value).toISOString() };
+    const newTask = { ...task };
+    newTask.reminderDateTime.dateTime = e.target.value;
     actions.editTask(newTask);
   }
 
@@ -78,10 +79,10 @@ class PopupContainer extends Component {
 
     const newTask = { ...task };
     if (bookmarked) {
-      newTask.linkedRe = {};
+      newTask.body.content += '\nPageInfo';
     }
-
-    actions.createTask(selectedTasklistId, newTask);
+    newTask.test = '123';
+    actions.createTask(selectedTasklistId, newTask).then(actions.resetTask);
   }
 
   resetTask(e) {
@@ -114,23 +115,25 @@ class PopupContainer extends Component {
     } = this;
 
     return (
-      <Popup
-        task={task}
-        tasklistList={tasklistList}
-        selectedTasklistId={selectedTasklistId}
-        importance={importance}
-        bookmarked={bookmarked}
-        taskCreating={taskCreating}
-        tasklistListLoading={tasklistListLoading}
-        editTaskTitle={editTaskTitle}
-        editTaskDescribe={editTaskDescribe}
-        editReminderDateTime={editReminderDateTime}
-        editSelectedTasklist={editSelectedTasklist}
-        editBookmarked={editBookmarked}
-        editImportance={editImportance}
-        resetTask={resetTask}
-        createTask={createTask}
-      />
+      <div>
+        <Popup
+          task={task}
+          tasklistList={tasklistList}
+          selectedTasklistId={selectedTasklistId}
+          importance={importance}
+          bookmarked={bookmarked}
+          taskCreating={taskCreating}
+          tasklistListLoading={tasklistListLoading}
+          editTaskTitle={editTaskTitle}
+          editTaskDescribe={editTaskDescribe}
+          editReminderDateTime={editReminderDateTime}
+          editSelectedTasklist={editSelectedTasklist}
+          editBookmarked={editBookmarked}
+          editImportance={editImportance}
+          resetTask={resetTask}
+          createTask={createTask}
+        />
+      </div>
     );
   }
 }

@@ -12,7 +12,10 @@ const defaultTask = () => ({
     content: '',
     contentType: 'text',
   },
-  reminderDateTime: '',
+  reminderDateTime: {
+    dateTime: '',
+    timeZone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
+  },
   importance: 'normal',
   title: '',
 });
