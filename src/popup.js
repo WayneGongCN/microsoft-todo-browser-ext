@@ -2,6 +2,8 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
+import Container from '@material-ui/core/Container';
+import MSTodoLink from './components/MSTodoLink';
 
 chrome.runtime.getBackgroundPage((backgroundPage) => {
   window.Tasklist = backgroundPage.Tasklist;
@@ -13,7 +15,10 @@ chrome.runtime.getBackgroundPage((backgroundPage) => {
     .then((PopupContainer) => {
       render(
         <Provider store={window.store}>
-          <PopupContainer />
+          <Container style={{ width: 350, padding: '8px' }}>
+            <MSTodoLink />
+            <PopupContainer />
+          </Container>
         </Provider>,
         document.getElementById('root'),
       );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -12,6 +12,8 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 import Add from '@material-ui/icons/Add';
 import BookmarksOutlined from '@material-ui/icons/BookmarksOutlined';
@@ -22,7 +24,21 @@ import RotateLeft from '@material-ui/icons/RotateLeft';
 
 const { Tasklist } = window;
 // eslint-disable-next-line no-unused-vars
-const useStyles = makeStyles((theme) => ({}));
+const useStyles = makeStyles((theme) => ({
+  resetBtn: {
+    '&:hover': {
+      color: theme.palette.secondary.light,
+    },
+  },
+
+  fullWidth: {
+    width: '100%',
+  },
+
+  iconFix: {
+    marginTop: 8,
+  },
+}));
 
 function Popup(props) {
   const {
@@ -44,6 +60,8 @@ function Popup(props) {
     createTask,
   } = props;
 
+  const [showMessage, setShowMessage] = useState(false);
+
   const classes = useStyles();
 
   return (
@@ -55,6 +73,9 @@ function Popup(props) {
           value={task.title}
           onChange={editTaskTitle}
           disabled={taskCreating}
+          required
+          fullWidth
+          autoFocus
         />
       </Grid>
 
@@ -62,11 +83,12 @@ function Popup(props) {
         <TextField
           id="outlined-basic"
           label="Describe"
-          multiline
           rowsMax={4}
           value={task.body.content}
           onChange={editTaskDescribe}
           disabled={taskCreating}
+          fullWidth
+          multiline
         />
       </Grid>
 
@@ -74,19 +96,17 @@ function Popup(props) {
         <TextField
           label="Reminder Date"
           type="datetime-local"
+          InputLabelProps={{ shrink: true }}
           value={task.reminderDateTime.dateTime}
-          className={classes.textField}
           onChange={editReminderDateTime}
           disabled={taskCreating}
-          InputLabelProps={{
-            shrink: true,
-          }}
+          fullWidth
         />
       </Grid>
 
       <Grid container item direction="row" alignItems="center" spacing={2} xs={12}>
         <Grid item xs={8}>
-          <FormControl style={{ width: '100%' }}>
+          <FormControl fullWidth>
             <InputLabel id="task-list-label">Task List</InputLabel>
             <Select
               labelId="task-list-label"
@@ -101,11 +121,11 @@ function Popup(props) {
 
         <Grid item xs={2}>
           <Checkbox
+            color="secondary"
+            className={classes.iconFix}
             icon={<StarOutline fontSize="default" />}
             checkedIcon={<Star fontSize="default" />}
-            color="secondary"
-            checked={task.importance === 'high'}
-            value={task.importance === 'high' ? 'low' : 'high'}
+            checked={task.importance}
             onChange={editImportance}
             onKeyUp={editImportance}
             disabled={taskCreating}
@@ -114,9 +134,10 @@ function Popup(props) {
 
         <Grid item xs={2}>
           <Checkbox
+            color="secondary"
+            className={classes.iconFix}
             icon={<BookmarksOutlined fontSize="small" />}
             checkedIcon={<Bookmarks fontSize="small" />}
-            color="secondary"
             checked={bookmarked}
             onChange={editBookmarked}
             onKeyUp={editBookmarked}
@@ -128,8 +149,8 @@ function Popup(props) {
       <Grid container item direction="row" alignItems="center" xs={12}>
         <Grid item xs>
           <IconButton
+            className={classes.resetBtn}
             size="small"
-            color="secondary"
             onClick={resetTask}
             onKeyUp={resetTask}
           >
@@ -139,20 +160,28 @@ function Popup(props) {
 
         <Grid item xs={10}>
           <Button
-            style={{ width: '100%' }}
             size="small"
             variant="contained"
             color="primary"
+            className={classes.fullWidth}
             endIcon={taskCreating ? <CircularProgress size={20} /> : <Add />}
             onClick={createTask}
+            // onClick={() => setShowMessage(true)}
             onKeyUp={createTask}
-            disabled={Boolean(taskCreating || tasklistListLoading || !selectedTasklistId)}
+            // TODO: disable status move to redux
+            disabled={Boolean(taskCreating || tasklistListLoading || !selectedTasklistId || !task.title.trim())}
             disableElevation
           >
             { taskCreating ? '' : 'Add'}
           </Button>
         </Grid>
       </Grid>
+
+      <Snackbar autoHideDuration={3000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={showMessage} onClose={() => setShowMessage(false)}>
+        <MuiAlert severity="success" variant="filled" onClose={() => setShowMessage(false)}>
+          Success
+        </MuiAlert>
+      </Snackbar>
     </Grid>
   );
 }
@@ -168,7 +197,7 @@ Popup.propTypes = {
       dateTime: PropTypes.string,
       timeZone: PropTypes.string.isRequired,
     }),
-    importance: PropTypes.string.isRequired,
+    importance: PropTypes.bool.isRequired,
   }).isRequired,
 
   tasklistList: PropTypes.arrayOf(PropTypes.instanceOf(Tasklist)).isRequired,

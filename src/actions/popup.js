@@ -1,8 +1,6 @@
 import * as types from '../constants/PopupTypes';
 
-export const fetchTasklistList = () => (dispatch, getState) => {
-  const state = getState();
-  if (state.popup.tasklistListLoading) return Promise.reject();
+export const fetchTasklistList = () => (dispatch) => {
   dispatch({ type: types.FETCH_TASKLIST_LIST_START });
   return new window.Tasklist().listTasklist()
     .then((res) => dispatch({ type: types.FETCH_TASKLIST_LIST_SUCCESS, payload: { tasklistList: res } }))
@@ -20,7 +18,7 @@ export const editImportance = (importance) => ({ type: types.EDIT_IMPORTANCE, pa
 export const editBookmarked = (bookmarked) => ({ type: types.EDIT_BOOKMARKED, payload: { bookmarked } });
 export const resetTask = () => ({ type: types.RESET_TASK });
 
-export const createTask = (selectedTasklistId, task, bookmarkInfo = null) => (dispatch, getState) => {
+export const createTask = (selectedTasklistId, task, bookmarkInfo) => (dispatch, getState) => {
   const state = getState();
   const { tasklistList } = state.popup;
   const tasklist = tasklistList.find((x) => x.id === selectedTasklistId);
@@ -29,8 +27,21 @@ export const createTask = (selectedTasklistId, task, bookmarkInfo = null) => (di
   dispatch({ type: types.CREATE_TASK_START, payload: { task, bookmarkInfo } });
   return tasklist.createTask(task, bookmarkInfo)
     .then((res) => dispatch({ type: types.CREATE_TASK_SUCCESS, payload: { task: res } }))
+    .then(() => dispatch(resetTask()))
     .catch((error) => {
       dispatch({ type: types.CREATE_TASK_ERROR, error });
       return Promise.reject(error);
     });
 };
+
+export const createBookmarkedTask = (selectedTasklistId, task) => (dispatch) => new Promise((resolve, reject) => {
+  try {
+    chrome.tabs.query({ active: true }, (tab) => {
+      const curTab = tab[0] || null;
+      resolve((curTab && `\n\n---\n${curTab.title}\n${curTab.url}`) || null);
+    });
+  } catch (e) {
+    reject(e);
+  }
+})
+  .then((bookmarkInfo) => dispatch(createTask(selectedTasklistId, task, bookmarkInfo)));

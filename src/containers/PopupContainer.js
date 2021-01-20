@@ -49,7 +49,7 @@ class PopupContainer extends Component {
   editImportance(e) {
     if (e.type === 'keyup' && e.code !== 'Enter') return;
     const { actions } = this.props;
-    actions.editImportance(e.target.value);
+    actions.editImportance(e.target.checked);
   }
 
   editBookmarked(e) {
@@ -61,27 +61,13 @@ class PopupContainer extends Component {
   createTask(e) {
     if (e.type === 'keyup' && e.code !== 'Enter') return;
     const {
-      task, bookmarked, selectedTasklistId, actions,
+      selectedTasklistId, task, bookmarked, actions,
     } = this.props;
-
-    new Promise((resolve, reject) => {
-      try {
-        if (bookmarked) {
-          chrome.tabs.query({ active: true }, (tab) => {
-            const curTab = tab[0] || null;
-            if (!curTab) resolve(null);
-            const bookmarkInfo = `\n\n---\n${curTab.title}\n${curTab.url}`;
-            resolve(bookmarkInfo);
-          });
-        } else {
-          resolve(null);
-        }
-      } catch (e) {
-        reject(e);
-      }
-    })
-      .then((bookmarkInfo) => actions.createTask(selectedTasklistId, task, bookmarkInfo))
-      .then(actions.resetTask);
+    if (bookmarked) {
+      actions.createBookmarkedTask(selectedTasklistId, task);
+    } else {
+      actions.createTask(selectedTasklistId, task);
+    }
   }
 
   resetTask(e) {
@@ -112,24 +98,22 @@ class PopupContainer extends Component {
     } = this;
 
     return (
-      <div>
-        <Popup
-          task={task}
-          tasklistList={tasklistList}
-          selectedTasklistId={selectedTasklistId}
-          bookmarked={bookmarked}
-          taskCreating={taskCreating}
-          tasklistListLoading={tasklistListLoading}
-          editTaskTitle={editTaskTitle}
-          editTaskDescribe={editTaskDescribe}
-          editReminderDateTime={editReminderDateTime}
-          editSelectedTasklist={editSelectedTasklist}
-          editBookmarked={editBookmarked}
-          editImportance={editImportance}
-          resetTask={resetTask}
-          createTask={createTask}
-        />
-      </div>
+      <Popup
+        task={task}
+        tasklistList={tasklistList}
+        selectedTasklistId={selectedTasklistId}
+        bookmarked={bookmarked}
+        taskCreating={taskCreating}
+        tasklistListLoading={tasklistListLoading}
+        editTaskTitle={editTaskTitle}
+        editTaskDescribe={editTaskDescribe}
+        editReminderDateTime={editReminderDateTime}
+        editSelectedTasklist={editSelectedTasklist}
+        editBookmarked={editBookmarked}
+        editImportance={editImportance}
+        resetTask={resetTask}
+        createTask={createTask}
+      />
     );
   }
 }

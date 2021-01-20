@@ -5,6 +5,7 @@ import {
 } from '../constants/PopupTypes';
 
 const defaultTask = () => ({
+  title: '',
   body: {
     content: '',
     contentType: 'text',
@@ -13,15 +14,13 @@ const defaultTask = () => ({
     dateTime: '',
     timeZone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
   },
-  importance: 'low',
-  title: '',
+  importance: false,
 });
 
 const initialState = {
+  task: defaultTask(),
   taskCreating: false,
   tasklistListLoading: false,
-
-  task: defaultTask(),
   tasklistList: [],
   selectedTasklistId: '',
   bookmarked: false,
@@ -77,7 +76,6 @@ function popup(state = initialState, action) {
     case CREATE_TASK_SUCCESS: {
       return {
         ...state,
-        task: defaultTask(),
         taskCreating: false,
       };
     }
@@ -89,7 +87,7 @@ function popup(state = initialState, action) {
       };
     }
     case RESET_TASK: {
-      return { ...state, task: defaultTask() };
+      return { ...state, task: defaultTask(), bookmarked: false };
     }
 
     default:

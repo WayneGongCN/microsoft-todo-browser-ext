@@ -88,7 +88,7 @@ class Task extends ModelBase {
     const result = {};
 
     result.title = task.title;
-    result.importance = task.importance;
+    result.importance = task.importance ? 'high' : 'low';
 
     result.body = task.body;
     if (bookmarkInfo) {
