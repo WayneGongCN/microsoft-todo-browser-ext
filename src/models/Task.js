@@ -9,8 +9,6 @@ class Task extends ModelBase {
     super();
 
     this.id = task.id;
-    this.taskListId = task.taskListId;
-
     this.body = task.body;
     this.completedDateTime = task.completedDateTime;
     this.dueDateTime = task.dueDateTime;
@@ -29,6 +27,10 @@ class Task extends ModelBase {
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotasklist-list-tasks.md
   static listTasks(taskListId) {
     return new Tasklist({ id: taskListId }).listTasks();
+  }
+
+  setTasklistId(tasklistId) {
+    this.tasklistId = tasklistId;
   }
 
   // Create task
@@ -82,19 +84,23 @@ class Task extends ModelBase {
     return this.get(`${this.endPointPrefix}/me/todo/lists/${this.id}/tasks/delta`);
   }
 
-  static mapping(task) {
-    return {
-      id: task.id || undefined,
-      body: task.body || undefined,
-      completedDateTime: task.completedDateTime || undefined,
-      dueDateTime: task.dueDateTime || undefined,
-      importance: task.importance || undefined,
-      isReminderOn: task.isReminderOn || undefined,
-      recurrence: task.recurrence || undefined,
-      reminderDateTime: task.reminderDateTime || undefined,
-      status: task.status || undefined,
-      title: task.title || undefined,
-    };
+  static mapping(task, bookmarkInfo = null) {
+    const result = {};
+
+    result.title = task.title;
+    result.importance = task.importance;
+
+    result.body = task.body;
+    if (bookmarkInfo) {
+      result.body.content += bookmarkInfo;
+    }
+
+    result.reminderDateTime = task.reminderDateTime;
+    if (!result.reminderDateTime.dateTime) {
+      delete result.reminderDateTime;
+    }
+
+    return result;
   }
 }
 

@@ -42,8 +42,6 @@ function Popup(props) {
     editImportance,
     resetTask,
     createTask,
-
-    importance,
   } = props;
 
   const classes = useStyles();
@@ -92,7 +90,6 @@ function Popup(props) {
             <InputLabel id="task-list-label">Task List</InputLabel>
             <Select
               labelId="task-list-label"
-              id="task-list-select"
               value={selectedTasklistId}
               onChange={editSelectedTasklist}
               disabled={taskCreating || tasklistListLoading}
@@ -107,8 +104,8 @@ function Popup(props) {
             icon={<StarOutline fontSize="default" />}
             checkedIcon={<Star fontSize="default" />}
             color="secondary"
-            name="checkedH"
-            checked={importance}
+            checked={task.importance === 'high'}
+            value={task.importance === 'high' ? 'low' : 'high'}
             onChange={editImportance}
             onKeyUp={editImportance}
             disabled={taskCreating}
@@ -120,7 +117,6 @@ function Popup(props) {
             icon={<BookmarksOutlined fontSize="small" />}
             checkedIcon={<Bookmarks fontSize="small" />}
             color="secondary"
-            name="checkedH"
             checked={bookmarked}
             onChange={editBookmarked}
             onKeyUp={editBookmarked}
@@ -172,13 +168,12 @@ Popup.propTypes = {
       dateTime: PropTypes.string,
       timeZone: PropTypes.string.isRequired,
     }),
-    importance: PropTypes.oneOf(['high', 'normal']),
+    importance: PropTypes.string.isRequired,
   }).isRequired,
 
   tasklistList: PropTypes.arrayOf(PropTypes.instanceOf(Tasklist)).isRequired,
   selectedTasklistId: PropTypes.string.isRequired,
 
-  importance: PropTypes.bool.isRequired,
   bookmarked: PropTypes.bool.isRequired,
   taskCreating: PropTypes.bool.isRequired,
   tasklistListLoading: PropTypes.bool.isRequired,

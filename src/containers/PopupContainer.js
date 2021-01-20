@@ -26,27 +26,19 @@ class PopupContainer extends Component {
     actions.fetchTasklistList();
   }
 
-  // shouldComponentUpdate() {
-  //   // can submit
-  // }
-
   editTaskTitle(e) {
-    const { task, actions } = this.props;
-    actions.editTask({ ...task, title: e.target.value });
+    const { actions } = this.props;
+    actions.editTaskTitle(e.target.value);
   }
 
   editTaskDescribe(e) {
-    const { task, actions } = this.props;
-    const newTask = { ...task };
-    newTask.body.content = e.target.value;
-    actions.editTask(newTask);
+    const { actions } = this.props;
+    actions.editTaskDescribe(e.target.value);
   }
 
   editReminderDateTime(e) {
-    const { task, actions } = this.props;
-    const newTask = { ...task };
-    newTask.reminderDateTime.dateTime = e.target.value;
-    actions.editTask(newTask);
+    const { actions } = this.props;
+    actions.editReminderDateTime(e.target.value);
   }
 
   editSelectedTasklist(e) {
@@ -56,33 +48,40 @@ class PopupContainer extends Component {
 
   editImportance(e) {
     if (e.type === 'keyup' && e.code !== 'Enter') return;
-    const { task, actions } = this.props;
-    let { importance } = this.props;
-    importance = !importance;
-    importance = importance ? 'high' : 'normal';
-    actions.editTask({ ...task, importance });
+    const { actions } = this.props;
+    actions.editImportance(e.target.value);
   }
 
   editBookmarked(e) {
     if (e.type === 'keyup' && e.code !== 'Enter') return;
-    const { bookmarked, actions } = this.props;
-    actions.editBookmarked(!bookmarked);
+    const { actions } = this.props;
+    actions.editBookmarked(e.target.checked);
   }
 
   createTask(e) {
     if (e.type === 'keyup' && e.code !== 'Enter') return;
     const {
-      props: {
-        task, bookmarked, selectedTasklistId, actions,
-      },
-    } = this;
+      task, bookmarked, selectedTasklistId, actions,
+    } = this.props;
 
-    const newTask = { ...task };
-    if (bookmarked) {
-      newTask.body.content += '\nPageInfo';
-    }
-    newTask.test = '123';
-    actions.createTask(selectedTasklistId, newTask).then(actions.resetTask);
+    new Promise((resolve, reject) => {
+      try {
+        if (bookmarked) {
+          chrome.tabs.query({ active: true }, (tab) => {
+            const curTab = tab[0] || null;
+            if (!curTab) resolve(null);
+            const bookmarkInfo = `\n\n---\n${curTab.title}\n${curTab.url}`;
+            resolve(bookmarkInfo);
+          });
+        } else {
+          resolve(null);
+        }
+      } catch (e) {
+        reject(e);
+      }
+    })
+      .then((bookmarkInfo) => actions.createTask(selectedTasklistId, task, bookmarkInfo))
+      .then(actions.resetTask);
   }
 
   resetTask(e) {
@@ -99,8 +98,6 @@ class PopupContainer extends Component {
         selectedTasklistId,
         taskCreating,
         tasklistListLoading,
-
-        importance,
         bookmarked,
       },
 
@@ -120,7 +117,6 @@ class PopupContainer extends Component {
           task={task}
           tasklistList={tasklistList}
           selectedTasklistId={selectedTasklistId}
-          importance={importance}
           bookmarked={bookmarked}
           taskCreating={taskCreating}
           tasklistListLoading={tasklistListLoading}
@@ -139,9 +135,6 @@ class PopupContainer extends Component {
 }
 
 export default connect(
-  (state) => ({
-    ...state.popup,
-    importance: state.popup.task.importance === 'high',
-  }),
+  (state) => state.popup,
   (dispatch) => ({ actions: bindActionCreators(popupActions, dispatch) }),
 )(PopupContainer);

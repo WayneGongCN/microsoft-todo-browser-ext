@@ -60,10 +60,15 @@ class Tasklist extends ModelBase {
 
   // Create task
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotasklist-post-tasks.md
-  createTask(task) {
+  createTask(task, bookmarkInfo = null) {
     const endPoint = `${this.endPointPrefix}me/todo/lists/${this.id}/tasks`;
-    const data = Task.mapping(task);
-    return this.post(endPoint, data).then((res) => new Task(res));
+    const data = Task.mapping(task, bookmarkInfo);
+    return this.post(endPoint, data)
+      .then((res) => {
+        const task = new Task(res);
+        task.setTasklistId(this.id);
+        return task;
+      });
   }
 }
 
