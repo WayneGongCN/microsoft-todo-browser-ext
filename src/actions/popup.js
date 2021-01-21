@@ -12,7 +12,15 @@ export const fetchTasklistList = () => (dispatch) => {
     .then((res) => dispatch({ type: types.FETCH_TASKLIST_LIST_SUCCESS, payload: { tasklistList: res } }))
     .catch((error) => {
       dispatch({ type: types.FETCH_TASKLIST_LIST_ERROR, payload: { error } });
-      dispatch(openErrorMessage(error));
+      let message = '';
+      if (error.statusText && error.status) {
+        message = `Error: ${error.statusText} ${error.status}`;
+      } else if (error.message) {
+        message = error.message;
+      } else {
+        message = error.toString();
+      }
+      dispatch(openErrorMessage(message));
       return Promise.reject(error);
     });
 };

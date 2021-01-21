@@ -2,7 +2,7 @@ import React from 'react';
 import Link from '@material-ui/core/Link';
 import { Grid } from '@material-ui/core';
 
-export default function MSTodoLink() {
+export default function MicrosoftTodoLink() {
   return (
     <Grid container direction="row-reverse">
       <Grid item>

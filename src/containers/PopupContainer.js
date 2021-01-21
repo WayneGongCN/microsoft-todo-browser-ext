@@ -4,9 +4,11 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-import Popup from '../components/Popup';
+import PopupTaskForm from '../components/PopupTaskForm';
 import * as popupActions from '../actions/popup';
+import * as accountActions from '../actions/account';
 import Message from '../components/Message';
+import MicrosoftTodoLink from '../components/MicrosoftTodoLink';
 
 class PopupContainer extends Component {
   constructor(props) {
@@ -23,58 +25,58 @@ class PopupContainer extends Component {
   }
 
   componentDidMount() {
-    const { actions } = this.props;
-    actions.fetchTasklistList();
+    const { fetchTasklistList } = this.props;
+    fetchTasklistList();
   }
 
   editTaskTitle(e) {
-    const { actions } = this.props;
-    actions.editTaskTitle(e.target.value);
+    const { editTaskTitle } = this.props;
+    editTaskTitle(e.target.value);
   }
 
   editTaskDescribe(e) {
-    const { actions } = this.props;
-    actions.editTaskDescribe(e.target.value);
+    const { editTaskDescribe } = this.props;
+    editTaskDescribe(e.target.value);
   }
 
   editReminderDateTime(e) {
-    const { actions } = this.props;
-    actions.editReminderDateTime(e.target.value);
+    const { editReminderDateTime } = this.props;
+    editReminderDateTime(e.target.value);
   }
 
   editSelectedTasklist(e) {
-    const { actions } = this.props;
-    actions.editSelectedTasklist(e.target.value);
+    const { editSelectedTasklist } = this.props;
+    editSelectedTasklist(e.target.value);
   }
 
   editImportance(e) {
     if (e.type === 'keyup' && e.code !== 'Enter') return;
-    const { actions } = this.props;
-    actions.editImportance(e.target.checked);
+    const { editImportance } = this.props;
+    editImportance(e.target.checked);
   }
 
   editBookmarked(e) {
     if (e.type === 'keyup' && e.code !== 'Enter') return;
-    const { actions } = this.props;
-    actions.editBookmarked(e.target.checked);
+    const { editBookmarked } = this.props;
+    editBookmarked(e.target.checked);
   }
 
   createTask(e) {
     if (e.type === 'keyup' && e.code !== 'Enter') return;
     const {
-      selectedTasklistId, task, bookmarked, actions,
+      selectedTasklistId, task, bookmarked, createBookmarkedTask, createTask,
     } = this.props;
     if (bookmarked) {
-      actions.createBookmarkedTask(selectedTasklistId, task);
+      createBookmarkedTask(selectedTasklistId, task);
     } else {
-      actions.createTask(selectedTasklistId, task);
+      createTask(selectedTasklistId, task);
     }
   }
 
   resetTask(e) {
     if (e.type === 'keyup' && e.code !== 'Enter') return;
-    const { actions } = this.props;
-    actions.resetTask();
+    const { resetTask } = this.props;
+    resetTask();
   }
 
   render() {
@@ -91,9 +93,7 @@ class PopupContainer extends Component {
         messageType,
         message,
 
-        actions: {
-          closeMessage,
-        },
+        closeMessage,
       },
 
       editTaskTitle,
@@ -108,7 +108,8 @@ class PopupContainer extends Component {
 
     return (
       <>
-        <Popup
+        <MicrosoftTodoLink />
+        <PopupTaskForm
           task={task}
           tasklistList={tasklistList}
           selectedTasklistId={selectedTasklistId}
@@ -135,7 +136,8 @@ class PopupContainer extends Component {
   }
 }
 
-export default connect(
-  (state) => state.popup,
-  (dispatch) => ({ actions: bindActionCreators(popupActions, dispatch) }),
-)(PopupContainer);
+const mapStateToProps = (state) => state.popup;
+
+const mapActionToProps = (dispatch) => bindActionCreators({ ...popupActions, ...accountActions }, dispatch);
+
+export default connect(mapStateToProps, mapActionToProps)(PopupContainer);

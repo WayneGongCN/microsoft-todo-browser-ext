@@ -7,7 +7,7 @@ const DEFAULT_MSAL_CONF = {
     redirectUri: `https://${process.env.CHROME_EXT_ID}.chromiumapp.org/`,
   },
   cache: {
-    cacheLocation: 'sessionStorage',
+    cacheLocation: 'localStorage',
     storeAuthStateInCookie: false,
   },
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -21,7 +21,7 @@ import Bookmarks from '@material-ui/icons/Bookmarks';
 import RotateLeft from '@material-ui/icons/RotateLeft';
 
 const { Tasklist } = window;
-// eslint-disable-next-line no-unused-vars
+
 const useStyles = makeStyles((theme) => ({
   resetBtn: {
     '&:hover': {

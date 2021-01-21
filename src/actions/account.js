@@ -10,12 +10,18 @@ export const logout = () => (dispatch) => {
 
 export const getOAuthToken = (options) => (dispatch, getState) => {
   const state = getState();
-  const { token } = state.account;
+  let { token } = state.account;
+  try {
+    token = token || JSON.parse(localStorage.getItem('token'));
+  } catch (e) {
+    console.warn(e);
+  }
 
-  if (!token || Date.now() >= token.expiresOn.getTime()) {
+  if (!token || Date.now() >= new Date(token.expiresOn).getTime()) {
     dispatch({ type: types.FETCH_OAUTH_TOKEN_START });
     return msalInstance.acquireTokenRedirect(options)
       .then((res) => {
+        localStorage.setItem('token', JSON.stringify(res));
         dispatch({ type: types.FETCH_OAUTH_TOKEN_SUCCESS, payload: res });
         return res;
       })

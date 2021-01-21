@@ -4,30 +4,30 @@ import {
 } from '../constants/AccountTypes';
 
 const initialState = {
-  pending: false,
+  waiting: false,
   token: null,
 };
 
 function account(state = initialState, action) {
   switch (action.type) {
     case LOG_OUT_START: {
-      return { ...state, pending: true };
+      return { ...state, waiting: true };
     }
     case LOG_OUT_SUCCESS: {
-      return { ...state, pending: false, token: null };
+      return { ...state, waiting: false, token: null };
     }
     case LOG_OUT_ERROR: {
-      return { ...state, pending: false, token: null };
+      return { ...state, waiting: false, token: null };
     }
 
     case FETCH_OAUTH_TOKEN_START: {
-      return { ...state, pending: true };
+      return { ...state, waiting: true };
     }
     case FETCH_OAUTH_TOKEN_SUCCESS: {
-      return { ...state, pending: false, token: action.payload };
+      return { ...state, waiting: false, token: action.payload };
     }
     case FETCH_OAUTH_TOKEN_ERROR: {
-      return { ...state, pending: false, token: null };
+      return { ...state, waiting: false, token: null };
     }
 
     default:
