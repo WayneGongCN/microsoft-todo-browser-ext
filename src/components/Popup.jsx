@@ -12,8 +12,6 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
 
 import Add from '@material-ui/icons/Add';
 import BookmarksOutlined from '@material-ui/icons/BookmarksOutlined';
@@ -59,8 +57,6 @@ function Popup(props) {
     resetTask,
     createTask,
   } = props;
-
-  const [showMessage, setShowMessage] = useState(false);
 
   const classes = useStyles();
 
@@ -166,22 +162,15 @@ function Popup(props) {
             className={classes.fullWidth}
             endIcon={taskCreating ? <CircularProgress size={20} /> : <Add />}
             onClick={createTask}
-            // onClick={() => setShowMessage(true)}
             onKeyUp={createTask}
             // TODO: disable status move to redux
-            disabled={Boolean(taskCreating || tasklistListLoading || !selectedTasklistId || !task.title.trim())}
+            disabled={Boolean(taskCreating || !selectedTasklistId || !task.title.trim())}
             disableElevation
           >
             { taskCreating ? '' : 'Add'}
           </Button>
         </Grid>
       </Grid>
-
-      <Snackbar autoHideDuration={3000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={showMessage} onClose={() => setShowMessage(false)}>
-        <MuiAlert severity="success" variant="filled" onClose={() => setShowMessage(false)}>
-          Success
-        </MuiAlert>
-      </Snackbar>
     </Grid>
   );
 }

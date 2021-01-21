@@ -1,7 +1,7 @@
 import {
   FETCH_TASKLIST_LIST_START, FETCH_TASKLIST_LIST_SUCCESS, FETCH_TASKLIST_LIST_ERROR,
   EDIT_TASK_TITLE, EDIT_TASK_CONTENT, EDIT_TASK_REMINDER_DATETIME, EDIT_SELECTED_TASKLIST, EDIT_BOOKMARKED,
-  CREATE_TASK_ERROR, CREATE_TASK_START, CREATE_TASK_SUCCESS, RESET_TASK, EDIT_IMPORTANCE,
+  CREATE_TASK_ERROR, CREATE_TASK_START, CREATE_TASK_SUCCESS, RESET_TASK, EDIT_IMPORTANCE, OPEN_SUCCESS_MESSAGE, OPEN_ERROR_MESSAGE, CLOSE_MESSAGE,
 } from '../constants/PopupTypes';
 
 const defaultTask = () => ({
@@ -24,6 +24,10 @@ const initialState = {
   tasklistList: [],
   selectedTasklistId: '',
   bookmarked: false,
+
+  opemMessage: false,
+  messageType: null,
+  message: null,
 };
 
 function popup(state = initialState, action) {
@@ -88,6 +92,25 @@ function popup(state = initialState, action) {
     }
     case RESET_TASK: {
       return { ...state, task: defaultTask(), bookmarked: false };
+    }
+
+    // MESSAGE
+    case OPEN_SUCCESS_MESSAGE: {
+      const { message } = action.payload;
+      return {
+        ...state, message, opemMessage: true, messageType: 'success',
+      };
+    }
+    case OPEN_ERROR_MESSAGE: {
+      const { message } = action.payload;
+      return {
+        ...state, message, opemMessage: true, messageType: 'error',
+      };
+    }
+    case CLOSE_MESSAGE: {
+      return {
+        ...state, opemMessage: false, messageType: null, message: null,
+      };
     }
 
     default:

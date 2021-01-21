@@ -24,6 +24,7 @@ module.exports = {
   ],
 
   rules: {
+    'linebreak-style': ['error', 'unix'],
     'max-len': ['error', { code: 150 }],
     'eol-last': ['error', 'always'],
     'no-shadow': ['off'],

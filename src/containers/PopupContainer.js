@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import Popup from '../components/Popup';
 import * as popupActions from '../actions/popup';
+import Message from '../components/Message';
 
 class PopupContainer extends Component {
   constructor(props) {
@@ -85,6 +86,14 @@ class PopupContainer extends Component {
         taskCreating,
         tasklistListLoading,
         bookmarked,
+
+        opemMessage,
+        messageType,
+        message,
+
+        actions: {
+          closeMessage,
+        },
       },
 
       editTaskTitle,
@@ -98,22 +107,30 @@ class PopupContainer extends Component {
     } = this;
 
     return (
-      <Popup
-        task={task}
-        tasklistList={tasklistList}
-        selectedTasklistId={selectedTasklistId}
-        bookmarked={bookmarked}
-        taskCreating={taskCreating}
-        tasklistListLoading={tasklistListLoading}
-        editTaskTitle={editTaskTitle}
-        editTaskDescribe={editTaskDescribe}
-        editReminderDateTime={editReminderDateTime}
-        editSelectedTasklist={editSelectedTasklist}
-        editBookmarked={editBookmarked}
-        editImportance={editImportance}
-        resetTask={resetTask}
-        createTask={createTask}
-      />
+      <>
+        <Popup
+          task={task}
+          tasklistList={tasklistList}
+          selectedTasklistId={selectedTasklistId}
+          bookmarked={bookmarked}
+          taskCreating={taskCreating}
+          tasklistListLoading={tasklistListLoading}
+          editTaskTitle={editTaskTitle}
+          editTaskDescribe={editTaskDescribe}
+          editReminderDateTime={editReminderDateTime}
+          editSelectedTasklist={editSelectedTasklist}
+          editBookmarked={editBookmarked}
+          editImportance={editImportance}
+          resetTask={resetTask}
+          createTask={createTask}
+        />
+        <Message
+          opemMessage={opemMessage}
+          closeMessage={closeMessage}
+          messageType={messageType}
+          message={message}
+        />
+      </>
     );
   }
 }
