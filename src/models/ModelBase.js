@@ -3,7 +3,6 @@ import getStore from '../reducers';
 
 class ModelBase {
   constructor() {
-    this.tokenOptions = { scopes: ['User.Read', 'Tasks.ReadWrite.Shared'] };
     this.endPointPrefix = 'https://graph.microsoft.com/v1.0/';
   }
 
@@ -19,7 +18,7 @@ class ModelBase {
   }
 
   authFetch(url, options) {
-    const action = getOAuthToken(this.tokenOptions);
+    const action = getOAuthToken();
     return getStore().dispatch(action)
       .then((res) => res.accessToken)
       .then((token) => {

@@ -6,8 +6,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
-module.exports = {
-  mode: 'development',
+module.exports = (env) => ({
+  mode: env.mode,
 
   /**
    * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP
@@ -19,7 +19,7 @@ module.exports = {
   entry: {
     background: './src/background/index.js',
     popup: './src/popup.js',
-    options: './src/options.js',
+    // options: './src/options.js',
   },
 
   output: {
@@ -67,9 +67,10 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: 'public/manifest.json', to: '' },
+        { from: 'public/icons', to: 'icons/' },
       ],
     }),
 
     new CleanWebpackPlugin(),
   ],
-};
+});

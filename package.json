@@ -1,12 +1,12 @@
 {
   "name": "microsoft-todo-chrome-ext",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.0.1",
   "repository": "https://github.com/WayneGongCN/microsoft-todo-chrome-ext.git",
   "author": "waynegong <Wayne.Gong.CN@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack --config webpack.config.js --watch"
+    "start": "webpack --config webpack.config.js --env mode=development --watch",
+    "build": "webpack --config webpack.config.js --env mode=production"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",

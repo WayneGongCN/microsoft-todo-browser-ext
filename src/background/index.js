@@ -1,7 +1,6 @@
 /* eslint-disable import/no-unresolved */
 import msalInstance from '../helpers/msal';
-import Task from '../models/Task';
-import Tasklist from '../models/Tasklist';
+import { Task, Tasklist } from '../models/Task';
 import getStore from '../reducers';
 
 chrome.runtime.onInstalled.addListener(() => {

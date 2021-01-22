@@ -1,3 +1,5 @@
+export const GET_ACCOUNTS = 'GET_ACCOUNTS';
+
 export const LOG_OUT_START = 'LOG_OUT_START';
 export const LOG_OUT_SUCCESS = 'LOG_OUT_START';
 export const LOG_OUT_ERROR = 'LOG_OUT_START';

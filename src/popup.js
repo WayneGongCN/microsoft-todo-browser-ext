@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import Container from '@material-ui/core/Container';
 
 chrome.runtime.getBackgroundPage((backgroundPage) => {
+  window.msalInstance = backgroundPage.msalInstance;
   window.Tasklist = backgroundPage.Tasklist;
   window.Task = backgroundPage.Task;
   window.store = backgroundPage.getStore(true);

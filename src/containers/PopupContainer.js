@@ -9,6 +9,7 @@ import * as popupActions from '../actions/popup';
 import * as accountActions from '../actions/account';
 import Message from '../components/Message';
 import MicrosoftTodoLink from '../components/MicrosoftTodoLink';
+import Login from '../components/Login';
 
 class PopupContainer extends Component {
   constructor(props) {
@@ -25,8 +26,20 @@ class PopupContainer extends Component {
   }
 
   componentDidMount() {
-    const { fetchTasklistList } = this.props;
-    fetchTasklistList();
+    console.log('componentDidMount');
+    const { getAccount } = this.props;
+    getAccount();
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log('componentDidUpdate', prevProps);
+    const {
+      account, tasklistList, fetchTasklistList, tasklistListLoading,
+    } = this.props;
+
+    if (account && tasklistList.length === 0 && !tasklistListLoading) {
+      fetchTasklistList();
+    }
   }
 
   editTaskTitle(e) {
@@ -82,6 +95,8 @@ class PopupContainer extends Component {
   render() {
     const {
       props: {
+        account,
+
         task,
         tasklistList,
         selectedTasklistId,
@@ -94,6 +109,8 @@ class PopupContainer extends Component {
         message,
 
         closeMessage,
+        getOAuthToken,
+        loggingIn,
       },
 
       editTaskTitle,
@@ -109,22 +126,30 @@ class PopupContainer extends Component {
     return (
       <>
         <MicrosoftTodoLink />
-        <PopupTaskForm
-          task={task}
-          tasklistList={tasklistList}
-          selectedTasklistId={selectedTasklistId}
-          bookmarked={bookmarked}
-          taskCreating={taskCreating}
-          tasklistListLoading={tasklistListLoading}
-          editTaskTitle={editTaskTitle}
-          editTaskDescribe={editTaskDescribe}
-          editReminderDateTime={editReminderDateTime}
-          editSelectedTasklist={editSelectedTasklist}
-          editBookmarked={editBookmarked}
-          editImportance={editImportance}
-          resetTask={resetTask}
-          createTask={createTask}
-        />
+
+        {
+          account
+            ? (
+              <PopupTaskForm
+                task={task}
+                tasklistList={tasklistList}
+                selectedTasklistId={selectedTasklistId}
+                bookmarked={bookmarked}
+                taskCreating={taskCreating}
+                tasklistListLoading={tasklistListLoading}
+                editTaskTitle={editTaskTitle}
+                editTaskDescribe={editTaskDescribe}
+                editReminderDateTime={editReminderDateTime}
+                editSelectedTasklist={editSelectedTasklist}
+                editBookmarked={editBookmarked}
+                editImportance={editImportance}
+                resetTask={resetTask}
+                createTask={createTask}
+              />
+            )
+            : <Login login={() => getOAuthToken()} loading={loggingIn} />
+        }
+
         <Message
           opemMessage={opemMessage}
           closeMessage={closeMessage}
@@ -136,7 +161,7 @@ class PopupContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => state.popup;
+const mapStateToProps = (state) => ({ ...state.popup, ...state.account });
 
 const mapActionToProps = (dispatch) => bindActionCreators({ ...popupActions, ...accountActions }, dispatch);
 
