@@ -19,9 +19,9 @@ export const getOAuthToken = (options) => (dispatch, getState) => {
   if (!token || Date.now() >= new Date(token.expiresOn).getTime()) {
     dispatch({ type: types.FETCH_OAUTH_TOKEN_START });
     return window.msalInstance.acquireTokenRedirect({ scopes, account, ...options })
-      .then((token) => {
-        dispatch({ type: types.FETCH_OAUTH_TOKEN_SUCCESS, payload: { token } });
-        return token;
+      .then((newToken) => {
+        dispatch({ type: types.FETCH_OAUTH_TOKEN_SUCCESS, payload: { token: newToken } });
+        return newToken;
       })
       .catch((error) => {
         dispatch({ type: types.FETCH_OAUTH_TOKEN_ERROR, payload: error });

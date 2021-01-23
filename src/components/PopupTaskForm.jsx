@@ -175,19 +175,21 @@ function Popup(props) {
   );
 }
 
-Popup.propTypes = {
-  task: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    body: PropTypes.shape({
-      content: PropTypes.string,
-      contentType: PropTypes.oneOf(['text', 'html']),
-    }),
-    reminderDateTime: PropTypes.shape({
-      dateTime: PropTypes.string,
-      timeZone: PropTypes.string.isRequired,
-    }),
-    importance: PropTypes.bool.isRequired,
-  }).isRequired,
+const taskType = PropTypes.shape({
+  title: PropTypes.string.isRequired,
+  body: PropTypes.shape({
+    content: PropTypes.string,
+    contentType: PropTypes.oneOf(['text', 'html']),
+  }),
+  reminderDateTime: PropTypes.shape({
+    dateTime: PropTypes.string,
+    timeZone: PropTypes.string.isRequired,
+  }),
+  importance: PropTypes.bool.isRequired,
+});
+
+export const popupTaskFormPropTypes = {
+  task: taskType.isRequired,
 
   tasklistList: PropTypes.arrayOf(PropTypes.instanceOf(Tasklist)).isRequired,
   selectedTasklistId: PropTypes.string.isRequired,
@@ -205,5 +207,7 @@ Popup.propTypes = {
   resetTask: PropTypes.func.isRequired,
   createTask: PropTypes.func.isRequired,
 };
+
+Popup.propTypes = popupTaskFormPropTypes;
 
 export default Popup;

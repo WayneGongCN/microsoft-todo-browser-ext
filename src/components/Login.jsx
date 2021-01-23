@@ -20,9 +20,10 @@ function Login(props) {
   );
 }
 
-Login.propTypes = {
+export const loginPropTypes = {
   login: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
+Login.propTypes = loginPropTypes;
 
 export default Login;

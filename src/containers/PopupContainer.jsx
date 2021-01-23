@@ -1,15 +1,19 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/jsx-filename-extension */
-/* eslint-disable react/jsx-props-no-spreading */
-import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-import PopupTaskForm from '../components/PopupTaskForm';
+import { connect } from 'react-redux';
+// import PropTypes from 'prop-types';
+
+import { Button, Grid } from '@material-ui/core';
 import * as popupActions from '../actions/popup';
 import * as accountActions from '../actions/account';
-import Message from '../components/Message';
-import MicrosoftTodoLink from '../components/MicrosoftTodoLink';
+
+import PopupTaskForm, { popupTaskFormPropTypes } from '../components/PopupTaskForm';
+import Message, { messagePropTypes } from '../components/Message';
 import Login from '../components/Login';
+
+function toMsTodo() {
+  chrome.tabs.create({ active: true, url: 'https://to-do.live.com/tasks/inbox' });
+}
 
 class PopupContainer extends Component {
   constructor(props) {
@@ -26,13 +30,11 @@ class PopupContainer extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
     const { getAccount } = this.props;
     getAccount();
   }
 
-  componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate', prevProps);
+  componentDidUpdate() {
     const {
       account, tasklistList, fetchTasklistList, tasklistListLoading,
     } = this.props;
@@ -125,7 +127,13 @@ class PopupContainer extends Component {
 
     return (
       <>
-        <MicrosoftTodoLink />
+        <Grid container direction="row-reverse">
+          <Grid item>
+            <Button onClick={toMsTodo}>
+              To Microsoft To-Do
+            </Button>
+          </Grid>
+        </Grid>
 
         {
           account
@@ -161,8 +169,11 @@ class PopupContainer extends Component {
   }
 }
 
+PopupContainer.propTypes = {
+  ...popupTaskFormPropTypes,
+  ...messagePropTypes,
+};
+
 const mapStateToProps = (state) => ({ ...state.popup, ...state.account });
-
 const mapActionToProps = (dispatch) => bindActionCreators({ ...popupActions, ...accountActions }, dispatch);
-
 export default connect(mapStateToProps, mapActionToProps)(PopupContainer);
