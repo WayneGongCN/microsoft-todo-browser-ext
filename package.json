@@ -5,7 +5,7 @@
   "author": "waynegong <Wayne.Gong.CN@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack --config webpack.config.js --env mode=development --watch",
+    "dev": "webpack --config webpack.config.js --env mode=development --watch",
     "build": "webpack --config webpack.config.js --env mode=production"
   },
   "devDependencies": {

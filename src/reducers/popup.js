@@ -30,7 +30,7 @@ const initialState = {
   message: null,
 };
 
-function popup(state = initialState, action) {
+function popupReducer(state = initialState, action) {
   switch (action.type) {
     // FETCH_TASKLIST_LIST
     case FETCH_TASKLIST_LIST_START: {
@@ -118,4 +118,4 @@ function popup(state = initialState, action) {
   }
 }
 
-export default popup;
+export default popupReducer;

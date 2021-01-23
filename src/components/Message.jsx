@@ -1,9 +1,10 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
-export default function Message(props) {
+function Message(props) {
   const {
     opemMessage, closeMessage, messageType, message,
   } = props;
@@ -30,3 +31,19 @@ export default function Message(props) {
     </Snackbar>
   );
 }
+
+export const messagePropTypes = {
+
+  opemMessage: PropTypes.bool.isRequired,
+  closeMessage: PropTypes.func.isRequired,
+  messageType: PropTypes.string,
+  message: PropTypes.string,
+};
+
+Message.propTypes = messagePropTypes;
+Message.defaultProps = {
+  messageType: 'info',
+  message: '',
+};
+
+export default Message;

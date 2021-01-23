@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
@@ -14,6 +13,7 @@ chrome.runtime.getBackgroundPage((backgroundPage) => {
     .then((res) => res.default)
     .then((PopupContainer) => {
       render(
+        // eslint-disable-next-line react/jsx-filename-extension
         <Provider store={window.store}>
           <Container style={{ width: 350, padding: '8px' }}>
             <PopupContainer />
@@ -23,19 +23,3 @@ chrome.runtime.getBackgroundPage((backgroundPage) => {
       );
     });
 });
-
-// import PopupContainer from './containers/PopupContainer';
-// import store from './reducers/index';
-// import Task from './models/Task';
-// import Tasklist from './models/Tasklist';
-
-// window.store = store;
-// window.Task = Task;
-// window.Tasklist = Tasklist;
-
-// render(
-//   <Provider store={store}>
-//     <PopupContainer />
-//   </Provider>,
-//   document.getElementById('root'),
-// );

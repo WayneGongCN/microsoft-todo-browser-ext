@@ -12,7 +12,7 @@ const defaultState = () => ({
 
 const initialState = defaultState();
 
-function account(state = initialState, action) {
+function accountReducer(state = initialState, action) {
   switch (action.type) {
     case GET_ACCOUNTS: {
       const { account } = action.payload;
@@ -49,4 +49,4 @@ function account(state = initialState, action) {
   }
 }
 
-export default account;
+export default accountReducer;
