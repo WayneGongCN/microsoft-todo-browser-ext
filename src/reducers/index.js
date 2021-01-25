@@ -10,7 +10,7 @@ const reducers = combineReducers({ account, popup });
 const middlewares = [
   thunk,
   isDev && logger,
-];
+].filter(Boolean);
 
 let storeInstance = null;
 export default function getStore(flag) {

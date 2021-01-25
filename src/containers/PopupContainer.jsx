@@ -1,9 +1,11 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // import PropTypes from 'prop-types';
 
-import { Button, Grid } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
 import * as popupActions from '../actions/popup';
 import * as accountActions from '../actions/account';
 
@@ -129,9 +131,9 @@ class PopupContainer extends Component {
       <>
         <Grid container direction="row-reverse">
           <Grid item>
-            <Button onClick={toMsTodo}>
-              To Microsoft To-Do
-            </Button>
+            <Link component="button" onClick={toMsTodo}>
+              Microsoft To-Do
+            </Link>
           </Grid>
         </Grid>
 
