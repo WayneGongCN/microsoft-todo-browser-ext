@@ -6,7 +6,7 @@ import {
 const defaultState = () => ({
   loggingIn: false,
   account: null,
-  scopes: ['User.Read', 'Tasks.ReadWrite.Shared'],
+  scopes: ['User.Read', 'Tasks.ReadWrite'],
   token: null,
 });
 
