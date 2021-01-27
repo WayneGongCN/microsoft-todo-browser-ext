@@ -6,21 +6,12 @@ export const getAccount = () => (dispatch) => {
   dispatch({ type: types.GET_ACCOUNTS, payload: { account } });
 };
 
-export const clearAccount = () => (dispatch) => {
-  chrome.runtime.getBackgroundPage((backgroundPage) => {
-    backgroundPage.localStorage.clear();
-    backgroundPage.sessionStorage.clear();
-    dispatch({ type: types.CLEAR_ACCOUNT });
-  });
-};
-
 export const logout = () => (dispatch) => {
   dispatch({ type: types.LOG_OUT_START });
   return window.msalInstance.logout()
-    .then(() => dispatch({ type: types.LOG_OUT_START }))
+    .then(() => dispatch({ type: types.LOG_OUT_SUCCESS }))
     .catch((error) => {
       dispatch({ type: types.LOG_OUT_ERROR, payload: { error } });
-      dispatch(clearAccount());
       return Promise.reject(error);
     });
 };
@@ -38,7 +29,6 @@ export const getOAuthToken = (options) => (dispatch, getState) => {
       })
       .catch((error) => {
         dispatch({ type: types.FETCH_OAUTH_TOKEN_ERROR, payload: error });
-        dispatch(clearAccount());
         return Promise.reject(error);
       });
   }

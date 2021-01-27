@@ -1,6 +1,6 @@
 import {
   FETCH_OAUTH_TOKEN_ERROR, FETCH_OAUTH_TOKEN_START, FETCH_OAUTH_TOKEN_SUCCESS,
-  LOG_OUT_ERROR, LOG_OUT_START, LOG_OUT_SUCCESS, GET_ACCOUNTS, CLEAR_ACCOUNT,
+  LOG_OUT_ERROR, LOG_OUT_START, LOG_OUT_SUCCESS, GET_ACCOUNTS,
 } from '../constants/AccountTypes';
 
 const defaultState = () => ({
@@ -34,7 +34,6 @@ function accountReducer(state = initialState, action) {
     case LOG_OUT_ERROR:
     case LOG_OUT_SUCCESS:
     case FETCH_OAUTH_TOKEN_ERROR:
-    case CLEAR_ACCOUNT:
       return defaultState();
 
     default:
