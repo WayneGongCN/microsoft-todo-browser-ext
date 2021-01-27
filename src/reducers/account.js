@@ -19,17 +19,6 @@ function accountReducer(state = initialState, action) {
       return { ...state, account };
     }
 
-    // logout
-    case LOG_OUT_START: {
-      return defaultState();
-    }
-    case LOG_OUT_SUCCESS: {
-      return defaultState();
-    }
-    case LOG_OUT_ERROR: {
-      return defaultState();
-    }
-
     // fetch token
     case FETCH_OAUTH_TOKEN_START: {
       return { ...state, loggingIn: true };
@@ -40,9 +29,12 @@ function accountReducer(state = initialState, action) {
         ...state, loggingIn: false, token, account: token.account,
       };
     }
-    case FETCH_OAUTH_TOKEN_ERROR: {
+
+    case LOG_OUT_START:
+    case LOG_OUT_ERROR:
+    case LOG_OUT_SUCCESS:
+    case FETCH_OAUTH_TOKEN_ERROR:
       return defaultState();
-    }
 
     default:
       return state;
