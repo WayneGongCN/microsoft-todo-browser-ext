@@ -9,13 +9,17 @@ export const getAccount = () => (dispatch) => {
 export const logout = () => (dispatch) => {
   dispatch({ type: types.LOG_OUT_START });
   return window.msalInstance.logout()
-    .then((payload) => dispatch({ type: types.LOG_OUT_START, payload }))
-    .catch((payload) => dispatch({ type: types.LOG_OUT_ERROR, payload }));
+    .then(() => dispatch({ type: types.LOG_OUT_SUCCESS }))
+    .catch((error) => {
+      dispatch({ type: types.LOG_OUT_ERROR, payload: { error } });
+      return Promise.reject(error);
+    });
 };
 
 export const getOAuthToken = (options) => (dispatch, getState) => {
   const state = getState();
   const { token, scopes, account } = state.account;
+
   if (!token || Date.now() >= new Date(token.expiresOn).getTime()) {
     dispatch({ type: types.FETCH_OAUTH_TOKEN_START });
     return window.msalInstance.acquireTokenRedirect({ scopes, account, ...options })
