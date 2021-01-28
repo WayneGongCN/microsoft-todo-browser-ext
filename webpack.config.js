@@ -6,6 +6,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
+const manifest = require('./src/manifest');
+
 module.exports = (env) => ({
   mode: env.mode,
 
@@ -45,6 +47,7 @@ module.exports = (env) => ({
 
   plugins: [
     new Dotenv(),
+
     new ESLintPlugin({
       extensions: ['js', 'jsx'],
       eslintPath: require.resolve('eslint'),
@@ -66,7 +69,7 @@ module.exports = (env) => ({
 
     new CopyPlugin({
       patterns: [
-        { from: 'public/manifest.json', to: '' },
+        { from: 'src/manifest/index.js', to: 'manifest.json', transform: () => JSON.stringify(manifest) },
         { from: 'public/icons', to: 'icons/' },
       ],
     }),
