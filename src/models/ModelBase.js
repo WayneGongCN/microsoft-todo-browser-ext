@@ -1,4 +1,4 @@
-import { getOAuthToken } from '../actions/account';
+import { getOAuthToken } from '../actions/app';
 import getStore from '../reducers';
 
 class ModelBase {

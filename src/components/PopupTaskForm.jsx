@@ -40,21 +40,18 @@ const useStyles = makeStyles((theme) => ({
 
 function Popup(props) {
   const {
-    taskCreating,
-    tasklistListLoading,
-    bookmarked,
-
+    form,
     tasklistList,
-    selectedTasklistId,
+    fetchingTasklistList,
+    taskCreating,
 
-    task,
-    editTaskTitle,
-    editTaskDescribe,
-    editSelectedTasklist,
+    editTitle,
+    editDescribe,
+    editTasklist,
     editReminderDateTime,
     editBookmarked,
     editImportance,
-    resetTask,
+    resetPopupform,
     createTask,
   } = props;
 
@@ -66,8 +63,8 @@ function Popup(props) {
         <TextField
           id="outlined-basic"
           label="Title"
-          value={task.title}
-          onChange={editTaskTitle}
+          value={form.title}
+          onChange={editTitle}
           disabled={taskCreating}
           required
           fullWidth
@@ -80,8 +77,8 @@ function Popup(props) {
           id="outlined-basic"
           label="Describe"
           rowsMax={4}
-          value={task.body.content}
-          onChange={editTaskDescribe}
+          value={form.describe}
+          onChange={editDescribe}
           disabled={taskCreating}
           fullWidth
           multiline
@@ -93,7 +90,7 @@ function Popup(props) {
           label="Reminder Date"
           type="datetime-local"
           InputLabelProps={{ shrink: true }}
-          value={task.reminderDateTime.dateTime}
+          value={form.reminderDateTime.dateTime}
           onChange={editReminderDateTime}
           disabled={taskCreating}
           fullWidth
@@ -106,9 +103,9 @@ function Popup(props) {
             <InputLabel id="task-list-label">Task List</InputLabel>
             <Select
               labelId="task-list-label"
-              value={selectedTasklistId}
-              onChange={editSelectedTasklist}
-              disabled={taskCreating || tasklistListLoading}
+              value={form.tasklistId}
+              onChange={editTasklist}
+              disabled={taskCreating || fetchingTasklistList}
             >
               {tasklistList.map((x) => <MenuItem key={x.id} value={x.id}>{x.displayName}</MenuItem>)}
             </Select>
@@ -121,7 +118,7 @@ function Popup(props) {
             className={classes.iconFix}
             icon={<StarOutline fontSize="default" />}
             checkedIcon={<Star fontSize="default" />}
-            checked={task.importance}
+            checked={form.importance}
             onChange={editImportance}
             onKeyUp={editImportance}
             disabled={taskCreating}
@@ -134,7 +131,7 @@ function Popup(props) {
             className={classes.iconFix}
             icon={<BookmarksOutlined fontSize="small" />}
             checkedIcon={<Bookmarks fontSize="small" />}
-            checked={bookmarked}
+            checked={form.bookmarked}
             onChange={editBookmarked}
             onKeyUp={editBookmarked}
             disabled={taskCreating}
@@ -147,8 +144,8 @@ function Popup(props) {
           <IconButton
             className={classes.resetBtn}
             size="small"
-            onClick={resetTask}
-            onKeyUp={resetTask}
+            onClick={resetPopupform}
+            onKeyUp={resetPopupform}
           >
             <RotateLeft />
           </IconButton>
@@ -164,7 +161,7 @@ function Popup(props) {
             onClick={createTask}
             onKeyUp={createTask}
             // TODO: disable status move to redux
-            disabled={Boolean(taskCreating || !selectedTasklistId || !task.title.trim())}
+            disabled={Boolean(taskCreating || !form.tasklistId || !form.title.trim())}
             disableElevation
           >
             { taskCreating ? '' : 'Add'}
@@ -175,36 +172,28 @@ function Popup(props) {
   );
 }
 
-const taskType = PropTypes.shape({
+const popupTaskForm = PropTypes.shape({
   title: PropTypes.string.isRequired,
-  body: PropTypes.shape({
-    content: PropTypes.string,
-    contentType: PropTypes.oneOf(['text', 'html']),
-  }),
-  reminderDateTime: PropTypes.shape({
-    dateTime: PropTypes.string,
-    timeZone: PropTypes.string.isRequired,
-  }),
+  describe: PropTypes.string,
+  reminderDateTime: PropTypes.string,
+  tasklistId: PropTypes.string.isRequired,
   importance: PropTypes.bool.isRequired,
+  bookmarked: PropTypes.bool.isRequired,
 });
 
 export const popupTaskFormPropTypes = {
-  task: taskType.isRequired,
-
+  form: popupTaskForm.isRequired,
   tasklistList: PropTypes.arrayOf(PropTypes.instanceOf(Tasklist)).isRequired,
-  selectedTasklistId: PropTypes.string.isRequired,
-
-  bookmarked: PropTypes.bool.isRequired,
   taskCreating: PropTypes.bool.isRequired,
-  tasklistListLoading: PropTypes.bool.isRequired,
+  fetchingTasklistList: PropTypes.bool.isRequired,
 
-  editTaskTitle: PropTypes.func.isRequired,
-  editTaskDescribe: PropTypes.func.isRequired,
+  editTitle: PropTypes.func.isRequired,
+  editDescribe: PropTypes.func.isRequired,
   editReminderDateTime: PropTypes.func.isRequired,
-  editSelectedTasklist: PropTypes.func.isRequired,
+  editTasklist: PropTypes.func.isRequired,
   editBookmarked: PropTypes.func.isRequired,
   editImportance: PropTypes.func.isRequired,
-  resetTask: PropTypes.func.isRequired,
+  resetPopupform: PropTypes.func.isRequired,
   createTask: PropTypes.func.isRequired,
 };
 
