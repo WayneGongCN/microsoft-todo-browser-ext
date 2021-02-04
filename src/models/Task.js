@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { editDescribe } from '../actions/popup';
 import ModelBase from './ModelBase';
 
 // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/resources/todotask.md
@@ -82,23 +83,35 @@ export class Task extends ModelBase {
     return this.get(`${this.endPointPrefix}/me/todo/lists/${this.id}/tasks/delta`);
   }
 
-  static mapping(task, bookmarkInfo = null) {
-    const result = {};
+  static mapping(meta) {
+    const {
+      title,
+      describe = '',
+      contentType = 'text',
+      reminderDateTime = '',
+      timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone,
+      importance = false,
+      bookmarked = false,
+      bookmarkInfo
+    } = meta
 
-    result.title = task.title;
-    result.importance = task.importance ? 'high' : 'low';
-
-    result.body = task.body;
-    if (bookmarkInfo) {
-      result.body.content += bookmarkInfo;
+    const result = {
+      title,
+      body: {
+        contentType,
+        content: editDescribe,
+      },
+      importance: importance ? 'high' : 'low',
+      reminderDateTime: {
+        timeZone,
+        dateTime: reminderDateTime,
+      }
     }
 
-    result.reminderDateTime = task.reminderDateTime;
-    if (!result.reminderDateTime.dateTime) {
-      delete result.reminderDateTime;
-    }
+    !reminderDateTime && (delete result.reminderDateTime)
+    bookmarked && (result.body.content += (bookmarked ? bookmarkInfo : ''))
 
-    return result;
+    return result
   }
 }
 
@@ -161,14 +174,14 @@ export class Tasklist extends ModelBase {
 
   // Create task
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotasklist-post-tasks.md
-  createTask(task, bookmarkInfo = null) {
+  createTask(taskMeta) {
     const endPoint = `${this.endPointPrefix}me/todo/lists/${this.id}/tasks`;
-    const data = Task.mapping(task, bookmarkInfo);
+    const data = Task.mapping(taskMeta);
     return this.post(endPoint, data)
       .then((res) => {
-        const task = new Task(res);
-        task.setTasklistId(this.id);
-        return task;
+        const taskInstance = new Task(res);
+        taskInstance.setTasklistId(this.id);
+        return taskInstance;
       });
   }
 }
