@@ -19,7 +19,7 @@ class ModelBase {
 
   authFetch(url, options) {
     const action = getOAuthToken();
-    return getStore().dispatch(action)
+    return getStore().store.dispatch(action)
       .then((res) => res.accessToken)
       .then((token) => {
         const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };

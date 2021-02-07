@@ -1,17 +1,19 @@
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import {
   EDIT_POPUPFORM_BOOKMARKED, EDIT_POPUPFORM_DESCRIBE, EDIT_POPUPFORM_IMPORTANCE, EDIT_POPUPFORM_REMIND_DATETIME, EDIT_POPUPFORM_TASKLIST, EDIT_POPUPFORM_TITLE, RESET_POPUPFORM,
 } from '../constants/popupTypes';
 
-const getInitalState = () => ({
+const initalState = {
   title: '',
   describe: '',
   reminderDateTime: '',
   tasklistId: '',
   importance: false,
   bookmarked: false,
-});
+};
 
-function popupReducer(state = getInitalState(), action) {
+function popupReducer(state = initalState, action) {
   switch (action.type) {
     case EDIT_POPUPFORM_TITLE: {
       const value = action.payload;
@@ -39,7 +41,7 @@ function popupReducer(state = getInitalState(), action) {
     }
 
     case RESET_POPUPFORM: {
-      return getInitalState();
+      return { ...initalState, tasklistId: state.tasklistId };
     }
 
     default:
@@ -47,4 +49,4 @@ function popupReducer(state = getInitalState(), action) {
   }
 }
 
-export default popupReducer;
+export default persistReducer({ key: 'popup', storage }, popupReducer);

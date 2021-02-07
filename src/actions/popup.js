@@ -4,7 +4,7 @@ import {
 
 export const editTitle = (payload) => ({ type: EDIT_POPUPFORM_TITLE, payload });
 export const editDescribe = (payload) => ({ type: EDIT_POPUPFORM_DESCRIBE, payload });
-export const editRemindDateTime = (payload) => ({ type: EDIT_POPUPFORM_REMIND_DATETIME, payload });
+export const editReminderDateTime = (payload) => ({ type: EDIT_POPUPFORM_REMIND_DATETIME, payload });
 export const editTasklist = (payload) => ({ type: EDIT_POPUPFORM_TASKLIST, payload });
 export const editImportance = (payload) => ({ type: EDIT_POPUPFORM_IMPORTANCE, payload });
 export const editBookmarked = (payload) => ({ type: EDIT_POPUPFORM_BOOKMARKED, payload });
