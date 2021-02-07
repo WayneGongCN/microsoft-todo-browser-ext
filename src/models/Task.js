@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { editDescribe } from '../actions/popup';
 import ModelBase from './ModelBase';
 
 // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/resources/todotask.md
@@ -99,7 +98,7 @@ export class Task extends ModelBase {
       title,
       body: {
         contentType,
-        content: editDescribe,
+        content: describe,
       },
       importance: importance ? 'high' : 'low',
       reminderDateTime: {

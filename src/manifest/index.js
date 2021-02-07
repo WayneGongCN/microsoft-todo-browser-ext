@@ -4,7 +4,7 @@ module.exports = {
   name: 'Microsoft To Do browser extension',
   version: packageJson.version,
   description: packageJson.description,
-  permissions: ['identity', 'tabs'],
+  permissions: ['identity', 'tabs', 'notifications'],
   background: {
     scripts: ['background.js'],
     persistent: false,

@@ -11,6 +11,7 @@ const initalState = {
   tasklistId: '',
   importance: false,
   bookmarked: false,
+  bookmarkInfo: '',
 };
 
 function popupReducer(state = initalState, action) {
