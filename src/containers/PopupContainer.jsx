@@ -13,10 +13,7 @@ import * as tasklistActions from '../actions/tasklist';
 import PopupTaskForm from '../components/PopupTaskForm';
 // import Message from '../components/Message';
 import Login from '../components/Login';
-
-function toMsTodo() {
-  chrome.tabs.create({ active: true, url: 'https://to-do.live.com/tasks/inbox' });
-}
+import { openMicrosoftTodo } from '../helpers';
 
 class PopupContainer extends Component {
   constructor(props) {
@@ -88,14 +85,9 @@ class PopupContainer extends Component {
   }
 
   createTask(e) {
-    if (e.type === 'keyup' && e.code !== 'Enter') return;
-    const { popup, config, actions: { createTask, resetPopupform } } = this.props;
-    createTask(popup.tasklistId, popup)
-      .then(() => {
-        if (config.popupFormAutoClear) {
-          resetPopupform();
-        }
-      });
+    if (e.type === 'keyup' && e.code !== 'Enter') return Promise.resolve(null);
+    const { popup, actions: { createTask } } = this.props;
+    return createTask(popup.tasklistId, popup);
   }
 
   resetPopupform(e) {
@@ -132,7 +124,7 @@ class PopupContainer extends Component {
       <>
         <Grid container direction="row-reverse">
           <Grid item>
-            <Link component="button" onClick={toMsTodo}>
+            <Link component="button" onClick={openMicrosoftTodo}>
               Microsoft To-Do
             </Link>
           </Grid>
