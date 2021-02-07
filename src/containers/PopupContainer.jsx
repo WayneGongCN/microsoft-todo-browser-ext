@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import * as popupActions from '../actions/popup';
 import * as appActions from '../actions/app';
+import * as tasklistActions from '../actions/tasklist';
 
 import PopupTaskForm from '../components/PopupTaskForm';
 // import Message from '../components/Message';
@@ -29,6 +30,7 @@ class PopupContainer extends Component {
     this.editBookmarked = this.editBookmarked.bind(this);
     this.createTask = this.createTask.bind(this);
     this.resetPopupform = this.resetPopupform.bind(this);
+    this.login = this.login.bind(this);
   }
 
   componentDidMount() {
@@ -39,11 +41,17 @@ class PopupContainer extends Component {
   componentDidUpdate() {
     const {
       app,
-      actions: { fetchTasklistList },
+      tasklist,
+      popup,
+      actions: { fetchTasklistList, editTasklist },
     } = this.props;
 
-    if (app.account && app.tasklistList.length === 0 && !app.fetchingTasklistList) {
+    if (app.account && !tasklist.updateByNetwork && !tasklist.fetchingTasklistList && !tasklist.error) {
       fetchTasklistList();
+    }
+
+    if (!popup.tasklistId && tasklist.tasklistList.length) {
+      editTasklist(tasklist.tasklistList[0].id);
     }
   }
 
@@ -81,8 +89,13 @@ class PopupContainer extends Component {
 
   createTask(e) {
     if (e.type === 'keyup' && e.code !== 'Enter') return;
-    const { popup, actions: { createTask } } = this.props;
-    createTask(popup.tasklistId, popup);
+    const { popup, config, actions: { createTask, resetPopupform } } = this.props;
+    createTask(popup.tasklistId, popup)
+      .then(() => {
+        if (config.popupFormAutoClear) {
+          resetPopupform();
+        }
+      });
   }
 
   resetPopupform(e) {
@@ -92,14 +105,15 @@ class PopupContainer extends Component {
   }
 
   login() {
-    const { actions: { getOAuthToken } } = this.props;
-    getOAuthToken();
+    const { actions: { getOAuthToken, getAccount } } = this.props;
+    getOAuthToken().then(getAccount);
   }
 
   render() {
     const {
       props: {
         app,
+        tasklist,
         popup,
       },
 
@@ -129,9 +143,9 @@ class PopupContainer extends Component {
             ? (
               <PopupTaskForm
                 form={popup}
-                tasklistList={app.tasklistList}
                 taskCreating={app.taskCreating}
-                fetchingTasklistList={app.fetchingTasklistList}
+                tasklistList={tasklist.tasklistList}
+                // fetchingTasklistList={tasklist.fetchingTasklistList}
                 editTitle={editTitle}
                 editDescribe={editDescribe}
                 editReminderDateTime={editReminderDateTime}
@@ -150,5 +164,5 @@ class PopupContainer extends Component {
 }
 
 const mapStateToProps = (state) => state;
-const mapActionToProps = (dispatch) => ({ actions: bindActionCreators({ ...popupActions, ...appActions }, dispatch) });
+const mapActionToProps = (dispatch) => ({ actions: bindActionCreators({ ...popupActions, ...tasklistActions, ...appActions }, dispatch) });
 export default connect(mapStateToProps, mapActionToProps)(PopupContainer);

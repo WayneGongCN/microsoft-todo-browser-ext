@@ -42,7 +42,7 @@ function Popup(props) {
   const {
     form,
     tasklistList,
-    fetchingTasklistList,
+    // fetchingTasklistList,
     taskCreating,
 
     editTitle,
@@ -90,7 +90,7 @@ function Popup(props) {
           label="Reminder Date"
           type="datetime-local"
           InputLabelProps={{ shrink: true }}
-          value={form.reminderDateTime.dateTime}
+          value={form.reminderDateTime}
           onChange={editReminderDateTime}
           disabled={taskCreating}
           fullWidth
@@ -105,7 +105,7 @@ function Popup(props) {
               labelId="task-list-label"
               value={form.tasklistId}
               onChange={editTasklist}
-              disabled={taskCreating || fetchingTasklistList}
+              disabled={taskCreating}
             >
               {tasklistList.map((x) => <MenuItem key={x.id} value={x.id}>{x.displayName}</MenuItem>)}
             </Select>
@@ -185,7 +185,7 @@ export const popupTaskFormPropTypes = {
   form: popupTaskForm.isRequired,
   tasklistList: PropTypes.arrayOf(PropTypes.instanceOf(Tasklist)).isRequired,
   taskCreating: PropTypes.bool.isRequired,
-  fetchingTasklistList: PropTypes.bool.isRequired,
+  // fetchingTasklistList: PropTypes.bool.isRequired,
 
   editTitle: PropTypes.func.isRequired,
   editDescribe: PropTypes.func.isRequired,

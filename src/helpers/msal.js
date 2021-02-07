@@ -27,7 +27,10 @@ msalInstance.acquireTokenRedirect = function acquireTokenRedirect(options, ...ar
     const onRedirectNavigate = (url) => {
       // https://developer.chrome.com/docs/extensions/reference/identity/#method-launchWebAuthFlow
       chrome.identity.launchWebAuthFlow({ url, interactive: true }, (hashUrl) => {
-        if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
+        if (chrome.runtime.lastError) {
+          clearAccount();
+          return reject(chrome.runtime.lastError.message);
+        }
         return msalInstance.handleRedirectPromise(hashUrl)
           .then(resolve)
           .catch((e) => {
