@@ -34,11 +34,13 @@ function popupReducer(state = initalState, action) {
     }
     case EDIT_POPUPFORM_IMPORTANCE: {
       const value = action.payload;
-      return { ...state, importance: value };
+      const importance = typeof value === 'boolean' ? value : !state.importance;
+      return { ...state, importance };
     }
     case EDIT_POPUPFORM_BOOKMARKED: {
       const value = action.payload;
-      return { ...state, bookmarked: value };
+      const bookmarked = typeof value === 'boolean' ? value : !state.bookmarked;
+      return { ...state, bookmarked };
     }
 
     case RESET_POPUPFORM: {
