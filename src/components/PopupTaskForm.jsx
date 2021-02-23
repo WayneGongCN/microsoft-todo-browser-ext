@@ -19,6 +19,7 @@ import Star from '@material-ui/icons/Star';
 import StarOutline from '@material-ui/icons/StarOutline';
 import Bookmarks from '@material-ui/icons/Bookmarks';
 import RotateLeft from '@material-ui/icons/RotateLeft';
+import { getEventValue, triggerByHotkey } from '../helpers';
 
 const { Tasklist } = window;
 
@@ -39,23 +40,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Popup(props) {
-  const {
-    form,
-    tasklistList,
-    // fetchingTasklistList,
-    taskCreating,
-
+  const classes = useStyles();
+  const { form, tasklistList, taskCreating } = props;
+  let {
     editTitle,
     editDescribe,
     editTasklist,
     editReminderDateTime,
-    editBookmarked,
     editImportance,
+    editBookmarked,
     resetPopupform,
     createTask,
   } = props;
 
-  const classes = useStyles();
+  editTitle = getEventValue(editTitle);
+  editDescribe = getEventValue(editDescribe);
+  editTasklist = getEventValue(editTasklist);
+  editReminderDateTime = getEventValue(editReminderDateTime);
+  editImportance = triggerByHotkey(editImportance);
+  editBookmarked = triggerByHotkey(editBookmarked);
+  resetPopupform = triggerByHotkey(resetPopupform);
+  createTask = triggerByHotkey(createTask.bind(null, form.tasklistId, form));
 
   return (
     <Grid container direction="column" spacing={2} className={classes.popupPage}>

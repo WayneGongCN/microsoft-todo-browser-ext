@@ -1,11 +1,10 @@
 import { PublicClientApplication } from '@azure/msal-browser';
-import { extensionId } from '.';
 
 const DEFAULT_MSAL_CONF = {
   auth: {
     clientId: process.env.MSAL_CLIENT_ID,
     authority: 'https://login.microsoftonline.com/consumers',
-    redirectUri: `https://${extensionId}.chromiumapp.org/`,
+    redirectUri: `https://${chrome.runtime.id}.chromiumapp.org/`,
   },
   cache: {
     cacheLocation: 'localStorage',
