@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable import/first */
 /* eslint-disable import/newline-after-import */
 import msalInstance from '../helpers/msal';

@@ -63,7 +63,7 @@ class PopupContainer extends Component {
           editTasklist,
           editBookmarked,
           editImportance,
-          createTask,
+          popupformSubmit,
           resetPopupform,
         },
       },
@@ -94,7 +94,7 @@ class PopupContainer extends Component {
                 editImportance={editImportance}
                 editBookmarked={editBookmarked}
                 resetPopupform={resetPopupform}
-                createTask={createTask}
+                popupformSubmit={popupformSubmit}
               />
             )
             : <Login login={login} loading={app.loggingIn} />

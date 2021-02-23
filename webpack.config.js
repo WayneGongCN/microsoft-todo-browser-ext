@@ -21,7 +21,7 @@ module.exports = (env) => ({
   entry: {
     background: './src/background/index.js',
     popup: './src/popup.js',
-    // options: './src/options.js',
+    options: './src/options.js',
   },
 
   output: {

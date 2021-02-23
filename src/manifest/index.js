@@ -9,6 +9,7 @@ module.exports = {
     scripts: ['background.js'],
     persistent: false,
   },
+  options_page: 'options.html',
   browser_action: {
     default_popup: 'popup.html',
   },

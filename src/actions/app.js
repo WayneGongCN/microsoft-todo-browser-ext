@@ -2,12 +2,11 @@
 import {
   CREATE_TASK_START, CREATE_TASK_SUCCESS, CREATE_TASK_ERROR, GET_ACCOUNTS, LOG_OUT_START, LOG_OUT_SUCCESS, LOG_OUT_ERROR, FETCH_OAUTH_TOKEN_START, FETCH_OAUTH_TOKEN_SUCCESS, FETCH_OAUTH_TOKEN_ERROR,
 } from '../constants/appTypes';
-import { getActiveTabInfo, showNavigateNotify } from '../helpers';
-import { resetPopupform } from './popup';
+import { getActiveTabInfo } from '../helpers';
 
 // Task
 export const createTask = (tasklistId, taskMeta) => (dispatch, getState) => {
-  const { tasklist: { tasklistList }, config: { popupFormAutoClear, popupFormNotify } } = getState();
+  const { tasklistList } = getState().tasklist;
   const targetTasklist = tasklistList.find((x) => x.id === tasklistId);
   if (!targetTasklist) throw new Error('xxx');
   dispatch({ type: CREATE_TASK_START, payload: { tasklistId, taskMeta } });
@@ -16,8 +15,6 @@ export const createTask = (tasklistId, taskMeta) => (dispatch, getState) => {
     .then((taskMeta) => targetTasklist.createTask(taskMeta))
     .then((task) => {
       dispatch({ type: CREATE_TASK_SUCCESS, payload: task });
-      if (popupFormAutoClear) dispatch(resetPopupform());
-      if (popupFormNotify) showNavigateNotify(task, 'Create task success', 'Open task on Microsoft To-Do.');
       return task;
     })
     .catch((error) => {
