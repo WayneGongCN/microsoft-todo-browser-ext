@@ -11,7 +11,6 @@ import * as appActions from '../actions/app';
 import * as tasklistActions from '../actions/tasklist';
 
 import PopupTaskForm from '../components/PopupTaskForm';
-// import Message from '../components/Message';
 import Login from '../components/Login';
 import { openMicrosoftTodo } from '../helpers';
 
@@ -32,11 +31,11 @@ class PopupContainer extends Component {
       app,
       tasklist,
       popup,
-      actions: { fetchTasklistList, editTasklist },
+      actions: { fetchTasklists, editTasklist },
     } = this.props;
 
     if (app.account && !tasklist.updateByNetwork && !tasklist.fetchingTasklistList && !tasklist.error) {
-      fetchTasklistList();
+      fetchTasklists();
     }
 
     if (!popup.tasklistId && tasklist.tasklistList.length) {
@@ -63,7 +62,7 @@ class PopupContainer extends Component {
           editTasklist,
           editBookmarked,
           editImportance,
-          createTask,
+          popupformSubmit,
           resetPopupform,
         },
       },
@@ -94,7 +93,7 @@ class PopupContainer extends Component {
                 editImportance={editImportance}
                 editBookmarked={editBookmarked}
                 resetPopupform={resetPopupform}
-                createTask={createTask}
+                popupformSubmit={popupformSubmit}
               />
             )
             : <Login login={login} loading={app.loggingIn} />

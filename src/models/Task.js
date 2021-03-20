@@ -1,6 +1,13 @@
 /* eslint-disable */
 import ModelBase from './ModelBase';
 
+const TASK_END_POINT_MAP = {
+  create: tasklistId => `todo/lists/${tasklistId}/tasks`,
+  get: ({ tasklistId, id }) => `/me/todo/lists/${tasklistId}/tasks/${id}`,
+  update: ({ tasklistId, id }) => `todo/lists/${tasklistId}/tasks/${id}`,
+  delete: ({ tasklistId, id }) => `todo/lists/${tasklistId}/tasks/${id}`
+}
+
 // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/resources/todotask.md
 export class Task extends ModelBase {
   constructor(task) {
@@ -21,65 +28,60 @@ export class Task extends ModelBase {
     this.bodyLastModifiedDateTime = task.bodyLastModifiedDateTime;
   }
 
-  // List tasks
-  // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotasklist-list-tasks.md
-  static listTasks(taskListId) {
-    return new Tasklist({ id: taskListId }).listTasks();
-  }
-
-  setTasklistId(tasklistId) {
-    this.tasklistId = tasklistId;
-  }
-
   // Create task
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotasklist-post-tasks.md
   create() {
-    const endPoint = `${this.endPointPrefix}todo/lists/${this.taskListId}/tasks`;
+    const path = TASK_END_POINT_MAP.create(this.tasklistId);
     const data = Task.mapping(this);
-    return this.post(endPoint, data).then((task) => new Task(task));
+    return Task.post(path, data).then((task) => new Task(task));
   }
 
   // Get task
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotask-get.md
   getTask() {
-    return this.get(`${this.endPointPrefix}/me/todo/lists/${this.taskListId}/tasks/${this.id}`).then((task) => new Task(task));
+    const { tasklistId, id } = this
+    const path = TASK_END_POINT_MAP.get({ tasklistId, id })
+    return Task.get(path).then((task) => new Task(task));
   }
 
   // Update todoTask
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotask-update.md
   update() {
-    const endPoint = `${this.endPointPrefix}todo/lists/${this.taskListId}/tasks/${this.id}`;
+    const { tasklistId, id } = this
+    const path = TASK_END_POINT_MAP.update({ tasklistId, id })
     const data = Task.mapping(this);
-    return this.patch(endPoint, data).then((task) => new Task(task));
+    return Task.patch(path, data).then((task) => new Task(task));
   }
 
   // Delete todoTask
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotask-delete.md
   delete() {
-    return super.delete(`${this.endPointPrefix}todo/lists/${this.taskListId}/tasks/${this.id}`);
+    const { tasklistId, id } = this
+    const path = TASK_END_POINT_MAP.delete({ tasklistId, id })
+    return Task.delete(path);
   }
 
   // List linkedResources
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotask-list-linkedresources.md
   listLinkedResources() {
-    return this.get(`${this.endPointPrefix}todo/lists/${this.taskListId}/tasks/${this.id}/linkedResources`);
+    return Task.get(`todo/lists/${this.tasklistId}/tasks/${this.id}/linkedResources`);
   }
 
   // Create linkedResource
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotask-post-linkedresources.md
   createLinkedResource() {
-    const endPoint = `${this.endPointPrefix}todo/lists/${this.taskListId}/tasks/${this.id}/linkedResources`;
+    const endPoint = `todo/lists/${this.tasklistId}/tasks/${this.id}/linkedResources`;
     const data = {
       webUrl: '',
       applicationName: '',
       displayName: '',
       externalId: '',
     };
-    return this.post(endPoint, data);
+    return Task.post(endPoint, data);
   }
 
   delta() {
-    return this.get(`${this.endPointPrefix}/me/todo/lists/${this.id}/tasks/delta`);
+    return Task.get(`/me/todo/lists/${this.id}/tasks/delta`);
   }
 
   static mapping(meta) {
@@ -129,57 +131,57 @@ export class Tasklist extends ModelBase {
     }
   }
 
-  // List lists
+  // Fetch tasklists
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todo-list-lists.md
-  listTasklist() {
-    return this.get(`${this.endPointPrefix}me/todo/lists`).then((list) => list.value.map((x) => new Tasklist(x)));
+  static fetchTasklists() {
+    return Tasklist.get(`me/todo/lists`).then((list) => list.value.map((x) => new Tasklist(x)));
   }
 
   // Create todoTasklist
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todo-post-lists.md
   create() {
-    const endPoint = `${this.endPointPrefix}me/todo/lists`;
+    const endPoint = `me/todo/lists`;
     const data = { displayName: this.displayName || '' };
-    return this.post(endPoint, data).then((taskList) => new Tasklist(taskList));
+    return Tasklist.post(endPoint, data).then((taskList) => new Tasklist(taskList));
   }
 
   // Get task list
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotasklist-get.md
   getTasklist() {
-    return this.get(`${this.endPointPrefix}me/todo/lists/${this.id}`).then((taskList) => new Tasklist(taskList));
+    return Tasklist.get(`me/todo/lists/${this.id}`).then((taskList) => new Tasklist(taskList));
   }
 
   // Update task list
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotasklist-update.md
   update() {
-    const endPoint = `${this.endPointPrefix}me/todo/lists/${this.id}`;
+    const endPoint = `me/todo/lists/${this.id}`;
     const data = { displayName: this.displayName || '' };
-    return this.patch(endPoint, data).then((taskList) => new Tasklist(taskList));
+    return Tasklist.patch(endPoint, data).then((taskList) => new Tasklist(taskList));
   }
 
   // Delete task list
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotasklist-delete.md
   delete() {
-    const endPoint = `${this.endPointPrefix}me/todo/lists/${this.id}`;
-    return super.delete(endPoint);
+    const endPoint = `me/todo/lists/${this.id}`;
+    return Tasklist.delete(endPoint);
   }
 
   // List tasks
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotasklist-list-tasks.md
   listTasks() {
-    const endPoint = `${this.endPointPrefix}me/todo/lists/${this.id}/tasks`;
-    return this.get(endPoint).then((res) => res.value.map((x) => new Task(x)));
+    const endPoint = `me/todo/lists/${this.id}/tasks`;
+    return Tasklist.get(endPoint).then((res) => res.value.map((x) => new Task(x)));
   }
 
   // Create task
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotasklist-post-tasks.md
   createTask(taskMeta) {
-    const endPoint = `${this.endPointPrefix}me/todo/lists/${this.id}/tasks`;
+    const endPoint = `me/todo/lists/${this.id}/tasks`;
     const data = Task.mapping(taskMeta);
-    return this.post(endPoint, data)
+    return Tasklist.post(endPoint, data)
       .then((res) => {
         const taskInstance = new Task(res);
-        taskInstance.setTasklistId(this.id);
+        taskInstance.tasklistId = this.id;
         return taskInstance;
       });
   }

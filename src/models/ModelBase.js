@@ -1,13 +1,11 @@
 import { getOAuthToken } from '../actions/app';
 import getStore from '../reducers';
 
-class ModelBase {
-  constructor() {
-    this.endPointPrefix = 'https://graph.microsoft.com/v1.0/';
-  }
+const endPointPrefix = 'https://graph.microsoft.com/v1.0/';
 
-  // eslint-disable-next-line class-methods-use-this
-  fetch(url, options) {
+class ModelBase {
+  static fetch(path, options) {
+    const url = endPointPrefix + path;
     return fetch(url, options)
       .then((res) => {
         if (res.ok) {
@@ -17,30 +15,30 @@ class ModelBase {
       });
   }
 
-  authFetch(url, options) {
+  static authFetch(path, options) {
     const action = getOAuthToken();
     return getStore().store.dispatch(action)
       .then((res) => res.accessToken)
       .then((token) => {
         const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
-        return this.fetch(url, { headers, ...options });
+        return ModelBase.fetch(path, { headers, ...options });
       });
   }
 
-  get(url, options) {
-    return this.authFetch(url, { method: 'GET', ...options });
+  static get(path, options) {
+    return ModelBase.authFetch(path, { method: 'GET', ...options });
   }
 
-  post(url, data, options) {
-    return this.authFetch(url, { method: 'POST', body: JSON.stringify(data), ...options });
+  static post(path, data, options) {
+    return ModelBase.authFetch(path, { method: 'POST', body: JSON.stringify(data), ...options });
   }
 
-  delete(url, options) {
-    return this.authFetch(url, { method: 'DELETE', ...options });
+  static delete(url, options) {
+    return ModelBase.authFetch(url, { method: 'DELETE', ...options });
   }
 
-  patch(url, data, options) {
-    return this.authFetch(url, { method: 'PATCH', body: JSON.stringify(data), ...options });
+  static patch(url, data, options) {
+    return ModelBase.authFetch(url, { method: 'PATCH', body: JSON.stringify(data), ...options });
   }
 }
 

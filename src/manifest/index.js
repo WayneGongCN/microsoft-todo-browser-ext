@@ -4,11 +4,12 @@ module.exports = {
   name: 'Microsoft To Do browser extension',
   version: packageJson.version,
   description: packageJson.description,
-  permissions: ['identity', 'tabs', 'notifications'],
+  permissions: ['identity', 'tabs', 'contextMenus', 'notifications'],
   background: {
     scripts: ['background.js'],
     persistent: false,
   },
+  options_page: 'options.html',
   browser_action: {
     default_popup: 'popup.html',
   },
