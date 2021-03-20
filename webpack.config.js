@@ -9,6 +9,10 @@ const Dotenv = require('dotenv-webpack');
 const manifest = require('./src/manifest');
 
 module.exports = (env) => ({
+  /**
+   * webpack --env mode=development ...
+   * webpack --env mode=production ...
+   */
   mode: env.mode,
 
   /**
@@ -20,8 +24,8 @@ module.exports = (env) => ({
 
   entry: {
     background: './src/background/index.js',
-    popup: './src/popup.js',
-    // options: './src/options.js',
+    popup: './src/popup.jsx',
+    options: './src/options.jsx',
   },
 
   output: {
@@ -46,6 +50,9 @@ module.exports = (env) => ({
   resolve: { extensions: ['*', '.js', '.jsx'] },
 
   plugins: [
+    /**
+     * parse .env file
+     */
     new Dotenv(),
 
     new ESLintPlugin({
@@ -53,7 +60,7 @@ module.exports = (env) => ({
       eslintPath: require.resolve('eslint'),
       context: './src',
       cache: true,
-      fix: true,
+      fix: true, // fix on save
     }),
 
     new HtmlWebpackPlugin({
@@ -69,11 +76,15 @@ module.exports = (env) => ({
 
     new CopyPlugin({
       patterns: [
+        // build manifest.json with 'src/manifest/index.js'
         { from: 'src/manifest/index.js', to: 'manifest.json', transform: () => JSON.stringify(manifest) },
+
+        // copy icons to dist/icons
         { from: 'public/icons', to: 'icons/' },
       ],
     }),
 
+    // Clean the dist directory before building
     new CleanWebpackPlugin(),
   ],
 });

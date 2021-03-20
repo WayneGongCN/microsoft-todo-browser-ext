@@ -16,7 +16,6 @@ chrome.notifications.onClosed.addListener((notificationId) => {
   callback();
 });
 
-// TODO: permission
 
 export default class Notify {
   constructor(title, message, options) {

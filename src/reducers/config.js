@@ -1,9 +1,9 @@
+// TODO: refactor with React Final Form
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 const initialState = {
-  popupFormAutoClear: true,
-  popupFormNotify: true,
+  popupformAutoClear: true,
 };
 
 function configReducer(state = initialState, action) {

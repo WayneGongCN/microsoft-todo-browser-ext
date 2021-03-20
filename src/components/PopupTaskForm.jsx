@@ -50,7 +50,7 @@ function Popup(props) {
     editImportance,
     editBookmarked,
     resetPopupform,
-    createTask,
+    popupformSubmit,
   } = props;
 
   editTitle = getEventValue(editTitle);
@@ -60,7 +60,7 @@ function Popup(props) {
   editImportance = triggerByHotkey(editImportance);
   editBookmarked = triggerByHotkey(editBookmarked);
   resetPopupform = triggerByHotkey(resetPopupform);
-  createTask = triggerByHotkey(createTask.bind(null, form.tasklistId, form));
+  popupformSubmit = triggerByHotkey(popupformSubmit.bind(null, form.tasklistId, form));
 
   return (
     <Grid container direction="column" spacing={2} className={classes.popupPage}>
@@ -163,8 +163,8 @@ function Popup(props) {
             color="primary"
             className={classes.fullWidth}
             endIcon={taskCreating ? <CircularProgress size={20} /> : <Add />}
-            onClick={createTask}
-            onKeyUp={createTask}
+            onClick={popupformSubmit}
+            onKeyUp={popupformSubmit}
             // TODO: disable status move to redux
             disabled={Boolean(taskCreating || !form.tasklistId || !form.title.trim())}
             disableElevation
@@ -199,7 +199,7 @@ export const popupTaskFormPropTypes = {
   editBookmarked: PropTypes.func.isRequired,
   editImportance: PropTypes.func.isRequired,
   resetPopupform: PropTypes.func.isRequired,
-  createTask: PropTypes.func.isRequired,
+  popupformSubmit: PropTypes.func.isRequired,
 };
 
 Popup.propTypes = popupTaskFormPropTypes;
