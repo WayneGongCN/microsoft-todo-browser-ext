@@ -1,7 +1,6 @@
-import getStore from '../reducers';
-import { makeBookmarkInfo } from '../helpers';
-import { createTask } from '../actions/app';
-import { fetchTasklists } from '../actions/tasklist';
+import { makeBookmarkInfo } from '../helpers/index';
+import { createTask, fetchTasklists } from '../actions/app';
+import getStore from 'src/reducers/index';
 
 
 export const QUICK_ADD_MENU_ITEM = {
@@ -11,28 +10,25 @@ export const QUICK_ADD_MENU_ITEM = {
 };
 
 
-export const quickCreateTask = (taskMeta) => {
+export const quickCreateTask = (task: ITaskProperty) => {
   const { store } = getStore(true);
   if (!store) return Promise.reject();
 
   return fetchTasklists()(store.dispatch)
     .then((tasklistList) => tasklistList[0]?.id)
-    .then((tasklistId) => tasklistId && createTask(tasklistId, taskMeta)(store.dispatch, store.getState));
+    .then((tasklistId) => tasklistId && createTask(tasklistId, task)(store.dispatch, store.getState));
 };
 
 
-export const handleQuickAddMenuItemEvent = (info) => {
+export const handleQuickAddMenuItemEvent = (info: chrome.contextMenus.OnClickData) => {
   if (info.menuItemId !== QUICK_ADD_MENU_ITEM.id) return Promise.resolve(null);
 
-  const taskMeta = {
+  const task = {
     title: info.selectionText,
-    describe: '',
-    contentType: 'text',
     timeZone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
-    importance: false,
     bookmarked: true,
     bookmarkInfo: makeBookmarkInfo(),
   };
 
-  return quickCreateTask(taskMeta);
+  return quickCreateTask(task);
 };

@@ -1,3 +1,4 @@
+import { Task, Tasklist } from '../models/Task';
 import Notify from './notification';
 
 
@@ -5,14 +6,7 @@ export const isDev = process.env.NODE_ENV === 'development';
 export const isProd = process.env.NODE_ENV === 'production';
 
 
-export const triggerByHotkey = (fn, hotkey = 'Enter') => (e) => {
-  if (e.type === 'keyup' && e.code !== hotkey) return false;
-  return fn(e);
-};
-
-export const getEventValue = (fn, key = 'value') => (e) => fn(e.target[key]);
-
-export const openMicrosoftTodo = (target) => new Promise((resolve, reject) => {
+export const openMicrosoftTodo = (target?: Task | Tasklist) => new Promise((resolve, reject) => {
   const prefix = 'https://to-do.live.com';
 
   let url = '';
@@ -42,7 +36,7 @@ export const makeBookmarkInfo = () => new Promise((resolve, reject) => {
 });
 
 
-export const showNavigateNotify = (target, title = 'Notify', message = 'Open Microsoft To-Do.') => {
+export const showNavigateNotify = (target: Task | Tasklist, title = 'Notify', message = 'Open Microsoft To-Do.') => {
   const notify = new Notify(title, message);
   notify.onClick(() => {
     notify.clear();

@@ -1,9 +1,12 @@
 /* eslint-disable import/first */
 /* eslint-disable import/newline-after-import */
+declare var window: Window
+
 import msalInstance from '../helpers/msal';
 window.msalInstance = msalInstance;
 
 import { Task, Tasklist } from '../models/Task';
+
 window.Task = Task;
 window.Tasklist = Tasklist;
 
@@ -26,5 +29,5 @@ chrome.contextMenus.removeAll(() => {
 
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  handleQuickAddMenuItemEvent(info, tab);
+  handleQuickAddMenuItemEvent(info);
 });

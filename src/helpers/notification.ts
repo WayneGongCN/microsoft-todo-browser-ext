@@ -2,25 +2,28 @@
 const defaultIconUrl = `chrome-extension://${chrome.runtime.id}/icons/todo-128.png`;
 const defaultType = 'basic';
 
-const onClickCallbackMap = {};
-const onClosedCallbackMap = {};
+const onClickCallbackMap: {[key: string]: Function} = {};
+const onClosedCallbackMap: {[key: string]: Function} = {};
+
 
 chrome.notifications.onClicked.addListener((notificationId) => {
   const callback = onClickCallbackMap[notificationId];
-  if (!callback || typeof callback !== 'function') return;
   callback();
 });
 chrome.notifications.onClosed.addListener((notificationId) => {
   const callback = onClosedCallbackMap[notificationId];
-  if (!callback || typeof callback !== 'function') return;
   callback();
 });
 
 
 export default class Notify {
-  constructor(title, message, options) {
+  notificationId: string
+  _options: chrome.notifications.NotificationOptions
+  _onClickCallback: Function
+  _onClosedCallback: Function
+
+  constructor(title: string, message: string, options?: chrome.notifications.NotificationOptions) {
     this.notificationId = `${Date.now()}-${Math.random()}`;
-    this._options = title && message && options;
     this._options = {
       title,
       message,
@@ -54,14 +57,12 @@ export default class Notify {
     });
   }
 
-  onClick(fn) {
-    if (!fn || typeof fn !== 'function') throw new TypeError('fn required function.');
+  onClick(fn: Function) {
     this._onClickCallback = fn;
     this._registerCallback();
   }
 
-  onClosed(fn) {
-    if (!fn || typeof fn !== 'function') throw new TypeError('fn required function.');
+  onClosed(fn: Function) {
     this._onClosedCallback = fn;
     this._registerCallback();
   }
