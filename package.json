@@ -8,7 +8,8 @@
   "scripts": {
     "commit": "cz",
     "dev": "webpack --config webpack.config.js --env mode=development --watch",
-    "build": "webpack --config webpack.config.js --env mode=production"
+    "build": "webpack --config webpack.config.js --env mode=production",
+    "changelog": "conventional-changelog -p angular -o CHANGELOG.md  -i CHANGELOG.md"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
@@ -23,6 +24,7 @@
     "awesome-typescript-loader": "^5.2.1",
     "clean-webpack-plugin": "^3.0.0",
     "commitizen": "^4.2.3",
+    "conventional-changelog-cli": "^2.1.1",
     "copy-webpack-plugin": "^7.0.0",
     "css-loader": "^5.0.1",
     "cz-conventional-changelog": "^3.3.0",
