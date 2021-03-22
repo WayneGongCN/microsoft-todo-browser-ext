@@ -9,7 +9,8 @@
     "commit": "cz",
     "dev": "webpack --config webpack.config.js --env mode=development --watch",
     "build": "webpack --config webpack.config.js --env mode=production",
-    "changelog": "conventional-changelog -p angular -o CHANGELOG.md  -i CHANGELOG.md"
+    "changelog": "conventional-changelog -p angular -o CHANGELOG.md  -i CHANGELOG.md",
+    "release": "standard-version"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
@@ -19,7 +20,6 @@
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.2",
     "@types/react-redux": "^7.1.16",
-    "@types/redux": "^3.6.0",
     "@types/redux-logger": "^3.0.8",
     "awesome-typescript-loader": "^5.2.1",
     "clean-webpack-plugin": "^3.0.0",
@@ -39,8 +39,9 @@
     "html-webpack-plugin": "^5.0.0-beta.5",
     "husky": "^4.3.8",
     "source-map-loader": "^2.0.1",
+    "standard-version": "^9.1.1",
     "style-loader": "^2.0.0",
-    "typescript": "^4.2.3",
+    "typescript": "^3.9.9",
     "webpack": "^5.14.0",
     "webpack-cli": "^4.3.1"
   },
