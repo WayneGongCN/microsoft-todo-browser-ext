@@ -51,3 +51,13 @@ export const showNavigateNotify = (target, title = 'Notify', message = 'Open Mic
   notify.create();
   return notify;
 };
+
+export const sendMessageToActiveTab = (msg) => new Promise((resolve, reject) => {
+  chrome.tabs.query({ active: true }, (res) => {
+    if (!res.length) reject(new Error('Not found active tab.'));
+    const activeTab = res[0];
+    chrome.tabs.sendMessage(activeTab.id, msg, (response) => {
+      console.log('response: ', response);
+    });
+  });
+});

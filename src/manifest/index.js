@@ -13,6 +13,12 @@ module.exports = {
   browser_action: {
     default_popup: 'popup.html',
   },
+  content_scripts: [
+    {
+      matches: ['<all_urls>'],
+      js: ['content.js'],
+    },
+  ],
   icons: {
     16: './icons/todo-16.png',
     24: './icons/todo-24.png',

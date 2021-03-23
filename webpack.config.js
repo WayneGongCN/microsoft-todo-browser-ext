@@ -26,6 +26,7 @@ module.exports = (env) => ({
     background: './src/background/index.js',
     popup: './src/popup.jsx',
     options: './src/options.jsx',
+    content: './src/content.js',
   },
 
   output: {
