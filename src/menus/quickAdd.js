@@ -1,5 +1,5 @@
 import getStore from '../reducers';
-import { makeBookmarkInfo } from '../helpers';
+import { makeBookmarkInfo, sendMessageToActiveTab } from '../helpers';
 import { createTask } from '../actions/app';
 import { fetchTasklists } from '../actions/tasklist';
 
@@ -34,5 +34,9 @@ export const handleQuickAddMenuItemEvent = (info) => {
     bookmarkInfo: makeBookmarkInfo(),
   };
 
-  return quickCreateTask(taskMeta);
+  sendMessageToActiveTab({ type: 'CURSOR_LOADING' });
+  return quickCreateTask(taskMeta)
+    .finally(() => {
+      sendMessageToActiveTab({ type: 'CURSOR_RESET' });
+    });
 };
