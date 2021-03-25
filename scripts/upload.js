@@ -4,17 +4,22 @@ const AdmZip = require('adm-zip');
 const { Readable } = require('stream');
 const webStoreHelper = require('chrome-webstore-upload');
 
+
 // zip dist dir
 // https://www.npmjs.com/package/adm-zip
+console.log('Create zip file from dist.');
 let zip = new AdmZip();
 zip.addLocalFolder(path.join(__dirname, '../dist/'));
 zip = zip.toBuffer();
 
+
 // buffer to readStream
 // https://stackoverflow.com/questions/13230487/converting-a-buffer-into-a-readablestream-in-node-js
+console.log('Convert buffer tot read straem.');
 const readable = new Readable();
 readable.push(zip);
 readable.push(null);
+
 
 // make webStore
 // https://github.com/DrewML/chrome-webstore-upload
@@ -30,10 +35,19 @@ const webStore = webStoreHelper({
 
 
 // fetch token and upload
-webStore.fetchToken().then((token) => {
-  webStore.uploadExisting(readable, token).then((res) => {
-    console.log(res);
+console.log('Fetch API token');
+webStore.fetchToken()
+  .then((token) => {
+    console.log('Success fetch token.');
+    return token;
+  })
+  .then((token) => {
+    console.log('Start upload.');
+    return webStore.uploadExisting(readable, token);
+  })
+  .then((res) => {
     // Response is a Resource Representation
     // https://developer.chrome.com/webstore/webstore_api/items#resource
+    console.log(res);
+    process.exit(res.uploadState === 'SUCCESS' ? 0 : 1);
   });
-});
