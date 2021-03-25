@@ -8,7 +8,8 @@
   "scripts": {
     "commit": "cz",
     "dev": "webpack --config webpack.config.js --env mode=development --watch",
-    "build": "webpack --config webpack.config.js --env mode=production"
+    "build": "webpack --config webpack.config.js --env mode=production",
+    "upload": "node scripts/upload.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
@@ -42,6 +43,9 @@
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
+    "adm-zip": "^0.5.4",
+    "chrome-webstore-upload": "^0.4.4",
+    "dotenv": "^8.2.0",
     "dotenv-webpack": "^6.0.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
