@@ -5,12 +5,14 @@
   "repository": "https://github.com/WayneGongCN/microsoft-todo-browser-ext.git",
   "author": "waynegong <Wayne.Gong.CN@hotmail.com>",
   "license": "MIT",
+
   "scripts": {
     "commit": "cz",
     "dev": "webpack --config webpack.config.js --env mode=development --watch",
     "build": "webpack --config webpack.config.js --env mode=production",
     "upload": "node scripts/upload.js"
   },
+
   "devDependencies": {
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
@@ -56,6 +58,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0"
   },
+
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
