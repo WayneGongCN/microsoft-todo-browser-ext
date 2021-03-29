@@ -1,8 +1,9 @@
 import { IPublicClientApplication } from "@azure/msal-browser";
-import { AccountInfo, AuthenticationResult } from "@azure/msal-common/dist/src/index";
+import { AccountInfo, AuthenticationResult } from "@azure/msal-common";
 import { EAppActionTypes, ETaskContentTypes, ETaskImportance, ETaskStatus } from "src/constants/enums";
 import getStore from "src/reducers";
 import { Task, Tasklist } from "../src/models/Task";
+import { StateType, ActionType } from 'typesafe-actions';
 
 
 declare global {

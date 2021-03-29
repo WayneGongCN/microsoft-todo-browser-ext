@@ -1,6 +1,6 @@
 import { makeBookmarkInfo } from '../helpers/index';
 import { createTask, fetchTasklists } from '../actions/app';
-import getStore from 'src/reducers/index';
+import getStore from '../reducers/index';
 
 
 export const QUICK_ADD_MENU_ITEM = {
@@ -10,7 +10,7 @@ export const QUICK_ADD_MENU_ITEM = {
 };
 
 
-export const quickCreateTask = (task: ITaskProperty) => {
+export const quickCreateTask = (task: any) => {
   const { store } = getStore(true);
   if (!store) return Promise.reject();
 

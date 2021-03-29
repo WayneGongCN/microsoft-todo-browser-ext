@@ -1,4 +1,4 @@
-import { PublicClientApplication } from '@azure/msal-browser/dist/src/index';
+import { PublicClientApplication } from '@azure/msal-browser'
 
 const DEFAULT_MSAL_CONF = {
   auth: {
@@ -21,7 +21,7 @@ const clearAccount = () => {
 
 // https://developer.chrome.com/docs/apps/app_identity/#non
 const originAcquireTokenRedirect = msalInstance.acquireTokenRedirect;
-msalInstance.acquireTokenRedirect = function acquireTokenRedirect(options, ...args){
+msalInstance.acquireTokenRedirect = function acquireTokenRedirect(options, ...args):any {
   return new Promise((resolve, reject) => {
     const onRedirectNavigate = (url: string) => {
       // https://developer.chrome.com/docs/extensions/reference/identity/#method-launchWebAuthFlow

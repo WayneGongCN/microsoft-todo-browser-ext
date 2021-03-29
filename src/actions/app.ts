@@ -11,7 +11,7 @@ import { makeBookmarkInfo, showNavigateNotify } from '../helpers/index';
  * @param {Object} task Task meta info.
  * @returns
  */
-export const createTask = (tasklistId: string, task: ITaskProperty) => (dispatch, getState: IAppStatus) => {
+export const createTask = (tasklistId: string, task: ITaskProperty) => (dispatch, getState) => {
   const { tasklists } = getState();
   const selectedTasklist = tasklists.find((x) => x.id === tasklistId);
 
@@ -45,7 +45,7 @@ export const createTask = (tasklistId: string, task: ITaskProperty) => (dispatch
  * Get logined microsoft account info.
  * @returns account object or null.
  */
-export const getAccount = (): ThunkAction<AccountInfo, IAppStatus, unknown, IAction<EAppActionTypes.GET_ACCOUNTS, AccountInfo>> => (dispatch) => {
+export const getAccount = ()=> (dispatch) => {
   const accounts = window.msalInstance.getAllAccounts();
   const account = accounts[0] || null;
 

@@ -1,8 +1,8 @@
-import { applyMiddleware, createStore, combineReducers } from 'redux/index';
+import { applyMiddleware, createStore, combineReducers } from 'redux';
 import app from './app';
 import logger from 'redux-logger';
-import { isDev } from '../helpers/index';
-import thunk from 'redux-thunk/index';
+import { isDev } from '../helpers';
+import thunk from 'redux-thunk';
 import persistStore from 'redux-persist/es/persistStore';
 
 
