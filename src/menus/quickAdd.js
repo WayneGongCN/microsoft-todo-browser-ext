@@ -1,5 +1,7 @@
 import getStore from '../reducers';
-import { makeBookmarkInfo, sendMessageToActiveTab } from '../helpers';
+import {
+  getActiveTab, sendMessageToActiveTab, showNotify,
+} from '../helpers';
 import { createTask } from '../actions/app';
 import { fetchTasklists } from '../actions/tasklist';
 
@@ -17,26 +19,33 @@ export const quickCreateTask = (taskMeta) => {
 
   return fetchTasklists()(store.dispatch)
     .then((tasklistList) => tasklistList[0]?.id)
-    .then((tasklistId) => tasklistId && createTask(tasklistId, taskMeta)(store.dispatch, store.getState));
+    .then((tasklistId) => tasklistId && createTask(tasklistId, taskMeta, true)(store.dispatch, store.getState));
 };
 
 
 export const handleQuickAddMenuItemEvent = (info) => {
   if (info.menuItemId !== QUICK_ADD_MENU_ITEM.id) return Promise.resolve(null);
 
-  const taskMeta = {
-    title: info.selectionText,
-    describe: '',
-    contentType: 'text',
-    timeZone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
-    importance: false,
-    bookmarked: true,
-    bookmarkInfo: makeBookmarkInfo(),
-  };
+  return getActiveTab()
+    .then((activeTab) => {
+      const describe = info.selectionText;
+      let title = info.selectionText || activeTab.title;
+      title = title.length > 130 ? `${title.slice(0, 130)}...` : title;
 
-  sendMessageToActiveTab({ type: 'CURSOR_LOADING' });
-  return quickCreateTask(taskMeta)
-    .finally(() => {
-      sendMessageToActiveTab({ type: 'CURSOR_RESET' });
-    });
+      const taskMeta = {
+        title,
+        describe,
+        contentType: 'text',
+        timeZone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
+        importance: false,
+        bookmarked: true,
+      };
+
+      sendMessageToActiveTab({ type: 'CURSOR_LOADING' });
+      return quickCreateTask(taskMeta)
+        .finally(() => {
+          sendMessageToActiveTab({ type: 'CURSOR_RESET' });
+        });
+    })
+    .catch((e) => showNotify('Error', e.message));
 };
