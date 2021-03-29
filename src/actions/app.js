@@ -2,7 +2,9 @@
 import {
   CREATE_TASK_START, CREATE_TASK_SUCCESS, CREATE_TASK_ERROR, GET_ACCOUNTS, LOG_OUT_START, LOG_OUT_SUCCESS, LOG_OUT_ERROR, FETCH_OAUTH_TOKEN_START, FETCH_OAUTH_TOKEN_SUCCESS, FETCH_OAUTH_TOKEN_ERROR,
 } from '../constants/appTypes';
-import { makeBookmarkInfo, showNavigateNotify } from '../helpers';
+import {
+  getActiveTab, makeBookmarkInfo, showNotify, showTaskNotify,
+} from '../helpers';
 
 
 /**
@@ -11,19 +13,25 @@ import { makeBookmarkInfo, showNavigateNotify } from '../helpers';
  * @param {Object} taskMeta Task meta info.
  * @returns
  */
-export const createTask = (tasklistId, taskMeta) => (dispatch, getState) => {
+export const createTask = (tasklistId, taskMeta, quickAdd = false) => (dispatch, getState) => {
   const { tasklistList } = getState().tasklist;
   const selectedTasklist = tasklistList.find((x) => x.id === tasklistId);
 
   if (!selectedTasklist) throw new Error('Please select a task list first.');
   dispatch({ type: CREATE_TASK_START, payload: { tasklistId, taskMeta } });
 
-  return makeBookmarkInfo()
-    // Merge bookmarkInfo to taskMeta
-    .then((bookmarkInfo) => ({ ...taskMeta, bookmarkInfo }))
 
-    // Create task by selected tasklist instance.
-    .then((taskMeta) => selectedTasklist.createTask(taskMeta))
+  let result = null;
+  if (taskMeta.bookmarked) {
+    result = getActiveTab()
+      .then((tab) => makeBookmarkInfo(tab, quickAdd))
+      .then((bookmarkInfo) => ({ ...taskMeta, bookmarkInfo }))
+      .then((taskMeta) => selectedTasklist.createTask(taskMeta));
+  } else {
+    result = selectedTasklist.createTask(taskMeta);
+  }
+
+  return result
     .then((task) => {
       dispatch({ type: CREATE_TASK_SUCCESS, payload: task });
       return task;
@@ -31,11 +39,12 @@ export const createTask = (tasklistId, taskMeta) => (dispatch, getState) => {
 
     // show notify
     .then((task) => {
-      showNavigateNotify(task, 'Create task success', 'Open task on Microsoft To-Do.');
+      showTaskNotify(task, 'Create task success', 'Open task on Microsoft To-Do.');
     })
 
     .catch((error) => {
       dispatch({ type: CREATE_TASK_ERROR, payload: error });
+      showNotify('Error', error.message);
       return Promise.reject(error);
     });
 };

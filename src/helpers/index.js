@@ -10,7 +10,9 @@ export const triggerByHotkey = (fn, hotkey = 'Enter') => (e) => {
   return fn(e);
 };
 
+
 export const getEventValue = (fn, key = 'value') => (e) => fn(e.target[key]);
+
 
 export const openMicrosoftTodo = (target) => new Promise((resolve, reject) => {
   const prefix = 'https://to-do.live.com';
@@ -33,32 +35,42 @@ export const openMicrosoftTodo = (target) => new Promise((resolve, reject) => {
 });
 
 
-export const makeBookmarkInfo = () => new Promise((resolve, reject) => {
-  chrome.tabs.query({ active: true }, (tab) => {
-    if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
-    const curTab = tab[0] || '';
-    return resolve(curTab && `\n\n---\n${curTab.title}\n${curTab.url}`);
+export const getActiveTab = () => new Promise((resolve, reject) => {
+  chrome.tabs.query({ active: true }, (tabs) => {
+    if (chrome.runtime.lastError) reject(chrome.runtime.lastError.message);
+    else if (tabs && tabs.length > 0) {
+      const firstActiveTab = tabs[0];
+      resolve(firstActiveTab);
+    } else {
+      reject(new Error('Not found active tab.'));
+    }
   });
 });
 
 
-export const showNavigateNotify = (target, title = 'Notify', message = 'Open Microsoft To-Do.') => {
+export const makeBookmarkInfo = (tab, quickAdd = false) => {
+  const bookmarkInfo = `\n${tab.title}\n\n${tab.url}\n`;
+  const quickAddInfo = "\nCreated by 'Quick add task'\n";
+  return `\n\n---${quickAdd ? quickAddInfo : ''}${bookmarkInfo}`;
+};
+
+
+export const sendMessageToActiveTab = (msg) => getActiveTab().then((tab) => chrome.tabs.sendMessage(tab.id, msg));
+
+
+export const showNotify = (title = 'Notify', message) => {
   const notify = new Notify(title, message);
-  notify.onClick(() => {
-    notify.clear();
-    openMicrosoftTodo(target);
-  });
   notify.create();
   return notify;
 };
 
 
-export const sendMessageToActiveTab = (msg) => new Promise((resolve, reject) => {
-  chrome.tabs.query({ active: true }, (res) => {
-    if (!res.length) reject(new Error('Not found active tab.'));
-    const activeTab = res[0];
-    chrome.tabs.sendMessage(activeTab.id, msg, (response) => {
-      console.log('response: ', response);
-    });
+export const showTaskNotify = (task, title, message = 'Open Microsoft To-Do.') => {
+  const notify = showNotify(title, message);
+  notify.onClick(() => {
+    notify.clear();
+    openMicrosoftTodo(task);
   });
-});
+  return notify;
+};
+
