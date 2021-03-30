@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 import { RedirectRequest } from '@azure/msal-browser';
 import { AccountInfo } from '@azure/msal-common';
+import { createAction } from '@reduxjs/toolkit';
 import { ThunkAction } from 'redux-thunk';
 import { EAppActionTypes } from '../constants/enums';
 import { makeBookmarkInfo, showNavigateNotify } from '../helpers/index';
@@ -45,14 +46,15 @@ export const createTask = (tasklistId: string, task: ITaskProperty) => (dispatch
  * Get logined microsoft account info.
  * @returns account object or null.
  */
-export const getAccount = ()=> (dispatch) => {
-  const accounts = window.msalInstance.getAllAccounts();
-  const account = accounts[0] || null;
+// export const getAccount = ()=> (dispatch) => {
+//   const accounts = window.msalInstance.getAllAccounts();
+//   const account = accounts[0] || null;
 
-  dispatch({ type: EAppActionTypes.GET_ACCOUNTS, payload: account });
-  return accounts;
-};
+//   dispatch({ type: , payload: account });
+//   return accounts;
+// };
 
+const action = createAction<AccountInfo, EAppActionTypes>(EAppActionTypes.GET_ACCOUNTS)
 
 /**
  * Logout microsoft account.

@@ -1,7 +1,5 @@
 /* eslint-disable import/first */
 /* eslint-disable import/newline-after-import */
-declare var window: Window
-
 import msalInstance from './helpers/msal';
 window.msalInstance = msalInstance;
 
@@ -10,7 +8,7 @@ import { Task, Tasklist } from './models/Task';
 window.Task = Task;
 window.Tasklist = Tasklist;
 
-import getStore from './reducers';
+import { getStore } from './reducers';
 window.getStore = getStore;
 
 import { QUICK_ADD_MENU_ITEM, handleQuickAddMenuItemEvent } from './menus/quickAdd';
