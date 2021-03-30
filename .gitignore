@@ -2,4 +2,8 @@ node_modules/
 dist/
 .eslintcache
 *.log
+*.pem
+*.crx
+*.zip
 .env
+.DS_Store
