@@ -78,7 +78,7 @@ module.exports = (env) => ({
     new CopyPlugin({
       patterns: [
         // build manifest.json with 'src/manifest/index.js'
-        { from: 'src/manifest/index.js', to: 'manifest.json', transform: () => JSON.stringify(manifest) },
+        { from: 'src/manifest/index.js', to: 'manifest.json', transform: () => JSON.stringify(manifest(env)) },
 
         // copy icons to dist/icons
         { from: 'public/icons', to: 'icons/' },
