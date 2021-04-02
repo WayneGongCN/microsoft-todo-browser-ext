@@ -81,13 +81,15 @@ declare global {
     reportError: Boolean,
   }
 
-
-  interface IAppStatus {
-    // account
+  interface ISliceAccount {
     account: AccountInfo,
     token: AuthenticationResult,
     loggingIn: Boolean,
     scopes: string[],
+  }
+
+
+  interface IAppStatus {
 
     // tasklist
     tasklists: ITasklist[],

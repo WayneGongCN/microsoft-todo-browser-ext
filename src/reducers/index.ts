@@ -1,32 +1,30 @@
-import { applyMiddleware, createStore, combineReducers, AnyAction, Dispatch, Middleware } from 'redux';
-import app from './app';
-import logger from 'redux-logger';
+import { combineReducers } from 'redux';
 import { isDev } from '../helpers';
-import thunk, { ThunkMiddleware } from 'redux-thunk';
-import persistStore from 'redux-persist/es/persistStore';
-import { configureStore, createAction, EnhancedStore, MiddlewareArray } from '@reduxjs/toolkit';
-import { PersistPartial } from 'redux-persist/es/persistReducer';
-import { PERSIST, REGISTER, REHYDRATE } from 'redux-persist/es/constants';
+import { configureStore } from '@reduxjs/toolkit';
+import { PERSIST, REGISTER, REHYDRATE } from 'redux-persist';
+import accountReducer from './account'
+import persistStore from 'redux-persist/lib/persistStore';
 
 
-let storeInstance: EnhancedStore<{ app: IAppStatus & PersistPartial; }, AnyAction, MiddlewareArray<ThunkMiddleware<{ app: IAppStatus & PersistPartial; }, AnyAction, null> | ThunkMiddleware<{ app: IAppStatus & PersistPartial; }, AnyAction, undefined> | Middleware<{}, { app: IAppStatus & PersistPartial; }, Dispatch<AnyAction>>>> = null
-let persistStoreInstance = null;
+const rootReducer = combineReducers({
+  account: accountReducer
+});
+
+export const store = configureStore({
+  reducer: rootReducer,
+  devTools: isDev,
+  middleware: getDefaultMiddleware => getDefaultMiddleware({
+    serializableCheck: {
+      // https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data
+      ignoredActions: [REHYDRATE, REGISTER, PERSIST]
+    }
+  }),
+})
+
+export let persistStoreInstance = persistStore(store);;
 
 
-export const getStore = (restructure = false) => {
-  if (storeInstance === null || restructure) {
-    storeInstance = configureStore({
-      reducer: { app },
-      devTools: isDev,
-      middleware: getDefaultMiddleware => getDefaultMiddleware({
-        serializableCheck: {
-          // https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data
-          ignoredActions: [REHYDRATE, REGISTER, PERSIST]
-        }
-      }),
-    })
-
-    persistStoreInstance = persistStore(storeInstance);
-  }
-  return storeInstance
-}
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch
