@@ -26,6 +26,7 @@ module.exports = (env) => ({
     background: './src/background.ts',
     popup: './src/popup.tsx',
     options: './src/options.tsx',
+    content: './src/content.js',
   },
 
   output: {
@@ -74,8 +75,8 @@ module.exports = (env) => ({
 
     new CopyPlugin({
       patterns: [
-        // build manifest.json with 'src/manifest/index.js'
-        { from: 'src/manifest/index.js', to: 'manifest.json', transform: () => JSON.stringify(manifest) },
+        // build manifest.json with 'src/manifest.js'
+        { from: 'src/manifest.js', to: 'manifest.json', transform: () => JSON.stringify(manifest(env)) },
 
         // copy icons to dist/icons
         { from: 'public/icons', to: 'icons/' },
