@@ -1,32 +1,18 @@
 const path = require('path');
-// const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const Dotenv = require('dotenv-webpack');
 
-const manifest = require('./src/manifest');
+const manifest = require('../src/manifest');
 
 module.exports = (env) => ({
-  /**
-   * webpack --env mode=development ...
-   * webpack --env mode=production ...
-   */
-  mode: env.mode,
-
-  /**
-   * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP
-   * https://stackoverflow.com/questions/48047150/chrome-extension-compiled-by-webpack-throws-unsafe-eval-error
-   * https://webpack.docschina.org/configuration/devtool/#root
-   */
-  devtool: 'cheap-module-source-map',
-
   entry: {
     background: './src/background.ts',
     popup: './src/popup.tsx',
-    options: './src/options.tsx',
-    content: './src/content.js',
+    // options: './src/options.tsx',
+    // content: './src/content.js',
   },
 
   output: {
@@ -36,8 +22,11 @@ module.exports = (env) => ({
 
   module: {
     rules: [
-      { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
-      { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
@@ -53,14 +42,6 @@ module.exports = (env) => ({
      * parse .env file
      */
     new Dotenv(),
-
-    new ESLintPlugin({
-      extensions: ['js', 'jsx'],
-      eslintPath: require.resolve('eslint'),
-      context: './src',
-      cache: true,
-      fix: true, // fix on save
-    }),
 
     new HtmlWebpackPlugin({
       filename: 'popup.html',
@@ -85,10 +66,32 @@ module.exports = (env) => ({
 
     // Clean the dist directory before building
     new CleanWebpackPlugin(),
+
+    new BundleAnalyzerPlugin(),
+
   ],
 
-  externals: {
-    react: 'React',
-    'react-dom': 'ReactDOM',
+  optimization: {
+    splitChunks: {
+      chunks: 'async',
+      minSize: 20000,
+      minRemainingSize: 0,
+      minChunks: 1,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
+      enforceSizeThreshold: 50000,
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          reuseExistingChunk: true,
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
+    },
   },
 });

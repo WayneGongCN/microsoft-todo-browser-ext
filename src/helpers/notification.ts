@@ -1,4 +1,8 @@
-/* eslint-disable no-underscore-dangle */
+/**
+ * TODO: callbackMap 改为 Map 结构
+ * TODO: notificationId 使用 UUID
+ */
+
 const defaultIconUrl = `chrome-extension://${chrome.runtime.id}/icons/todo-128.png`;
 const defaultType = 'basic';
 

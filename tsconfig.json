@@ -1,16 +1,13 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
-    "baseUrl": ".",
     "noImplicitAny": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "module": "es6",
-    "target": "es6",
-    "jsx": "react-jsx",
-    "allowJs": true,
+    "module": "es2020",
+    "target": "es2020",
+    "jsx": "react",
     "moduleResolution": "node",
     "resolveJsonModule": true,
   },
-  "include": ["./types"]
+  "exclude": ["node_modules"]
 }

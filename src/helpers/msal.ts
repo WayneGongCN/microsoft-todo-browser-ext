@@ -1,4 +1,4 @@
-import { PublicClientApplication } from '@azure/msal-browser'
+import { AuthenticationResult, PublicClientApplication, RedirectRequest } from '@azure/msal-browser'
 
 const DEFAULT_MSAL_CONF = {
   auth: {
@@ -19,9 +19,28 @@ const clearAccount = () => {
   window.sessionStorage.clear();
 };
 
+
+const originLogout = msalInstance.logout;
+msalInstance.logout = function logout(options, ...args) {
+  return new Promise((resolve, reject) => {
+    const onRedirectNavigate = (url: string) => {
+      chrome.identity.launchWebAuthFlow({ url, interactive: true }, () => {
+        clearAccount();
+        // user allways close window
+        // if (chrome.runtime.lastError) reject(chrome.runtime.lastError.message);
+        resolve();
+      });
+    };
+
+    originLogout.call(msalInstance, { onRedirectNavigate, ...options }, ...args).catch(reject);
+  });
+};
+
+
+msalInstance.getAllAccounts()
+
 // https://developer.chrome.com/docs/apps/app_identity/#non
-const originAcquireTokenRedirect = msalInstance.acquireTokenRedirect;
-msalInstance.acquireTokenRedirect = function acquireTokenRedirect(options, ...args):any {
+export const authentication = (request: RedirectRequest): Promise<AuthenticationResult> => {
   return new Promise((resolve, reject) => {
     const onRedirectNavigate = (url: string) => {
       // https://developer.chrome.com/docs/extensions/reference/identity/#method-launchWebAuthFlow
@@ -43,29 +62,9 @@ msalInstance.acquireTokenRedirect = function acquireTokenRedirect(options, ...ar
     // https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/2664
     // https://github.com/AzureAD/microsoft-authentication-library-for-js/pull/2669
     // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-core/classes/_useragentapplication_.useragentapplication.html#acquiretokenredirect
-    originAcquireTokenRedirect.call(msalInstance, { onRedirectNavigate, ...options }, ...args).catch((e: any) => {
+    msalInstance.acquireTokenRedirect({ onRedirectNavigate, ...request }).catch((e: any) => {
       clearAccount();
       reject(e);
     });
   });
 };
-
-const originLogout = msalInstance.logout;
-msalInstance.logout = function logout(options, ...args) {
-  return new Promise((resolve, reject) => {
-    const onRedirectNavigate = (url: string) => {
-      chrome.identity.launchWebAuthFlow({ url, interactive: true }, () => {
-        clearAccount();
-        // user allways close window
-        // if (chrome.runtime.lastError) reject(chrome.runtime.lastError.message);
-        resolve();
-      });
-    };
-
-    originLogout.call(msalInstance, { onRedirectNavigate, ...options }, ...args).catch(reject);
-  });
-};
-
-
-msalInstance.getAllAccounts()
-export default msalInstance;

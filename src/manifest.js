@@ -4,21 +4,21 @@ module.exports = (env) => ({
   name: 'Microsoft To Do browser extension',
   version: packageJson.version,
   description: packageJson.description,
-  permissions: ['identity', 'tabs', 'contextMenus', 'notifications'],
+  permissions: ['identity', 'tabs', 'contextMenus', 'notifications', 'storage'],
   background: {
     scripts: ['background.js'],
     persistent: false,
   },
-  options_page: 'options.html',
+  // options_page: 'options.html',
   browser_action: {
     default_popup: 'popup.html',
   },
-  content_scripts: [
-    {
-      matches: ['<all_urls>'],
-      js: ['content.js'],
-    },
-  ],
+  // content_scripts: [
+  //   {
+  //     matches: ['<all_urls>'],
+  //     js: ['content.js'],
+  //   },
+  // ],
   icons: env.NODE_ENV === 'development'
     ? { 128: './icons/todo-dev-128.png' }
     : {

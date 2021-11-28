@@ -1,4 +1,5 @@
-import { Task, Tasklist } from '../models/Task';
+import Task from '../classes/Task';
+import Tasklist from '../classes/TaskList';
 import Notify from './notification';
 
 
@@ -10,10 +11,8 @@ export const openMicrosoftTodo = (target?: Task | Tasklist) => new Promise((reso
   const prefix = 'https://to-do.live.com';
 
   let url = '';
-  // eslint-disable-next-line no-undef
   if (target instanceof Task) {
     url = `${prefix}/tasks/id/${target.id}/details`;
-    // eslint-disable-next-line no-undef
   } else if (target instanceof Tasklist) {
     url = `${prefix}/tasks/${target.id}`;
   } else {
@@ -27,7 +26,7 @@ export const openMicrosoftTodo = (target?: Task | Tasklist) => new Promise((reso
 });
 
 
-export const getActiveTab = () => new Promise((resolve, reject) => {
+export const getActiveTab = (): Promise<chrome.tabs.Tab> => new Promise((resolve, reject) => {
   chrome.tabs.query({ active: true }, (tabs) => {
     if (chrome.runtime.lastError) reject(chrome.runtime.lastError.message);
     else if (tabs && tabs.length > 0) {
@@ -40,24 +39,24 @@ export const getActiveTab = () => new Promise((resolve, reject) => {
 });
 
 
-export const makeBookmarkInfo = (tab, quickAdd = false) => {
+export const makeBookmarkInfo = (tab: chrome.tabs.Tab, quickAdd = false) => {
   const bookmarkInfo = `\n${tab.title}\n\n${tab.url}\n`;
   const quickAddInfo = "\nCreated by 'Quick add task'\n";
   return `\n\n---${quickAdd ? quickAddInfo : ''}${bookmarkInfo}`;
 };
 
 
-export const sendMessageToActiveTab = (msg) => getActiveTab().then((tab) => chrome.tabs.sendMessage(tab.id, msg));
+export const sendMessageToActiveTab = (msg: chrome.tabs.MessageSendOptions) => getActiveTab().then((tab) => chrome.tabs.sendMessage(tab.id, msg));
 
 
-export const showNotify = (title = 'Notify', message) => {
+export const showNotify = (title = 'Notify', message: string) => {
   const notify = new Notify(title, message);
   notify.create();
   return notify;
 };
 
 
-export const showTaskNotify = (task, title, message = 'Open Microsoft To-Do.') => {
+export const showTaskNotify = (task: Task, title: string, message = 'Open Microsoft To-Do.') => {
   const notify = showNotify(title, message);
   notify.onClick(() => {
     notify.clear();

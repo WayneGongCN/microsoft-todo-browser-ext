@@ -1,26 +1,13 @@
-/* eslint-disable import/first */
-/* eslint-disable import/newline-after-import */
-import msalInstance from './helpers/msal';
-import { store } from './reducers';
-import { QUICK_ADD_MENU_ITEM, handleQuickAddMenuItemEvent } from './menus/quickAdd';
+import { store } from "./redux";
+import { appSlice, asyncChunk as appSliceAsyncChunk } from "./redux/app";
+import taskApi from './redux/api/task'
 
+export const backgroundContext = {
+  store,
+  appSlice: appSlice as typeof appSlice & typeof appSliceAsyncChunk,
+  taskApi
+};
 
-console.log(msalInstance)
-console.log(store)
-
-
-chrome.contextMenus.removeAll(() => {
-  chrome.contextMenus.create(
-    QUICK_ADD_MENU_ITEM,
-    () => {
-      if (chrome.runtime.lastError) {
-        throw new Error(chrome.runtime.lastError.message);
-      }
-    },
-  );
-});
-
-
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  handleQuickAddMenuItemEvent(info);
-});
+// @ts-ignore
+window.backgroundContext = backgroundContext;
+console.log("process.env.NODE_ENV: ", backgroundContext);
