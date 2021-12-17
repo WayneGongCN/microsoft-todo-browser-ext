@@ -10,10 +10,6 @@ const Default: React.FC<any> = () => {
   // const dispatch = useDispatch<Dispatch>()
 
   // return <div onClick={() => dispatch(rootSlice.actions.increment())}>Test</div>
-
-  useEffect(() => {
-    console.log('useEffect')
-  })
   return (
     <>
       <Com1 />

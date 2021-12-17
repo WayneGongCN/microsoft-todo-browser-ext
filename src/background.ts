@@ -1,11 +1,9 @@
 import { store } from "./redux";
 import { appSlice, asyncChunk as appSliceAsyncChunk } from "./redux/app";
-import taskApi from './redux/api/task'
 
 export const backgroundContext = {
   store,
-  appSlice: appSlice as typeof appSlice & typeof appSliceAsyncChunk,
-  taskApi
+  appSlice: appSlice as typeof appSlice & typeof appSliceAsyncChunk
 };
 
 // @ts-ignore

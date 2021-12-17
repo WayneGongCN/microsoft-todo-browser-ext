@@ -7,7 +7,7 @@ const Login: React.FC<any> = () => {
   const dispatch = useDispatch();
   const handleLogin = useCallback(() => {
     logger.log('msalInstance', backgroundContext)
-    dispatch(backgroundContext.appSlice.authentication(null))
+    dispatch(backgroundContext.appSlice.authentication())
   }, [])
 
   return <div onClick={handleLogin}>Login</div>;
