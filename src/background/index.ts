@@ -1,5 +1,5 @@
-import { store } from "./redux";
-import { appSlice, asyncChunk as appSliceAsyncChunk } from "./redux/app";
+import { store } from "../redux";
+import { appSlice, asyncChunk as appSliceAsyncChunk } from "../redux/app";
 
 export const backgroundContext = {
   store,

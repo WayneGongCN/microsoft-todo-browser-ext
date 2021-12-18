@@ -9,8 +9,8 @@ const manifest = require('../src/manifest');
 
 module.exports = (env) => ({
   entry: {
-    background: './src/background.ts',
-    popup: './src/popup.tsx',
+    background: './src/background/index.ts',
+    popup: './src/popup/index.tsx',
     // options: './src/options.tsx',
     // content: './src/content.js',
   },

@@ -1,7 +1,6 @@
 module.exports = {
   env: {
-    // https://cn.eslint.org/docs/user-guide/configuring#specifying-environments
-    webextensions: true,
+    webextensions: true, // https://cn.eslint.org/docs/user-guide/configuring#specifying-environments
     browser: true,
     es2021: true,
   },

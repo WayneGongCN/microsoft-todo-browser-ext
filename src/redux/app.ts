@@ -5,6 +5,7 @@ import request from "../helpers/request";
 import { AuthenticationResult } from "@azure/msal-browser";
 import { ICreateTaskParams, ITasklistResult } from "../types";
 
+
 type SerializableAuthenticationResult = Omit<
   AuthenticationResult,
   "expiresOn"
@@ -20,6 +21,7 @@ export const authentication =
       );
     }
   );
+
 
 export const getTasklist = createAsyncThunk<ITasklistResult>(
   "app/getTasklist",
@@ -48,13 +50,9 @@ export const createTask = createAsyncThunk<
     Authorization: `Bearer ${state.app.authenticationResult.accessToken}`,
   };
   return request
-    .post(
-      `me/todo/lists/${params.tasklisId}/tasks`,
-      params.task,
-      {
-        headers,
-      }
-    )
+    .post(`me/todo/lists/${params.tasklisId}/tasks`, params.task, {
+      headers,
+    })
     .then((res) => res.data);
 });
 
@@ -64,7 +62,7 @@ export const appSlice = createSlice({
   initialState: {
     authenticationResult: null as null | SerializableAuthenticationResult,
     scopes: ["profile", "Tasks.ReadWrite"],
-    tasklist: [] as ITasklistResult['value'],
+    tasklist: [] as ITasklistResult["value"],
   },
 
   reducers: {},
@@ -90,6 +88,6 @@ appSlice.authentication = authentication;
 // @ts-ignore
 appSlice.getTasklist = getTasklist;
 // @ts-ignore
-appSlice.createTask = createTask
+appSlice.createTask = createTask;
 
 export default appSlice;

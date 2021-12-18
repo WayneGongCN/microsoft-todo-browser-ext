@@ -4,9 +4,9 @@ import Container from "@material-ui/core/Container";
 import { render } from "react-dom";
 import {
   BackgroundContext,
-} from "./types";
-import { logger } from "./helpers/logger";
-import { EThemes, loadTheme } from "./themes";
+} from "../types";
+import { logger } from "../helpers/logger";
+import { EThemes, loadTheme } from "../themes";
 
 export let backgroundContext: BackgroundContext
 
@@ -14,8 +14,9 @@ chrome.runtime.getBackgroundPage(async (ctx: any) => {
   logger.log("background ctx: ", ctx);
   backgroundContext = ctx.backgroundContext;
 
-  const Theme = loadTheme(EThemes.DEFAULT);
-
+  const themeName = EThemes.DEFAULT;
+  const Theme = loadTheme(themeName);
+  logger.log('theme: ', themeName)
 
   render(
     <Provider store={backgroundContext.store}>
