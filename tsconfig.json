@@ -8,6 +8,8 @@
     "jsx": "react",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "skipLibCheck": true
   },
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

@@ -8,24 +8,12 @@ export default class Tasklist {
   wellknownListName: string
   displayName: string
 
-  constructor(taskList: ITasklistProperty) {
-    if (taskList) {
-      this.id = taskList.id;
-      this.isOwner = taskList.isOwner;
-      this.isShared = taskList.isShared;
-      this.wellknownListName = taskList.wellknownListName;
-      this.displayName = taskList.displayName;
-    }
+  constructor() {
   }
 
-  // Fetch tasklists
-  // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todo-list-lists.md
-  static fetchTasklists() {
-    return request.get(`${API_BASE_URL}/me/todo/lists`).then(console.log)
-  }
 
-  // // Create todoTasklist
-  // // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todo-post-lists.md
+  // Create todoTasklist
+  // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todo-post-lists.md
   // create() {
   //   const endPoint = `me/todo/lists`;
   //   const data = { displayName: this.displayName || '' };

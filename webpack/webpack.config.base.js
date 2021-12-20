@@ -67,7 +67,7 @@ module.exports = (env) => ({
     // Clean the dist directory before building
     new CleanWebpackPlugin(),
 
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
 
   ],
 

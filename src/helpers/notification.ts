@@ -1,73 +1,71 @@
-/**
- * TODO: callbackMap 改为 Map 结构
- * TODO: notificationId 使用 UUID
- */
-
-const defaultIconUrl = `chrome-extension://${chrome.runtime.id}/icons/todo-128.png`;
-const defaultType = 'basic';
-
-const onClickCallbackMap: {[key: string]: Function} = {};
-const onClosedCallbackMap: {[key: string]: Function} = {};
+import { v4 as uuidv4 } from "uuid";
+import { NOTIFICATION_ICON_URL, NOTIFICATION_TYPE } from "../constants";
 
 
-chrome.notifications.onClicked.addListener((notificationId) => {
-  const callback = onClickCallbackMap[notificationId];
-  callback();
+const clickCallbackMap = new Map<string, [() => void]>();
+const closeCallbackMap =  new Map<string, [() => void]>();
+
+chrome.notifications.onClicked.addListener((id) => {
+  const callback = clickCallbackMap.get(id);
+  Array.isArray(callback) && callback.forEach(x => x())
 });
-chrome.notifications.onClosed.addListener((notificationId) => {
-  const callback = onClosedCallbackMap[notificationId];
-  callback();
+
+chrome.notifications.onClosed.addListener((id) => {
+  const callback = closeCallbackMap.get(id);
+  Array.isArray(callback) && callback.forEach(x => x())
 });
+
+const addCallback = (map: Map<string, [() => void]>) => (cb: () => void) => (id: string) => {
+  const cbList = map.get(id) || [] as unknown as [() => void];
+  cbList.push(cb);
+  map.set(id, cbList)
+}
 
 
 export default class Notify {
-  notificationId: string
-  _options: chrome.notifications.NotificationOptions
-  _onClickCallback: Function
-  _onClosedCallback: Function
+  id: string;
+  options: chrome.notifications.NotificationOptions;
 
-  constructor(title: string, message: string, options?: chrome.notifications.NotificationOptions) {
-    this.notificationId = `${Date.now()}-${Math.random()}`;
-    this._options = {
-      title,
-      message,
-      type: defaultType,
-      iconUrl: defaultIconUrl,
+  constructor(
+    options: chrome.notifications.NotificationOptions
+  ) {
+    this.id = uuidv4();
+    this.options = {
+      type: NOTIFICATION_TYPE,
+      iconUrl: NOTIFICATION_ICON_URL,
       ...options,
     };
   }
 
-  _registerCallback() {
-    if (this._onClickCallback) onClickCallbackMap[this.notificationId] = this._onClickCallback.bind(this);
-    if (this._onClosedCallback) onClosedCallbackMap[this.notificationId] = this._onClosedCallback.bind(this);
-  }
 
-  create() {
+  show() {
     return new Promise((resolve, reject) => {
-      chrome.notifications.create(this.notificationId, this._options, () => {
+      chrome.notifications.create(this.id, this.options, () => {
         if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
-        this._registerCallback();
         return resolve(this);
       });
     });
   }
 
+
   clear() {
     return new Promise((resolve, reject) => {
-      chrome.notifications.clear(this.notificationId, (wasCleared) => {
+      chrome.notifications.clear(this.id, (wasCleared) => {
         if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
         return resolve(wasCleared);
       });
     });
   }
 
-  onClick(fn: Function) {
-    this._onClickCallback = fn;
-    this._registerCallback();
+
+  onClick(cb: () => void) {
+    addCallback(clickCallbackMap)(cb)(this.id)
+    return this
   }
 
-  onClosed(fn: Function) {
-    this._onClosedCallback = fn;
-    this._registerCallback();
+
+  onClosed(cb: () => void) {
+    addCallback(closeCallbackMap)(cb)(this.id)
+    return this
   }
 }

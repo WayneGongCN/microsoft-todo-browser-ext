@@ -1,122 +1,85 @@
-import { IPublicClientApplication } from "@azure/msal-browser";
-import { AccountInfo, AuthenticationResult } from "@azure/msal-common";
-import { EAppActionTypes, ETaskContentTypes, ETaskImportance, ETaskStatus } from "src/constants/enums";
-import { Task, Tasklist } from "../src/models/Task";
+import { AuthenticationResult } from "@azure/msal-browser";
+import { backgroundContext } from "../src/background";
+import { ETaskContentTypes, ETaskImportance, ETaskStatus, TimeZone } from "../src/constants/enums";
+import { ErrorCode } from "../src/helpers/error";
 
-
-declare global {
-  interface IModeBase {
-
-  }
-
-  interface ITaskBody {
-    contentType: ETaskContentTypes
-    content: string
-  }
-
-  interface ITaskReminderDateTime {
-    timeZone: string,
-    dateTime: string
-  }
-
-  interface ITaskProperty {
-    body: ITaskBody
-    bodyLastModifiedDateTime: string
-    completedDateTime: string
-    createdDateTime: string
-    dueDateTime: string
-    id: string
-    importance: ETaskImportance
-    isReminderOn: Boolean
-    lastModifiedDateTime: string
-    recurrence: any
-    reminderDateTime: ITaskReminderDateTime
-    status: ETaskStatus
-    title: string
-  }
-
-  interface ITask extends ITaskProperty {
-    create(tasklistId: string): Promise<Task>
-    update(): Promise<Task>
-    delete(): Promise<any>
-
-    // TODO
-    listLinkedResources(): Promise<any>
-    createLinkedResource(): Promise<any>
-    delta(): Promise<any>
-  }
-
-
-  interface ITasklistProperty {
-    id: string
-    isOwner: Boolean
-    isShared: Boolean
-    wellknownListName: string
-    displayName: string
-  }
-
-  interface IAjaxListResult<T> {
-    value: T[]
-  }
-  interface ITasklist extends ITasklistProperty {
-    create(): Promise<ITasklist>
-    getTasklist(): Promise<ITasklist>
-    update(): Promise<ITasklist>
-    listTasks(): Promise<ITask[]>
-    createTask(task: ITaskProperty): Promise<ITask>
-
-    // TODO
-    delete(): Promise<any>
-  }
-
-  interface IAppConf {
-
-  }
-  interface IUserConf {
-    dateFormat: string,
-    timeFormat: string,
-    defalutTasklist: ITasklist | null,
-    rememberLastUeseTasklist: Boolean,
-    reportError: Boolean,
-  }
-
-  interface ISliceAccount {
-    account: AccountInfo,
-    token: AuthenticationResult,
-    loggingIn: Boolean,
-    scopes: string[],
-  }
-
-
-  interface IAppStatus {
-
-    // tasklist
-    tasklists: ITasklist[],
-    selectedTasklist: null | ITasklist,
-    fetchingTasklists: Boolean,
-
-    // task
-    popupForm: IPopupFormProperty | null
-    creatingTask: Boolean,
-
-    // config
-    appConf: IAppConf,
-    userConf: IUserConf
-
-    // debug
-    error: any,
-    log: any[]
-  }
-
-  interface IPopupFormProperty {
-
-  }
-
-  interface IAction<T, P> {
-    type: T,
-    payload: P
-  }
-
-  type ICreateTaskAction = IAction<EAppActionTypes.CREATE_TASK_START, ITask>
+interface ITaskBody {
+  contentType: ETaskContentTypes;
+  content: string;
 }
 
+interface ITaskReminderDateTime {
+  timeZone: TimeZone;
+  dateTime: string;
+}
+
+/**
+ * https://github.com/microsoftgraph/microsoft-graph-docs/blob/main/api-reference/v1.0/api/todotasklist-post-tasks.md#request-body
+ */
+interface ICreateTaskParams {
+  id?: string; // 	Unique identifier for the task. By default, this value changes when the item is moved from one list to another.
+  body?: ITaskBody;  // 	The task body that typically contains information about the task.
+  completedDateTime?: string;  // 	The date in the specified time zone that the task was finished.
+  dueDateTime?: string;  // 	The date in the specified time zone that the task is to be finished.
+  importance?: ETaskImportance;  // 	The importance of the task. Possible values are: low, normal, high.
+  isReminderOn?: boolean;  // 	Set to true if an alert is set to remind the user of the task.
+  recurrence?: any;  // 	The recurrence pattern for the task.
+  reminderDateTime?: ITaskReminderDateTime;  // 	The date and time for a reminder alert of the task to occur.
+  status?: ETaskStatus;  // 	Indicates the state or progress of the task. Possible values are: notStarted, inProgress, completed, waitingOnOthers, deferred.
+  title: string;  // 	A brief description of the task.
+  createdDateTime?: string;  // 	The date and time when the task was created. By default, it is in UTC. You can provide a custom time zone in the request header. The property value uses ISO 8601 format. For example, midnight UTC on Jan 1, 2020 would look like this: '2020-01-01T00:00:00Z'.
+  lastModifiedDateTime?: string; // 	The date and time when the task was last modified. By default, it is in UTC. You can provide a custom time zone in the request header. The property value uses ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2020 would look like this: '2020-01-01T00:00:00Z'.
+  bodyLastModifiedDateTime?: string; // 	The date and time when the task was last modified. By default, it is in UTC. You can provide a custom time zone in the request header. The property value uses ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2020 would look like this: '2020-01-01T00:00:00Z'.
+}
+
+interface IPopupForm {
+  id?: string;
+  tasklistId?:string;
+  title?:string;
+  describe?:string;
+  dateTime?:string;
+  importance?:boolean
+  bookmarked?:boolean;
+}
+
+interface ITasklistResult {
+  "@odata.context": string;
+  value: {
+    "@odata.etag": string;
+    displayName: string;
+    id: string;
+    isOwner: boolean;
+    isShared: boolean;
+    wellknownListName: string;
+  }[];
+}
+
+interface ITasksResult {
+  "@odata.context": string;
+  value: {
+    '@odata.etag': string
+    body: unknown
+    createdDateTime: string
+    dueDateTime: any
+    id: string
+    importance: "normal"
+    isReminderOn: false
+    lastModifiedDateTime: string
+    recurrence: unknown;
+    status: string
+    title: string
+  }[]
+}
+
+interface SerializError {
+  code: ErrorCode,
+  message: string,
+  stack: string,
+  time: number,
+}
+
+type Modify<T, R> = Omit<T, keyof R> & R;
+type BackgroundContext = typeof backgroundContext;
+type serializAuthenticationResult = Modify<AuthenticationResult, {
+  expiresOn: number; extExpiresOn: number
+}>;

@@ -2,11 +2,11 @@ import { API_BASE_URL } from "../constants";
 import request from "../helpers/request";
 
 export default class Task {
-  private meta: ITaskProperty;
+  // private meta: ITaskPropert;
   id: any;
 
-  constructor(meta: ITaskProperty) {
-    this.meta = meta;
+  constructor() {
+    // this.meta = meta;
   }
 
   // Create task
@@ -20,7 +20,7 @@ export default class Task {
   // https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/api-reference/v1.0/api/todotask-get.md
   static getTask({ tasklistId, id }: { tasklistId: string; id: string }) {
     const url = `${API_BASE_URL}/me/todo/lists/${tasklistId}/tasks/${id}`;
-    return request.post(url).then(console.log);
+    return request.post(url);
   }
 
   // // Update todoTask

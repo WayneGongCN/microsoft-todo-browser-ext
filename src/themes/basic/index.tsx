@@ -1,20 +1,17 @@
 import React from "react";
-import Com1 from "./components/Com1";
-import Com2 from "./components/Com2";
-// import { useDispatch, useSelector } from "react-redux"
-// import { Dispatch, rootSlice, State } from "../../../redux"
+import Hello from "./components/Hello";
+import Login from "./components/Login";
+import Tasklists from "./components/Tasklists";
 
-const Default: React.FC<any> = () => {
-  // const account = useSelector<State>(state => state.account)
-  // const dispatch = useDispatch<Dispatch>()
+const Basic: React.FC<any> = () => {
 
-  // return <div onClick={() => dispatch(rootSlice.actions.increment())}>Test</div>
   return (
     <>
-      <Com1 />
-      <Com2 />
+      <Hello />
+      <Login />
+      <Tasklists />
     </>
-  )
+  );
 };
 
-export default Default;
+export default Basic;

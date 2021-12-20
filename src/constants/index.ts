@@ -1,9 +1,31 @@
-export const API_BASE_URL = 'https://graph.microsoft.com/v1.0';
+import { IPopupForm } from "../../types";
 
-export const dateFormat = 'YYYY/MM/DD';
-export const timeFormat = 'HH:mm:ss';
-export const defalutTasklist = null as null;
-export const rememberLastUeseTasklist = true;
-export const reportError = false;
+export const API_BASE_URL = "https://graph.microsoft.com/v1.0";
+export const AUTH_SCOPE = ["profile", "Tasks.ReadWrite"];
+export const API_TIME_OUT = 1000 * 60;
 
-export const persistReducerkey = 'persistReducer'
+
+export const TIME_ZONE = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+export const DATE_FORMAT = "YYYY/MM/DD";
+export const TIME_FORMAT = "HH:mm:ss";
+
+
+export const QUICK_ADD_DEFAULT_TASKLIST = '';
+export const REMENBER_LAST_USE_TASKLIST = true;
+
+
+export const REPORT_ERROR = true;
+export const REPORT_SAMPLE_RATE = 1;
+
+export const NOTIFICATION_ICON_URL = `chrome-extension://${chrome.runtime.id}/icons/todo-128.png`;
+export const NOTIFICATION_TYPE = 'basic'
+
+export const AUTO_RESET_POPUP_FORM = true;
+export const DEFAULT_FORM_VALS: IPopupForm = {
+  title: '',
+  describe: '',
+  tasklistId: '',
+  importance: false,
+  bookmarked: true,
+  dateTime: ''
+}

@@ -1,18 +1,26 @@
 import { isDev } from "../helpers";
 import { configureStore } from "@reduxjs/toolkit";
-import appSlice from "./app";
-import logger from "redux-logger";
+import authSlice from "./auth";
+import logger, { createLogger } from "redux-logger";
+import taskSlice from "./task";
+import tasklistSlice from "./tasklist";
+import popupSlice from "./popup";
+import authMiddleware from "../helpers/authMiddleware";
 
 
 export const store = configureStore({
-  reducer: {
-    app: appSlice.reducer,
-  },
   devTools: isDev,
+
+  reducer: {
+    auth: authSlice.reducer,
+    task: taskSlice.reducer,
+    tasklist: tasklistSlice.reducer,
+    popup: popupSlice.reducer,
+  },
 
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
-      .prepend(logger)
+      .prepend(createLogger({collapsed: true}))
   }
 });
 

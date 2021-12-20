@@ -23,7 +23,7 @@ module.exports = {
   ],
 
   rules: {
-    'max-len': ['off'],
-    'no-multiple-empty-lines': ['error', { max: 3, maxEOF: 1 }],
+    'max-len': ['off', { code: 180 }],
+    'no-multiple-empty-lines': ['error', { max: 2, maxEOF: 1 }],
   },
 };
