@@ -1,6 +1,7 @@
 const packageJson = require('../package.json');
 
 module.exports = (env) => ({
+  manifest_version: 2,
   name: 'Microsoft To Do browser extension',
   version: packageJson.version,
   description: packageJson.description,
@@ -28,5 +29,4 @@ module.exports = (env) => ({
       48: './icons/todo-48.png',
       128: './icons/todo-128.png',
     },
-  manifest_version: 2,
 });

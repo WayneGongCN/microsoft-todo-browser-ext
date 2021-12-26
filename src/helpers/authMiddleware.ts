@@ -1,5 +1,4 @@
 import { State } from "../redux";
-import { logger } from "./logger";
 import { authentication } from "./msal";
 
 const authMiddleware = (store: any) => (next: any) => (action: any) => {

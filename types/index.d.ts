@@ -39,7 +39,7 @@ interface IPopupForm {
   describe?: string;
   dateTime?: string;
   importance?: boolean;
-  bookmarked?: boolean;
+  bookmark?: boolean;
 }
 
 interface ITasklistResult {

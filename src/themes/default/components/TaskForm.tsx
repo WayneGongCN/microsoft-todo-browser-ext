@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "../../../redux";
 import { Controller, useForm } from "react-hook-form";
@@ -28,56 +28,57 @@ const { tasklistSlice, taskSlice } = backgroundContext;
 
 type TaskFormProps = {
   defaultValues: IPopupForm;
-  loading: boolean;
   onChange: (val: IPopupForm) => void;
 };
 
 const TaskForm: React.FC<any> = ({
   defaultValues,
-  loading,
   onChange,
 }: TaskFormProps) => {
   const dispatch = useDispatch();
   const {
     watch,
     reset,
-    register,
     control,
-    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues });
 
-  useEffect(() => {
-    logger.log('mounted init onChange')
-    watch(onChange);
-  }, []);
-
+  // getTasklist
   const tasklists = useSelector((state: State) => state.tasklist.lists);
-  const loadingTasklists = useSelector(
-    (state: State) => state.tasklist.loading
-  );
   useEffect(() => {
     logger.log('mounted getTasklist')
     dispatch(tasklistSlice.getTasklist());
   }, []);
 
+  // init onChange
+  useEffect(() => {
+    logger.log('mounted init onChange')
+    watch(onChange);
+  }, []);
+
+  // loading stats
+  const creating = useSelector((state: State) => state.popup.creating);
+  const loadingTasklist = useSelector((state: State) => state.popup.loadingTasklist);
+
+  // submit
   const submit = useCallback((val, err) => {
     logger.log("submit", val, err);
     dispatch(taskSlice.createTask(val));
   }, []);
 
+  // reset
   const handleReset = useCallback(() => {
     logger.log("handleReset reset form");
     reset({...DEFAULT_FORM_VALS}); 
   }, [reset]);
 
+  // reset on defaultValues change
   useEffect(() => {
-    logger.log('defaultValues change, reset form')
+    logger.log('reset form on defaultValues change')
     reset(defaultValues)
   }, [defaultValues])
 
-  console.log('Render')
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item xs={12}>
@@ -148,7 +149,7 @@ const TaskForm: React.FC<any> = ({
               rules={{ required: true }}
               render={({ field }) => (
                 <>
-                  <Select labelId="task-list-label" {...field}>
+                  <Select labelId="task-list-label"  disabled={loadingTasklist} {...field}>
                     {tasklists.map((x) => (
                       <MenuItem key={x.id} value={x.id}>
                         {x.displayName}
@@ -164,14 +165,14 @@ const TaskForm: React.FC<any> = ({
           </FormControl>
         </Grid>
 
-        <Grid item xs={2}>
+        <Grid item xs={2} style={{marginTop: '8px'}}>
           <Controller
             control={control}
             name="importance"
             render={({ field }) => (
               <Tooltip title="Importance">
                 <Checkbox
-                  color="secondary"
+                  color="primary"
                   icon={<StarOutline fontSize="medium" />}
                   checkedIcon={<Star fontSize="medium" />}
                   {...field}
@@ -182,14 +183,14 @@ const TaskForm: React.FC<any> = ({
           />
         </Grid>
 
-        <Grid item xs={2}>
+        <Grid item xs={2} style={{marginTop: '8px'}}>
           <Controller
             control={control}
-            name="bookmarked"
+            name="bookmark"
             render={({ field }) => (
-              <Tooltip title="Bookmarked">
+              <Tooltip title="Bookmark">
                 <Checkbox
-                  color="secondary"
+                  color="primary"
                   icon={<BookmarksOutlined fontSize="small" />}
                   checkedIcon={<Bookmarks fontSize="small" />}
                   {...field}
@@ -204,7 +205,7 @@ const TaskForm: React.FC<any> = ({
       <Grid container item direction="row" alignItems="center" xs={12}>
         <Grid item xs>
           <Tooltip title="Reset">
-            <IconButton size="small" onClick={handleReset}>
+            <IconButton size="small" color="secondary" onClick={handleReset}>
               <RotateLeft />
             </IconButton>
           </Tooltip>
@@ -215,13 +216,12 @@ const TaskForm: React.FC<any> = ({
             size="small"
             variant="contained"
             color="primary"
-            endIcon={loading ? <CircularProgress size={20} /> : null}
-            disableElevation
-            disabled={loading}
+            endIcon={creating ? <CircularProgress size={20} /> : null}
+            disabled={creating}
             onClick={handleSubmit(submit)}
             fullWidth
           >
-            {loading ? "" : "Add a task"}
+            {creating ? "Creating ..." : "Add a task"}
           </Button>
         </Grid>
       </Grid>

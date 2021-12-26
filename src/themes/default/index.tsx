@@ -1,21 +1,17 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "../../redux";
 import TaskForm from "./components/TaskForm";
-import { backgroundContext } from "../../popup/";
 import { useEffect } from "react";
 import { logger } from "../../helpers/logger";
 import Login from "./components/Login";
-
-const { popupSlice } = backgroundContext;
+import { Container } from "@material-ui/core";
+import OpenMSTodo from "./components/OpenMSToDo";
 
 const Default: React.FC<any> = () => {
   useEffect(() => {
     logger.timeEnd("theme");
   }, []);
-
-  const dispatch = useDispatch();
-  const creating = useSelector((state: State) => state.popup.creating);
 
   const reduxForm = useSelector((state: State) => state.popup.form);
   useEffect(() => {
@@ -28,8 +24,13 @@ const Default: React.FC<any> = () => {
   }, []);
 
   const authed = useSelector((state: State) => state.auth.authenticationResult);
-  if (!authed) return <Login />;
-  return <TaskForm defaultValues={reduxForm} loading={creating} onChange={handleFormChange} />;
+  return (
+    <Container style={{ width: 350, padding: 10 }}>
+      <OpenMSTodo />
+      {authed ? <TaskForm defaultValues={reduxForm} onChange={handleFormChange} /> : <Login />}
+    </Container>
+  )
+  
 };
 
 export default Default;

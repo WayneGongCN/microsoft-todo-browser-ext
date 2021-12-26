@@ -1,6 +1,8 @@
 import { IPopupForm } from "../../types";
 
 export const EXT_ID = chrome.runtime.id;
+export const IS_DEV = process.env.NODE_ENV === "development";
+export const IS_PROD = process.env.NODE_ENV === "production";
 
 export const API_BASE_URL = "https://graph.microsoft.com/v1.0";
 export const AUTH_SCOPE = ["profile", "Tasks.ReadWrite"];
@@ -29,6 +31,6 @@ export const DEFAULT_FORM_VALS: IPopupForm = {
   describe: '',
   tasklistId: '',
   importance: false,
-  bookmarked: true,
+  bookmark: true,
   dateTime: ''
 }

@@ -1,14 +1,13 @@
-import { isDev } from "../helpers";
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./auth";
-import logger, { createLogger } from "redux-logger";
+import { createLogger } from "redux-logger";
 import taskSlice from "./task";
 import tasklistSlice from "./tasklist";
 import popupSlice from "./popup";
-import authMiddleware from "../helpers/authMiddleware";
+import { IS_DEV } from "../constants";
 
 export const store = configureStore({
-  devTools: isDev,
+  devTools: IS_DEV,
 
   reducer: {
     auth: authSlice.reducer,

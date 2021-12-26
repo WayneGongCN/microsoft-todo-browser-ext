@@ -1,8 +1,5 @@
 import { NotifyType } from "../constants/enums";
-import Notify from "./notification";
 
-export const isDev = process.env.NODE_ENV === "development";
-export const isProd = process.env.NODE_ENV === "production";
 
 export const bindAsyncActions = (
   slice: any,

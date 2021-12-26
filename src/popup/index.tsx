@@ -1,5 +1,4 @@
-console.time("getBackgroundPage");
-import React, { Suspense, useEffect, useRef } from "react";
+import React, { Suspense } from "react";
 import { Provider } from "react-redux";
 import Container from "@material-ui/core/Container";
 import { render } from "react-dom";
@@ -9,10 +8,12 @@ import { BackgroundContext } from "../../types";
 
 export let backgroundContext: BackgroundContext;
 
+logger.time('getBackgroundPage')
 chrome.runtime.getBackgroundPage(async (ctx: any) => {
   logger.timeEnd("getBackgroundPage");
   logger.time("firstRender");
   logger.time("theme");
+  logger.log('show popup')
 
   logger.log("background ctx: ", ctx);
   backgroundContext = ctx.backgroundContext;
@@ -23,11 +24,11 @@ chrome.runtime.getBackgroundPage(async (ctx: any) => {
 
   render(
     <Provider store={backgroundContext.store}>
-      <Suspense fallback={<div>{logger.timeEnd("firstRender")}Loading</div>}>
-        <Container style={{ width: 350, padding: "8px" }}>
+      <Container disableGutters>
+        <Suspense fallback={<div>{logger.timeEnd("firstRender")}Loading</div>}>
           <Theme />
-        </Container>
-      </Suspense>
+        </Suspense>
+      </Container>
     </Provider>,
     document.getElementById("root")
   );
