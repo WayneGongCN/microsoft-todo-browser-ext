@@ -7,7 +7,6 @@ import tasklistSlice from "./tasklist";
 import popupSlice from "./popup";
 import authMiddleware from "../helpers/authMiddleware";
 
-
 export const store = configureStore({
   devTools: isDev,
 
@@ -19,11 +18,11 @@ export const store = configureStore({
   },
 
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware()
-      .prepend(createLogger({collapsed: true}))
-  }
+    return getDefaultMiddleware().prepend(
+      createLogger({ collapsed: true, duration: true })
+    );
+  },
 });
-
 
 export type State = ReturnType<typeof store.getState>;
 export type Dispatch = typeof store.dispatch;

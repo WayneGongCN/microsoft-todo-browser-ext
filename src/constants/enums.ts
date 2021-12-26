@@ -23,3 +23,9 @@ export enum ETaskImportance {
 export enum TimeZone {
   UTC = 'UTC'
 }
+
+export enum NotifyType {
+  TODO,
+  TASK,
+  TASKLIST
+}

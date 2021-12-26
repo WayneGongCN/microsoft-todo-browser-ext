@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { State } from ".";
 import { authentication as msalAuthentication } from "../helpers/msal";
 import { AUTH_SCOPE } from "../constants";

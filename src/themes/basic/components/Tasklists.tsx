@@ -33,8 +33,7 @@ const Tasklists: React.FC<any> = () => {
         <li key={tasklist.id} onClick={() => handleTasklistClick(tasklist)}>
           <b>{tasklist.displayName}</b>
           <ul>
-            {tasks
-              .filter((task) => (task as any).tasklistId === tasklist.id)
+            {tasks[tasklist.id]
               .map((task) => (
                 <li key={task.id}>{task.title}</li>
               ))}

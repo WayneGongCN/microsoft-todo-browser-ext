@@ -1,5 +1,4 @@
-import Task from "../classes/Task";
-import Tasklist from "../classes/TaskList";
+import { NotifyType } from "../constants/enums";
 import Notify from "./notification";
 
 export const isDev = process.env.NODE_ENV === "development";
@@ -14,15 +13,15 @@ export const bindAsyncActions = (
   });
 };
 
-export const openMicrosoftTodo = (target?: Task | Tasklist) =>
+export const openMicrosoftTodo = (type?: NotifyType, id?: string) =>
   new Promise((resolve, reject) => {
     const prefix = "https://to-do.live.com";
 
     let url = "";
-    if (target instanceof Task) {
-      url = `${prefix}/tasks/id/${target.id}/details`;
-    } else if (target instanceof Tasklist) {
-      url = `${prefix}/tasks/${target.id}`;
+    if (type === NotifyType.TASK) {
+      url = `${prefix}/tasks/id/${id}/details`;
+    } else if (type === NotifyType.TASKLIST) {
+      url = `${prefix}/tasks/${id}`;
     } else {
       url = `${prefix}/tasks/inbox`;
     }
@@ -47,25 +46,11 @@ export const getActiveTab = (): Promise<chrome.tabs.Tab> =>
     });
   });
 
-
-export const sendMessageToActiveTab = (msg: chrome.tabs.MessageSendOptions): Promise<chrome.tabs.Tab> => {
-  return getActiveTab()
-    .then((tab) => {
-      chrome.tabs.sendMessage(tab.id, msg)
-      return tab;
-    });
-}
-
-
-export const showTaskNotify = (
-  task: Task,
-  title = "Create task success",
-  message = "Open Microsoft To-Do."
-) => {
-  const notify = new Notify({ title, message })
-  notify.onClick(() => {
-    openMicrosoftTodo(task);
-    notify.clear();
+export const sendMessageToActiveTab = (
+  msg: chrome.tabs.MessageSendOptions
+): Promise<chrome.tabs.Tab> => {
+  return getActiveTab().then((tab) => {
+    chrome.tabs.sendMessage(tab.id, msg);
+    return tab;
   });
-  return notify
 };
