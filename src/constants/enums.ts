@@ -29,3 +29,8 @@ export enum NotifyType {
   TASK,
   TASKLIST
 }
+
+export enum Page {
+  POPUP,
+  BACKGROUND,
+}

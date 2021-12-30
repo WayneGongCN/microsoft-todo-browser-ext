@@ -1,13 +1,17 @@
-// import { store } from "../reducers";
-// import { getActiveTab, sendMessageToActiveTab, showNotify } from "../helpers";
+import { store } from "../redux";
+import { getActiveTab, sendMessageToActiveTab } from "../helpers";
+import { ENABLE_QUICK_ADD } from "../constants";
+import { createTask } from "../redux/task";
 
-// export const QUICK_ADD_MENU_ITEM = {
-//   id: "QUICK_ADD",
-//   title: "Quick add task",
-//   contexts: ["page", "selection", "link", "image"],
-// };
+export const QUICK_ADD_MENU_ITEMS = [
+  {
+    id: "QUICK_ADD",
+    title: "Quick add task...",
+    contexts: ["all"],
+  },
+];
 
-// export const quickCreateTask = (taskMeta: any) => {
+// export const quickAddTask = (taskMeta: any) => {
 //   return fetchTasklists()(store.dispatch)
 //     .then((tasklistList) => tasklistList[0]?.id)
 //     .then(
@@ -44,3 +48,22 @@
 //     })
 //     .catch((e) => showNotify("Error", e.message));
 // };
+
+chrome.contextMenus.removeAll(() => {
+  if (!ENABLE_QUICK_ADD) return;
+  QUICK_ADD_MENU_ITEMS.forEach((item) => {
+    chrome.contextMenus.create(item, () => {
+      if (chrome.runtime.lastError) throw new Error(chrome.runtime.lastError.message);
+    });
+  });
+
+  chrome.contextMenus.onClicked.addListener((info, tab) => {
+    console.log(info, tab);
+    const { menuItemId, selectionText } = info;
+
+    store.dispatch(createTask({}))
+    .then(res => {
+
+    })
+  });
+});

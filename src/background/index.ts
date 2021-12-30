@@ -1,10 +1,14 @@
-import '../helpers/report'
+import '../helpers/quickAdd'
 import { store } from "../redux";
 import authSlice, { asyncChunk as authSliceAsyncChunk } from "../redux/auth";
 import popupSlice from "../redux/popup";
 import taskSlice, { asyncChunk as taskSlickAsyncChunk } from "../redux/task";
 import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from "../redux/tasklist";
 import Notify from "../helpers/notification";
+import report from '../helpers/report'
+import { Page } from "../constants/enums";
+
+report(Page.BACKGROUND)
 
 export const backgroundContext = {
   Notify,

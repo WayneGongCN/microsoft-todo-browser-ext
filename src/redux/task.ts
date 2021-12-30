@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ICreateTaskParams, IPopupForm, ITaskResult } from "../../types";
+import { TIME_ZONE } from "../constants";
 import { ETaskContentTypes, ETaskImportance, NotifyType, TimeZone } from "../constants/enums";
 import { bindAsyncActions, getActiveTab, openMicrosoftTodo } from "../helpers";
 import Notify from "../helpers/notification";
@@ -26,7 +27,7 @@ const mapToTaskParams = async (popupForm: IPopupForm): Promise<ICreateTaskParams
 
   if (dateTime) {
     result.reminderDateTime = {
-      timeZone: TimeZone.UTC,
+      timeZone: TIME_ZONE,
       dateTime: dateTime,
     };
   }

@@ -5,6 +5,10 @@ import { render } from "react-dom";
 import { logger } from "../helpers/logger";
 import { EThemes, loadTheme } from "../themes";
 import { BackgroundContext } from "../../types";
+import report from '../helpers/report'
+import { Page } from "../constants/enums";
+
+report(Page.POPUP)
 
 export let backgroundContext: BackgroundContext;
 

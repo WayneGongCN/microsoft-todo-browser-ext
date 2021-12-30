@@ -107,7 +107,7 @@ const TaskForm: React.FC<any> = ({
           render={({ field }) => (
             <TextField
               label="Describe"
-              maxRows={4}
+              maxRows={10}
               fullWidth
               multiline
               {...field}

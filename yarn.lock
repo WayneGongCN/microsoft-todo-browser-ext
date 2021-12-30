@@ -1490,7 +1490,7 @@
     redux-thunk "^2.3.0"
     reselect "^4.0.0"
 
-"@sentry/browser@^6.16.1":
+"@sentry/browser@6.16.1", "@sentry/browser@^6.16.1":
   version "6.16.1"
   resolved "https://mirrors.tencent.com/npm/@sentry%2fbrowser/-/browser-6.16.1.tgz#4270ab0fbd1de425e339b3e7a364feb09f470a87"
   integrity sha512-F2I5RL7RTLQF9CccMrqt73GRdK3FdqaChED3RulGQX5lH6U3exHGFxwyZxSrY4x6FedfBFYlfXWWCJXpLnFkow==
@@ -1527,6 +1527,18 @@
   dependencies:
     "@sentry/hub" "6.16.1"
     "@sentry/types" "6.16.1"
+    tslib "^1.9.3"
+
+"@sentry/react@^6.16.1":
+  version "6.16.1"
+  resolved "https://mirrors.tencent.com/npm/@sentry%2freact/-/react-6.16.1.tgz#d4930c4b23bcd307306a0549d20964d98caed38c"
+  integrity sha512-n8fOEKbym4kBi946q3AWXBNy1UKTmABj/hE2nAJbTWhi5IwdM7WBG6QCT2yq7oTHLuTxQrAwgKQc+A6zFTyVHg==
+  dependencies:
+    "@sentry/browser" "6.16.1"
+    "@sentry/minimal" "6.16.1"
+    "@sentry/types" "6.16.1"
+    "@sentry/utils" "6.16.1"
+    hoist-non-react-statics "^3.3.2"
     tslib "^1.9.3"
 
 "@sentry/tracing@^6.16.1":

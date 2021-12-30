@@ -24,7 +24,7 @@ module.exports = (env) => {
         eslintPath: require.resolve('eslint'),
         context: './src',
         cache: true,
-        fix: true, // fix on save
+        fix: true,
       }),
     ],
   };
