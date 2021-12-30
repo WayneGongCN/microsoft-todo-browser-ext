@@ -17,7 +17,7 @@ const DEFAULT_MSAL_CONF = {
   },
 };
 
-const msalInstance = (window as any).msalInstance = new PublicClientApplication(DEFAULT_MSAL_CONF);
+const msalInstance = new PublicClientApplication(DEFAULT_MSAL_CONF);
 msalInstance.getAllAccounts();
 
 

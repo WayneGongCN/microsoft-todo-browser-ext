@@ -6,7 +6,6 @@ let authPromise: Promise<void> = null;
 
 const authMiddleware = (store: any) => (next: any) => (action: any) => {
   // logger.log("authMiddleware", action.type);
-  debugger
   const { type, meta, payload } = action;
   if (!type) return next(action);
   if (type.includes("authenticationResult")) return next(action);

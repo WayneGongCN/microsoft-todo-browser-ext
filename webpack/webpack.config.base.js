@@ -68,7 +68,6 @@ module.exports = (env) => ({
     new CleanWebpackPlugin(),
 
     // new BundleAnalyzerPlugin(),
-
   ],
 
   optimization: {
