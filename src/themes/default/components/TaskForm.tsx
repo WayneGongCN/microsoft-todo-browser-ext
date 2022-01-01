@@ -23,6 +23,8 @@ import StarOutline from "@material-ui/icons/StarOutline";
 import Bookmarks from "@material-ui/icons/Bookmarks";
 import RotateLeft from "@material-ui/icons/RotateLeft";
 import { FormHelperText, Tooltip } from "@material-ui/core";
+import { LANG_POPUP_TITLE, LANG_POPUP_DESCRIBE, LANG_POPUP_DATETIME, LANG_POPUP_TASKLIST, LANG_POPUP_TASKLIST_VALIDATION, LANG_POPUP_IMPORTANCE_TOOLTIP, LANG_POPUP_BOOKMARK_TOOLTIP, LANG_POPUP_RESET, LANG_POPUP_CREATING, LANG_POPUP_ADDTASK } from "../../../constants/lang";
+
 
 const { tasklistSlice, taskSlice } = backgroundContext;
 
@@ -31,10 +33,7 @@ type TaskFormProps = {
   onChange: (val: IPopupForm) => void;
 };
 
-const TaskForm: React.FC<any> = ({
-  defaultValues,
-  onChange,
-}: TaskFormProps) => {
+const TaskForm: React.FC<any> = ({ defaultValues, onChange }: TaskFormProps) => {
   const dispatch = useDispatch();
   const {
     watch,
@@ -47,13 +46,13 @@ const TaskForm: React.FC<any> = ({
   // getTasklist
   const tasklists = useSelector((state: State) => state.tasklist.lists);
   useEffect(() => {
-    logger.log('mounted getTasklist')
+    logger.log("mounted getTasklist");
     dispatch(tasklistSlice.getTasklist());
   }, []);
 
   // init onChange
   useEffect(() => {
-    logger.log('mounted init onChange')
+    logger.log("mounted init onChange");
     watch(onChange);
   }, []);
 
@@ -70,14 +69,14 @@ const TaskForm: React.FC<any> = ({
   // reset
   const handleReset = useCallback(() => {
     logger.log("handleReset reset form");
-    reset({...DEFAULT_FORM_VALS}); 
+    reset({ ...DEFAULT_FORM_VALS });
   }, [reset]);
 
   // reset on defaultValues change
   useEffect(() => {
-    logger.log('reset form on defaultValues change')
-    reset(defaultValues)
-  }, [defaultValues])
+    logger.log("reset form on defaultValues change");
+    reset(defaultValues);
+  }, [defaultValues]);
 
   return (
     <Grid container direction="column" spacing={2}>
@@ -87,115 +86,66 @@ const TaskForm: React.FC<any> = ({
           name="title"
           rules={{ required: true }}
           render={({ field }) => (
-            <TextField
-              label="Title"
-              fullWidth
-              autoFocus
-              required
-              helperText={errors.title && "Title is required."}
-              error={Boolean(errors.title)}
-              {...field}
-            />
+            <TextField label={LANG_POPUP_TITLE} fullWidth autoFocus required helperText={errors.title && "Title is required."} error={Boolean(errors.title)} {...field} />
           )}
         />
       </Grid>
 
       <Grid item xs={12}>
-        <Controller
-          control={control}
-          name="describe"
-          render={({ field }) => (
-            <TextField
-              label="Describe"
-              maxRows={10}
-              fullWidth
-              multiline
-              {...field}
-            />
-          )}
-        />
+        <Controller control={control} name="describe" render={({ field }) => <TextField label={LANG_POPUP_DESCRIBE} maxRows={10} fullWidth multiline {...field} />} />
       </Grid>
 
       <Grid item xs={12}>
         <Controller
           control={control}
           name="dateTime"
-          render={({ field }) => (
-            <TextField
-              label="Reminder Date"
-              type="datetime-local"
-              InputLabelProps={{ shrink: true }}
-              fullWidth
-              {...field}
-            />
-          )}
+          render={({ field }) => <TextField label={LANG_POPUP_DATETIME} type="datetime-local" InputLabelProps={{ shrink: true }} fullWidth {...field} />}
         />
       </Grid>
 
-      <Grid
-        container
-        item
-        direction="row"
-        alignItems="center"
-        spacing={2}
-        xs={12}
-      >
+      <Grid container item direction="row" alignItems="center" spacing={2} xs={12}>
         <Grid item xs={8}>
           <FormControl error={Boolean(errors.tasklistId)} fullWidth required>
-            <InputLabel id="task-list-label">Task List</InputLabel>
+            <InputLabel id="task-list-label">{LANG_POPUP_TASKLIST}</InputLabel>
             <Controller
               control={control}
               name="tasklistId"
               rules={{ required: true }}
               render={({ field }) => (
                 <>
-                  <Select labelId="task-list-label"  disabled={loadingTasklist} {...field}>
+                  <Select labelId="task-list-label" disabled={loadingTasklist} {...field}>
                     {tasklists.map((x) => (
                       <MenuItem key={x.id} value={x.id}>
                         {x.displayName}
                       </MenuItem>
                     ))}
                   </Select>
-                  {Boolean(errors.tasklistId) && (
-                    <FormHelperText>Tasklist is required.</FormHelperText>
-                  )}
+                  {Boolean(errors.tasklistId) && <FormHelperText>{LANG_POPUP_TASKLIST_VALIDATION}</FormHelperText>}
                 </>
               )}
             />
           </FormControl>
         </Grid>
 
-        <Grid item xs={2} style={{marginTop: '8px'}}>
+        <Grid item xs={2} style={{ marginTop: "8px" }}>
           <Controller
             control={control}
             name="importance"
             render={({ field }) => (
-              <Tooltip title="Importance">
-                <Checkbox
-                  color="primary"
-                  icon={<StarOutline fontSize="medium" />}
-                  checkedIcon={<Star fontSize="medium" />}
-                  {...field}
-                  checked={field.value}
-                />
+              <Tooltip title={LANG_POPUP_IMPORTANCE_TOOLTIP} >
+                <Checkbox color="primary" icon={<StarOutline fontSize="medium" />} checkedIcon={<Star fontSize="medium" />} {...field} checked={field.value} />
               </Tooltip>
             )}
           />
         </Grid>
 
-        <Grid item xs={2} style={{marginTop: '8px'}}>
+        <Grid item xs={2} style={{ marginTop: "8px" }}>
           <Controller
             control={control}
             name="bookmark"
             render={({ field }) => (
-              <Tooltip title="Bookmark">
-                <Checkbox
-                  color="primary"
-                  icon={<BookmarksOutlined fontSize="small" />}
-                  checkedIcon={<Bookmarks fontSize="small" />}
-                  {...field}
-                  checked={field.value}
-                />
+              <Tooltip  title={LANG_POPUP_BOOKMARK_TOOLTIP}>
+                <Checkbox color="primary" icon={<BookmarksOutlined fontSize="small" />} checkedIcon={<Bookmarks fontSize="small" />} {...field} checked={field.value} />
               </Tooltip>
             )}
           />
@@ -204,7 +154,7 @@ const TaskForm: React.FC<any> = ({
 
       <Grid container item direction="row" alignItems="center" xs={12}>
         <Grid item xs>
-          <Tooltip title="Reset">
+          <Tooltip  title={LANG_POPUP_RESET}>
             <IconButton size="small" color="secondary" onClick={handleReset}>
               <RotateLeft />
             </IconButton>
@@ -221,7 +171,7 @@ const TaskForm: React.FC<any> = ({
             onClick={handleSubmit(submit)}
             fullWidth
           >
-            {creating ? "Creating ..." : "Add a task"}
+            {creating ? LANG_POPUP_CREATING : LANG_POPUP_ADDTASK}
           </Button>
         </Grid>
       </Grid>

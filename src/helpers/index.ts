@@ -1,10 +1,6 @@
 import { NotifyType } from "../constants/enums";
 
-
-export const bindAsyncActions = (
-  slice: any,
-  asyncActioMap: Record<string, Function>
-) => {
+export const bindAsyncActions = (slice: any, asyncActioMap: Record<string, Function>) => {
   Object.keys(asyncActioMap).forEach((key) => {
     slice[key] = asyncActioMap[key];
   });
@@ -24,8 +20,7 @@ export const openMicrosoftTodo = (type?: NotifyType, id?: string) =>
     }
 
     chrome.tabs.create({ active: true, url }, (tab) => {
-      if (chrome.runtime.lastError)
-        return reject(chrome.runtime.lastError.message);
+      if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
       return resolve(tab);
     });
   });
@@ -43,11 +38,13 @@ export const getActiveTab = (): Promise<chrome.tabs.Tab> =>
     });
   });
 
-export const sendMessageToActiveTab = (
-  msg: chrome.tabs.MessageSendOptions
-): Promise<chrome.tabs.Tab> => {
+export const sendMessageToActiveTab = (msg: chrome.tabs.MessageSendOptions): Promise<chrome.tabs.Tab> => {
   return getActiveTab().then((tab) => {
     chrome.tabs.sendMessage(tab.id, msg);
     return tab;
   });
+};
+
+export const getI18nText = (msgName: string): string => {
+  return chrome.i18n.getMessage(msgName);
 };

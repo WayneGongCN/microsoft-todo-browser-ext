@@ -61,6 +61,9 @@ module.exports = (env) => ({
 
         // copy icons to dist/icons
         { from: 'public/icons', to: 'icons/' },
+
+        // copy _locales to dist/_locales
+        { from: 'public/_locales', to: '_locales/' },
       ],
     }),
 

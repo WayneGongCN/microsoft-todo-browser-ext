@@ -1,0 +1,54 @@
+{
+  "popupTitleText": {
+    "message": "标题",
+    "description": "popup面板标题"
+  },
+  "popupDescribeText": {
+    "message": "描述",
+    "description": "popup面板描述"
+  },
+  "popupDateTimeText": {
+    "message": "提醒我",
+    "description": "Reminder Date"
+  },
+  "popupTaskListText": {
+    "message": "任务列表",
+    "description": "popup任务列表"
+  },
+  "popupResetTooltip": {
+    "message": "重置",
+    "description": "popup面板 重置按钮提示文案"
+  },
+  "popupCreatingText": {
+    "message": "正在创建",
+    "description": "popup面板 正在创建提示文案"
+  },
+  "popupAddTaskBtn": {
+    "message": "添加任务",
+    "description": "popup面板 添加任务按钮文案"
+  },
+  "popupTitleValidation": {
+    "message": "标题必填",
+    "description": "标题校验文案"
+  },
+  "popupTaskListValidation": {
+    "message": "标题列表必选",
+    "description": "标题列表校验文案"
+  },
+  "popupImportanceTooltip": {
+    "message": "重要",
+    "description": "star tooltip text"
+  },
+  "popupBookmarkTooltip": {
+    "message": "书签",
+    "description": "bookmark tooltip text"
+  },
+  "popupLoadingText": {
+    "message": "加载中",
+    "description": "登陆按钮加载中文字"
+  },
+  "popupLoginText": {
+    "message": "登录",
+    "description": "登陆按钮文字"
+  }
+} 
