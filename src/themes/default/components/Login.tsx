@@ -3,6 +3,7 @@ import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "../../../redux";
 import { backgroundContext } from "../../../popup/";
+import { LANG_POPUP_LOADING_TEXT, LANG_POPUP_LOGIN_TEXT } from "../../../constants/lang";
 
 const { authSlice } = backgroundContext;
 
@@ -24,7 +25,7 @@ const Login: React.FC<any> = () => {
         endIcon={loading ? <CircularProgress size={20} /> : null}
         onClick={handleLogin}
       >
-        {loading ? "Loading ..." : "Login"}
+        {loading ? LANG_POPUP_LOADING_TEXT + "..." : LANG_POPUP_LOGIN_TEXT}
       </Button>
     </Container>
   );
