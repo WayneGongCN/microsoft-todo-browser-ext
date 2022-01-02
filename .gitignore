@@ -7,3 +7,4 @@ dist/
 *.zip
 .env
 .DS_Store
+coverage/

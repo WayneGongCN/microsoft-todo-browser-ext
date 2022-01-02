@@ -27,6 +27,7 @@ const Default: React.FC<any> = () => {
   return (
     <Container style={{ width: 350, padding: 10 }}>
       <OpenMSTodo />
+      {/* <TaskForm defaultValues={reduxForm} onChange={handleFormChange} /> */}
       {authed ? <TaskForm defaultValues={reduxForm} onChange={handleFormChange} /> : <Login />}
     </Container>
   )

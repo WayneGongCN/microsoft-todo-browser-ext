@@ -81,8 +81,10 @@ interface SerializError {
 }
 
 type Modify<T, R> = Omit<T, keyof R> & R;
+
 type BackgroundContext = typeof backgroundContext;
-type serializAuthenticationResult = Modify<
+
+type SerializAuthenticationResult = Modify<
   AuthenticationResult,
   {
     expiresOn: number;

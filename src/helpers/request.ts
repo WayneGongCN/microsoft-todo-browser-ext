@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API_BASE_URL , API_TIME_OUT} from '../constants';
 import { store } from '../redux';
+import { getAccessToken } from '../redux/auth';
 import AppError, { ErrorCode } from './error';
 
 const instance = axios.create({
@@ -8,14 +9,10 @@ const instance = axios.create({
   timeout: API_TIME_OUT,
 });
 
-instance.interceptors.request.use((conf) => {
-  const hasAuthHeader = conf.headers?.Authorization;
-  if (hasAuthHeader) return conf;
-
-  const accessToken = store.getState().auth?.authenticationResult?.accessToken;
-  if (!accessToken) return conf;
-
+instance.interceptors.request.use(async (conf) => {
+  const accessToken = await store.dispatch(getAccessToken()).then(res => res.payload) as string;
   conf.headers.Authorization = `Bearer ${accessToken}`;
+
   return conf;
 });
 

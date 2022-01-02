@@ -1,6 +1,6 @@
 import '../helpers/quickAdd'
 import { store } from "../redux";
-import authSlice, { asyncChunk as authSliceAsyncChunk } from "../redux/auth";
+import authSlice, { asyncChunk as authSliceAsyncChunk, authentication } from "../redux/auth";
 import popupSlice from "../redux/popup";
 import taskSlice, { asyncChunk as taskSlickAsyncChunk } from "../redux/task";
 import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from "../redux/tasklist";
@@ -20,3 +20,5 @@ export const backgroundContext = {
 };
 // @ts-ignore
 window.backgroundContext = backgroundContext;
+
+// store.dispatch(authentication()).then(console.log)

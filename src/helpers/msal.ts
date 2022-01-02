@@ -1,9 +1,7 @@
-import {
-  AuthenticationResult,
-  PublicClientApplication,
-  RedirectRequest,
-} from "@azure/msal-browser";
-import { EXT_ID } from "../constants";
+import { AuthenticationResult, PublicClientApplication, RedirectRequest, SilentRequest } from "@azure/msal-browser";
+import { SerializAuthenticationResult } from "../../types";
+import { AUTH_SCOPES, EXT_ID } from "../constants";
+import { logger } from "./logger";
 
 const DEFAULT_MSAL_CONF = {
   auth: {
@@ -18,90 +16,77 @@ const DEFAULT_MSAL_CONF = {
 };
 
 const msalInstance = new PublicClientApplication(DEFAULT_MSAL_CONF);
-msalInstance.getAllAccounts();
-
 
 /**
- * 
+ * 清空登录态
  */
 const clearAccount = () => {
+  logger.log('clear account')
   window.localStorage.clear();
   window.sessionStorage.clear();
 };
 
-
 /**
  * 退出登录
- * @returns 
  */
 export const logout = () => {
   return new Promise((resolve, reject) => {
     const onRedirectNavigate = (url: string) => {
-      chrome.identity.launchWebAuthFlow(
-        { url, interactive: true },
-        (responseUrl) => {
-          clearAccount();
-          resolve(responseUrl);
-        }
-      );
+      chrome.identity.launchWebAuthFlow({ url, interactive: true }, (responseUrl) => {
+        if (chrome.runtime.lastError) reject(chrome.runtime.lastError.message);
+
+        clearAccount();
+        resolve(responseUrl);
+      });
     };
 
     msalInstance.logoutRedirect({ onRedirectNavigate }).catch(reject);
   });
 };
-(window as any).logout = logout
 
-
+const serializeAuthenticationResult  = (res: AuthenticationResult): SerializAuthenticationResult => ({
+  ...res,
+  expiresOn: new Date(res.expiresOn).getTime(),
+  extExpiresOn: new Date(res.extExpiresOn).getTime(),
+})
 
 /**
- * 
- * @param request 
- * @returns 
- * 
+ * 登录/获取 token
  * https://developer.chrome.com/docs/apps/app_identity/#non
  */
-export const authentication = (
-  request: RedirectRequest
-) => {
+export const msalAuthentication = (request: RedirectRequest): Promise<SerializAuthenticationResult> => {
   return new Promise((resolve, reject) => {
     const onRedirectNavigate = (url: string) => {
       // https://developer.chrome.com/docs/extensions/reference/identity/#method-launchWebAuthFlow
-      chrome.identity.launchWebAuthFlow(
-        { url, interactive: true },
-        (hashUrl) => {
-          if (chrome.runtime.lastError) {
-            clearAccount();
-            return reject(chrome.runtime.lastError.message);
-          }
-          return (
-            msalInstance
-              .handleRedirectPromise(hashUrl)
-              // TODO
-              .then(resolve)
-              .catch((e) => {
-                clearAccount();
-                reject(e);
-              })
-          );
-        }
-      );
+      chrome.identity.launchWebAuthFlow({ url, interactive: true }, (hashUrl) => {
+        if (chrome.runtime.lastError) reject(chrome.runtime.lastError.message);
+
+        msalInstance.handleRedirectPromise(hashUrl).then(resolve).catch(reject);
+      });
     };
 
     // https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/2664
     // https://github.com/AzureAD/microsoft-authentication-library-for-js/pull/2669
     // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-core/classes/_useragentapplication_.useragentapplication.html#acquiretokenredirect
-    msalInstance
-      .acquireTokenRedirect({ onRedirectNavigate, ...request })
-      .catch((e: any) => {
-        clearAccount();
-        reject(e);
-      });
-  })
-    .then((res: AuthenticationResult) => ({
-      ...res,
-      expiresOn: new Date(res.expiresOn).getTime(),
-      extExpiresOn: new Date(res.extExpiresOn).getTime(),
-    }))
-};
-(window as any).authentication = authentication
+    msalInstance.acquireTokenRedirect({ onRedirectNavigate, ...request }).catch(reject);
 
+    // const accountInfo = msalInstance.getAllAccounts();
+    // logger.log('getActiveAccount', accountInfo)
+    // msalInstance.acquireTokenSilent({
+    //   ...request,
+    //   account: accountInfo[0]
+    // })
+    //   .then(resolve)
+    //   .catch(err => {
+    //     logger.warn('acquireTokenSilent error try acquireTokenRedirect', err)
+    //     msalInstance.acquireTokenRedirect({ onRedirectNavigate, ...request }).catch(reject);
+    //   })
+  })
+    .then(serializeAuthenticationResult)
+    .catch((e) => {
+      clearAccount();
+      return Promise.reject(e);
+    });
+};
+
+export const msalAcquireTokenSilent = (request: SilentRequest) => msalInstance.acquireTokenSilent(request).then(serializeAuthenticationResult)

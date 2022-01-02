@@ -39,11 +39,11 @@ const mapToTaskParams = async (popupForm: IPopupForm): Promise<ICreateTaskParams
  *
  * https://github.com/microsoftgraph/microsoft-graph-docs/blob/main/api-reference/v1.0/api/todotasklist-post-tasks.md
  */
-export const createTask = createAsyncThunk<ITaskResult, IPopupForm>("task/createTask", async (params, { rejectWithValue }) => {
+export const createTask = createAsyncThunk<ITaskResult, IPopupForm>("task/createTask", async (params, { dispatch, rejectWithValue }) => {
   const { tasklistId, ...taskMeta } = params;
   const data = await mapToTaskParams(taskMeta);
   return request
-    .post<any, ITaskResult>(`me/todo/lists/${tasklistId}/tasks`, data)
+    .post<void, ITaskResult, ICreateTaskParams>(`me/todo/lists/${tasklistId}/tasks`, data)
     .then((res) => {
       new Notify({
         title: "Add a task success",

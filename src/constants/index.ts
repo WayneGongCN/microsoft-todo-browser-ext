@@ -6,7 +6,7 @@ export const IS_DEV = process.env.NODE_ENV === "development";
 export const IS_PROD = process.env.NODE_ENV === "production";
 
 export const API_BASE_URL = "https://graph.microsoft.com/v1.0";
-export const AUTH_SCOPE = ["profile", "Tasks.ReadWrite"];
+export const AUTH_SCOPES = ["profile", "Tasks.ReadWrite"];
 export const API_TIME_OUT = 1000 * 60;
 
 
