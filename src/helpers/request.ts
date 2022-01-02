@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { API_BASE_URL, API_TIME_OUT } from '../constants';
 import { store } from '../redux';
-import { getAccessToken } from '../redux/auth';
+import { acquireToken } from '../redux/auth';
 import AppError, { ErrorCode } from './error';
+import { logger } from './logger';
 
 const instance = axios.create({
   baseURL: API_BASE_URL,
@@ -10,8 +11,13 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(async (conf) => {
-  const accessToken = (await store.dispatch(getAccessToken()).then((res) => res.payload)) as string;
-  conf.headers.Authorization = `Bearer ${accessToken}`;
+  const accessToken = (await store.dispatch(acquireToken()).then((res) => res.payload)) as string;
+
+  if (accessToken) {
+    conf.headers.Authorization = `Bearer ${accessToken}`;
+  } else {
+    logger.warn('accessToken error');
+  }
 
   return conf;
 });

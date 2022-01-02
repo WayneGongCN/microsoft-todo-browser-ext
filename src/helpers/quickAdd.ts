@@ -58,9 +58,7 @@ chrome.contextMenus.removeAll(() => {
   });
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
-    console.log(info, tab);
     // const { menuItemId, selectionText } = info;
-
     // store.dispatch(createTask({})).then((res) => {});
   });
 });

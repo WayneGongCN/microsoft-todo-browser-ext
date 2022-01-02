@@ -2,6 +2,7 @@ import { AuthenticationResult, PublicClientApplication, RedirectRequest, SilentR
 import { SerializAuthenticationResult } from '../../types';
 import { EXT_ID } from '../constants';
 import { logger } from './logger';
+import AppError, { ErrorCode } from './error';
 
 const DEFAULT_MSAL_CONF = {
   auth: {
@@ -22,8 +23,8 @@ const msalInstance = new PublicClientApplication(DEFAULT_MSAL_CONF);
  */
 const clearAccount = () => {
   logger.log('clear account');
-  window.localStorage.clear();
-  window.sessionStorage.clear();
+  window?.localStorage.clear();
+  window?.sessionStorage.clear();
 };
 
 /**
@@ -41,7 +42,7 @@ export const logout = () => {
     };
 
     msalInstance.logoutRedirect({ onRedirectNavigate }).catch(reject);
-  });
+  }).catch((e) => Promise.reject(new AppError({ code: ErrorCode.ACQUIRE_TOKEN, message: e?.message || e })));
 };
 
 const serializeAuthenticationResult = (res: AuthenticationResult): SerializAuthenticationResult => ({
@@ -54,7 +55,7 @@ const serializeAuthenticationResult = (res: AuthenticationResult): SerializAuthe
  * 登录/获取 token
  * https://developer.chrome.com/docs/apps/app_identity/#non
  */
-export const msalAuthentication = (request: RedirectRequest): Promise<SerializAuthenticationResult> => {
+export const msalAcquireTokenRedirect = (request: RedirectRequest): Promise<SerializAuthenticationResult> => {
   return new Promise((resolve, reject) => {
     const onRedirectNavigate = (url: string) => {
       // https://developer.chrome.com/docs/extensions/reference/identity/#method-launchWebAuthFlow
@@ -69,24 +70,24 @@ export const msalAuthentication = (request: RedirectRequest): Promise<SerializAu
     // https://github.com/AzureAD/microsoft-authentication-library-for-js/pull/2669
     // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-core/classes/_useragentapplication_.useragentapplication.html#acquiretokenredirect
     msalInstance.acquireTokenRedirect({ onRedirectNavigate, ...request }).catch(reject);
-
-    // const accountInfo = msalInstance.getAllAccounts();
-    // logger.log('getActiveAccount', accountInfo)
-    // msalInstance.acquireTokenSilent({
-    //   ...request,
-    //   account: accountInfo[0]
-    // })
-    //   .then(resolve)
-    //   .catch(err => {
-    //     logger.warn('acquireTokenSilent error try acquireTokenRedirect', err)
-    //     msalInstance.acquireTokenRedirect({ onRedirectNavigate, ...request }).catch(reject);
-    //   })
   })
     .then(serializeAuthenticationResult)
     .catch((e) => {
       clearAccount();
-      return Promise.reject(e);
+      return Promise.reject(new AppError({ code: ErrorCode.ACQUIRE_TOKEN, message: e?.message || e }));
     });
 };
 
-export const msalAcquireTokenSilent = (request: SilentRequest) => msalInstance.acquireTokenSilent(request).then(serializeAuthenticationResult);
+/**
+ * msalAcquireTokenSilent
+ */
+export const msalAcquireTokenSilent = (request: SilentRequest) =>
+  msalInstance
+    .acquireTokenSilent(request)
+    .then(serializeAuthenticationResult)
+    .catch((e) => Promise.reject(new AppError({ code: ErrorCode.ACQUIRE_TOKEN_SILENT, message: e?.message || e })));
+
+/**
+ *
+ */
+export const msalGetAllAccounts = () => msalInstance.getAllAccounts();

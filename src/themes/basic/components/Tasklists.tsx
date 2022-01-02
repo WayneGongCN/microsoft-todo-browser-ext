@@ -13,7 +13,6 @@ const Tasklists: React.FC<any> = () => {
 
   useEffect(() => {
     if (account) {
-      console.log('getTasklist ...');
       dispatch(tasklistSlice.getTasklist());
     }
   }, [account]);

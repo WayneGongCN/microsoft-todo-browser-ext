@@ -1,6 +1,6 @@
 import '../helpers/quickAdd';
 import { store } from '../redux';
-import authSlice, { asyncChunk as authSliceAsyncChunk } from '../redux/auth';
+import authSlice, { acquireTokenSilent, asyncChunk as authSliceAsyncChunk } from '../redux/auth';
 import popupSlice from '../redux/popup';
 import taskSlice, { asyncChunk as taskSlickAsyncChunk } from '../redux/task';
 import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from '../redux/tasklist';
@@ -18,6 +18,9 @@ export const backgroundContext = {
   tasklistSlice: tasklistSlice as typeof tasklistSlice & typeof tasklistAsyncChunk,
   popupSlice: popupSlice as typeof popupSlice,
 };
+
 // eslint-disable-next-line
 // @ts-ignore
 window.backgroundContext = backgroundContext;
+
+store.dispatch(acquireTokenSilent());

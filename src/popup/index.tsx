@@ -13,7 +13,7 @@ report(Page.POPUP);
 export let backgroundContext: BackgroundContext;
 
 logger.time('getBackgroundPage');
-chrome.runtime.getBackgroundPage(async (ctx: any) => {
+chrome.runtime.getBackgroundPage(async (ctx: Window & { backgroundContext: BackgroundContext }) => {
   logger.timeEnd('getBackgroundPage');
   logger.time('firstRender');
   logger.time('theme');
