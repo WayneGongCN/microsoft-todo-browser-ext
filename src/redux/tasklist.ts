@@ -1,63 +1,48 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ITasklistResult, ITasksResult } from "../../types";
-import { bindAsyncActions } from "../helpers";
-import request from "../helpers/request";
-
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { ITasklistResult, ITasksResult } from '../../types';
+import { bindAsyncActions } from '../helpers';
+import request from '../helpers/request';
 
 /**
  * 获取 Tasklist 列表
  *
  * https://github.com/microsoftgraph/microsoft-graph-docs/blob/main/api-reference/v1.0/api/todo-list-lists.md
  */
-export const getTasklist = createAsyncThunk<ITasklistResult>(
-  "task/fetTasklist",
-  (_, { rejectWithValue }) =>
-    request
-      .get<any, ITasklistResult>("me/todo/lists")
-      .catch((e) => rejectWithValue(e.serializ()))
+export const getTasklist = createAsyncThunk<ITasklistResult>('task/fetTasklist', (_, { rejectWithValue }) =>
+  request.get<any, ITasklistResult>('me/todo/lists').catch((e) => rejectWithValue(e.serializ()))
 );
-
 
 /**
  * 获取 Tasklist 下的 Task
  *
  * https://github.com/microsoftgraph/microsoft-graph-docs/blob/main/api-reference/v1.0/api/todotasklist-list-tasks.md
  */
-export const getTasksByTasklistId = createAsyncThunk<ITasksResult, string>(
-  "task/getTask",
-  (tasklistId, { rejectWithValue }) =>
-    request
-      .get<any, ITasksResult>(`me/todo/lists/${tasklistId}/tasks`)
-      .catch((e) => {
-        rejectWithValue(e.serializ());
-        return Promise.reject(e);
-      })
+export const getTasksByTasklistId = createAsyncThunk<ITasksResult, string>('task/getTask', (tasklistId, { rejectWithValue }) =>
+  request.get<any, ITasksResult>(`me/todo/lists/${tasklistId}/tasks`).catch((e) => {
+    rejectWithValue(e.serializ());
+    return Promise.reject(e);
+  })
 );
-
 
 /**
  * 获取 Task
  *
  * https://github.com/microsoftgraph/microsoft-graph-docs/blob/main/api-reference/v1.0/api/todotask-get.md
  */
-export const getTaskById = createAsyncThunk<
-  ITasklistResult,
-  { tasklistId: string; taskId: string }
->("task/getTask", ({ tasklistId, taskId }, { rejectWithValue, dispatch }) =>
-  request
-    .get<any, ITasklistResult>(`me/todo/lists/${tasklistId}/tasks/${taskId}`)
-    .catch((e) => {
+export const getTaskById = createAsyncThunk<ITasklistResult, { tasklistId: string; taskId: string }>(
+  'task/getTask',
+  ({ tasklistId, taskId }, { rejectWithValue }) =>
+    request.get<any, ITasklistResult>(`me/todo/lists/${tasklistId}/tasks/${taskId}`).catch((e) => {
       rejectWithValue(e.serializ());
       return Promise.reject(e);
     })
 );
 
-
 export const tasklistSlice = createSlice({
-  name: "tasklist",
+  name: 'tasklist',
 
   initialState: {
-    lists: [] as ITasklistResult["value"],
+    lists: [] as ITasklistResult['value'],
     loading: false,
   },
 
@@ -73,7 +58,7 @@ export const tasklistSlice = createSlice({
         state.lists = payload.value;
         state.loading = false;
       })
-      .addCase(getTasklist.rejected, (state, { payload }) => {
+      .addCase(getTasklist.rejected, (state) => {
         state.lists = [];
         state.loading = false;
       })
@@ -82,22 +67,17 @@ export const tasklistSlice = createSlice({
       .addCase(getTasksByTasklistId.pending, (state) => {
         state.loading = true;
       })
-      .addCase(
-        getTasksByTasklistId.fulfilled,
-        (state, { payload, meta: { arg: tasklistId } }) => {
-          (state as any).tasks = payload.value.map((x) => ({
-            ...x,
-            tasklistId,
-          }));
-          state.loading = false;
-        }
-      )
-      .addCase(getTasksByTasklistId.rejected, (state, { payload }) => {
-        state.lists = [];
+      .addCase(getTasksByTasklistId.fulfilled, (state, { payload, meta: { arg: tasklistId } }) => {
+        (state as any).tasks = payload.value.map((x) => ({
+          ...x,
+          tasklistId,
+        }));
         state.loading = false;
       })
-
-
+      .addCase(getTasksByTasklistId.rejected, (state) => {
+        state.lists = [];
+        state.loading = false;
+      });
   },
 });
 

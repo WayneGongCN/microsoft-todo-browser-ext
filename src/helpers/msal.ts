@@ -1,16 +1,16 @@
-import { AuthenticationResult, PublicClientApplication, RedirectRequest, SilentRequest } from "@azure/msal-browser";
-import { SerializAuthenticationResult } from "../../types";
-import { AUTH_SCOPES, EXT_ID } from "../constants";
-import { logger } from "./logger";
+import { AuthenticationResult, PublicClientApplication, RedirectRequest, SilentRequest } from '@azure/msal-browser';
+import { SerializAuthenticationResult } from '../../types';
+import { EXT_ID } from '../constants';
+import { logger } from './logger';
 
 const DEFAULT_MSAL_CONF = {
   auth: {
     clientId: process.env.MSAL_CLIENT_ID,
-    authority: "https://login.microsoftonline.com/consumers",
+    authority: 'https://login.microsoftonline.com/consumers',
     redirectUri: `https://${EXT_ID}.chromiumapp.org/`,
   },
   cache: {
-    cacheLocation: "localStorage",
+    cacheLocation: 'localStorage',
     storeAuthStateInCookie: false,
   },
 };
@@ -21,7 +21,7 @@ const msalInstance = new PublicClientApplication(DEFAULT_MSAL_CONF);
  * 清空登录态
  */
 const clearAccount = () => {
-  logger.log('clear account')
+  logger.log('clear account');
   window.localStorage.clear();
   window.sessionStorage.clear();
 };
@@ -44,11 +44,11 @@ export const logout = () => {
   });
 };
 
-const serializeAuthenticationResult  = (res: AuthenticationResult): SerializAuthenticationResult => ({
+const serializeAuthenticationResult = (res: AuthenticationResult): SerializAuthenticationResult => ({
   ...res,
   expiresOn: new Date(res.expiresOn).getTime(),
   extExpiresOn: new Date(res.extExpiresOn).getTime(),
-})
+});
 
 /**
  * 登录/获取 token
@@ -89,4 +89,4 @@ export const msalAuthentication = (request: RedirectRequest): Promise<SerializAu
     });
 };
 
-export const msalAcquireTokenSilent = (request: SilentRequest) => msalInstance.acquireTokenSilent(request).then(serializeAuthenticationResult)
+export const msalAcquireTokenSilent = (request: SilentRequest) => msalInstance.acquireTokenSilent(request).then(serializeAuthenticationResult);

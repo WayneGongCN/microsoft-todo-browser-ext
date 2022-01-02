@@ -1,13 +1,13 @@
-import { store } from "../redux";
-import { getActiveTab, sendMessageToActiveTab } from "../helpers";
-import { ENABLE_QUICK_ADD } from "../constants";
-import { createTask } from "../redux/task";
+// import { store } from '../redux';
+// import { getActiveTab, sendMessageToActiveTab } from '../helpers';
+import { ENABLE_QUICK_ADD } from '../constants';
+// import { createTask } from '../redux/task';
 
 export const QUICK_ADD_MENU_ITEMS = [
   {
-    id: "QUICK_ADD",
-    title: "Quick add task...",
-    contexts: ["all"],
+    id: 'QUICK_ADD',
+    title: 'Quick add task...',
+    contexts: ['all'],
   },
 ];
 
@@ -59,11 +59,8 @@ chrome.contextMenus.removeAll(() => {
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
     console.log(info, tab);
-    const { menuItemId, selectionText } = info;
+    // const { menuItemId, selectionText } = info;
 
-    store.dispatch(createTask({}))
-    .then(res => {
-
-    })
+    // store.dispatch(createTask({})).then((res) => {});
   });
 });

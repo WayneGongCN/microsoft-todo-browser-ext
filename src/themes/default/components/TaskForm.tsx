@@ -1,30 +1,40 @@
-import React, { useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { State } from "../../../redux";
-import { Controller, useForm } from "react-hook-form";
-import { IPopupForm } from "../../../../types";
-import { backgroundContext } from "../../../popup";
-import { DEFAULT_FORM_VALS } from "../../../constants";
-import { logger } from "../../../helpers/logger";
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { State } from '../../../redux';
+import { Controller, useForm } from 'react-hook-form';
+import { IPopupForm } from '../../../../types';
+import { backgroundContext } from '../../../popup';
+import { DEFAULT_FORM_VALS } from '../../../constants';
+import { logger } from '../../../helpers/logger';
 
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
-import Checkbox from "@material-ui/core/Checkbox";
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import BookmarksOutlined from "@material-ui/icons/BookmarksOutlined";
-import Star from "@material-ui/icons/Star";
-import StarOutline from "@material-ui/icons/StarOutline";
-import Bookmarks from "@material-ui/icons/Bookmarks";
-import RotateLeft from "@material-ui/icons/RotateLeft";
-import { FormHelperText, Tooltip } from "@material-ui/core";
-import { LANG_POPUP_TITLE, LANG_POPUP_DESCRIBE, LANG_POPUP_DATETIME, LANG_POPUP_TASKLIST, LANG_POPUP_TASKLIST_VALIDATION, LANG_POPUP_IMPORTANCE_TOOLTIP, LANG_POPUP_BOOKMARK_TOOLTIP, LANG_POPUP_RESET, LANG_POPUP_CREATING, LANG_POPUP_ADDTASK } from "../../../constants/lang";
-
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import BookmarksOutlined from '@material-ui/icons/BookmarksOutlined';
+import Star from '@material-ui/icons/Star';
+import StarOutline from '@material-ui/icons/StarOutline';
+import Bookmarks from '@material-ui/icons/Bookmarks';
+import RotateLeft from '@material-ui/icons/RotateLeft';
+import { FormHelperText, Tooltip } from '@material-ui/core';
+import {
+  LANG_POPUP_TITLE,
+  LANG_POPUP_DESCRIBE,
+  LANG_POPUP_DATETIME,
+  LANG_POPUP_TASKLIST,
+  LANG_POPUP_TASKLIST_VALIDATION,
+  LANG_POPUP_IMPORTANCE_TOOLTIP,
+  LANG_POPUP_BOOKMARK_TOOLTIP,
+  LANG_POPUP_RESET,
+  LANG_POPUP_CREATING,
+  LANG_POPUP_ADDTASK,
+} from '../../../constants/lang';
 
 const { tasklistSlice, taskSlice } = backgroundContext;
 
@@ -46,13 +56,13 @@ const TaskForm: React.FC<any> = ({ defaultValues, onChange }: TaskFormProps) => 
   // getTasklist
   const tasklists = useSelector((state: State) => state.tasklist.lists);
   useEffect(() => {
-    logger.log("mounted getTasklist");
+    logger.log('mounted getTasklist');
     dispatch(tasklistSlice.getTasklist());
   }, []);
 
   // init onChange
   useEffect(() => {
-    logger.log("mounted init onChange");
+    logger.log('mounted init onChange');
     watch(onChange);
   }, []);
 
@@ -62,19 +72,19 @@ const TaskForm: React.FC<any> = ({ defaultValues, onChange }: TaskFormProps) => 
 
   // submit
   const submit = useCallback((val, err) => {
-    logger.log("submit", val, err);
+    logger.log('submit', val, err);
     dispatch(taskSlice.createTask(val));
   }, []);
 
   // reset
   const handleReset = useCallback(() => {
-    logger.log("handleReset reset form");
+    logger.log('handleReset reset form');
     reset({ ...DEFAULT_FORM_VALS });
   }, [reset]);
 
   // reset on defaultValues change
   useEffect(() => {
-    logger.log("reset form on defaultValues change");
+    logger.log('reset form on defaultValues change');
     reset(defaultValues);
   }, [defaultValues]);
 
@@ -86,13 +96,25 @@ const TaskForm: React.FC<any> = ({ defaultValues, onChange }: TaskFormProps) => 
           name="title"
           rules={{ required: true }}
           render={({ field }) => (
-            <TextField label={LANG_POPUP_TITLE} fullWidth autoFocus required helperText={errors.title && "Title is required."} error={Boolean(errors.title)} {...field} />
+            <TextField
+              label={LANG_POPUP_TITLE}
+              fullWidth
+              autoFocus
+              required
+              helperText={errors.title && 'Title is required.'}
+              error={Boolean(errors.title)}
+              {...field}
+            />
           )}
         />
       </Grid>
 
       <Grid item xs={12}>
-        <Controller control={control} name="describe" render={({ field }) => <TextField label={LANG_POPUP_DESCRIBE} maxRows={10} fullWidth multiline {...field} />} />
+        <Controller
+          control={control}
+          name="describe"
+          render={({ field }) => <TextField label={LANG_POPUP_DESCRIBE} maxRows={10} fullWidth multiline {...field} />}
+        />
       </Grid>
 
       <Grid item xs={12}>
@@ -127,25 +149,31 @@ const TaskForm: React.FC<any> = ({ defaultValues, onChange }: TaskFormProps) => 
           </FormControl>
         </Grid>
 
-        <Grid item xs={2} style={{ marginTop: "8px" }}>
+        <Grid item xs={2} style={{ marginTop: '8px' }}>
           <Controller
             control={control}
             name="importance"
             render={({ field }) => (
-              <Tooltip title={LANG_POPUP_IMPORTANCE_TOOLTIP} >
+              <Tooltip title={LANG_POPUP_IMPORTANCE_TOOLTIP}>
                 <Checkbox color="primary" icon={<StarOutline fontSize="medium" />} checkedIcon={<Star fontSize="medium" />} {...field} checked={field.value} />
               </Tooltip>
             )}
           />
         </Grid>
 
-        <Grid item xs={2} style={{ marginTop: "8px" }}>
+        <Grid item xs={2} style={{ marginTop: '8px' }}>
           <Controller
             control={control}
             name="bookmark"
             render={({ field }) => (
-              <Tooltip  title={LANG_POPUP_BOOKMARK_TOOLTIP}>
-                <Checkbox color="primary" icon={<BookmarksOutlined fontSize="small" />} checkedIcon={<Bookmarks fontSize="small" />} {...field} checked={field.value} />
+              <Tooltip title={LANG_POPUP_BOOKMARK_TOOLTIP}>
+                <Checkbox
+                  color="primary"
+                  icon={<BookmarksOutlined fontSize="small" />}
+                  checkedIcon={<Bookmarks fontSize="small" />}
+                  {...field}
+                  checked={field.value}
+                />
               </Tooltip>
             )}
           />
@@ -154,7 +182,7 @@ const TaskForm: React.FC<any> = ({ defaultValues, onChange }: TaskFormProps) => 
 
       <Grid container item direction="row" alignItems="center" xs={12}>
         <Grid item xs>
-          <Tooltip  title={LANG_POPUP_RESET}>
+          <Tooltip title={LANG_POPUP_RESET}>
             <IconButton size="small" color="secondary" onClick={handleReset}>
               <RotateLeft />
             </IconButton>

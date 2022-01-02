@@ -1,10 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { DEFAULT_FORM_VALS } from "../constants";
-import { createTask } from "./task";
-import { getTasklist } from "./tasklist";
+import { createSlice } from '@reduxjs/toolkit';
+import { DEFAULT_FORM_VALS } from '../constants';
+import { createTask } from './task';
+import { getTasklist } from './tasklist';
 
 export const popupSlice = createSlice({
-  name: "popup",
+  name: 'popup',
 
   initialState: {
     form: { ...DEFAULT_FORM_VALS },
@@ -25,7 +25,7 @@ export const popupSlice = createSlice({
       .addCase(createTask.pending, (state) => {
         state.creating = true;
       })
-      .addCase(createTask.fulfilled, (state, { payload, meta }) => {
+      .addCase(createTask.fulfilled, (state) => {
         state.creating = false;
         state.form = { ...DEFAULT_FORM_VALS, tasklistId: state.form.tasklistId };
       })
@@ -46,7 +46,7 @@ export const popupSlice = createSlice({
       })
       .addCase(getTasklist.rejected, (state, { payload }) => {
         state.loadingTasklist = false;
-      })
+      });
   },
 });
 

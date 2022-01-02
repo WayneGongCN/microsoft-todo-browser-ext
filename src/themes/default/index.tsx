@@ -1,21 +1,21 @@
-import React, { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { State } from "../../redux";
-import TaskForm from "./components/TaskForm";
-import { useEffect } from "react";
-import { logger } from "../../helpers/logger";
-import Login from "./components/Login";
-import { Container } from "@material-ui/core";
-import OpenMSTodo from "./components/OpenMSToDo";
+import React, { useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { State } from '../../redux';
+import TaskForm from './components/TaskForm';
+import { useEffect } from 'react';
+import { logger } from '../../helpers/logger';
+import Login from './components/Login';
+import { Container } from '@material-ui/core';
+import OpenMSTodo from './components/OpenMSToDo';
 
-const Default: React.FC<any> = () => {
+const Default: React.FC<void> = () => {
   useEffect(() => {
-    logger.timeEnd("theme");
+    logger.timeEnd('theme');
   }, []);
 
   const reduxForm = useSelector((state: State) => state.popup.form);
   useEffect(() => {
-    logger.log("reduxForm: ", reduxForm);
+    logger.log('reduxForm: ', reduxForm);
   }, [reduxForm]);
 
   const handleFormChange = useCallback((val) => {
@@ -30,8 +30,7 @@ const Default: React.FC<any> = () => {
       {/* <TaskForm defaultValues={reduxForm} onChange={handleFormChange} /> */}
       {authed ? <TaskForm defaultValues={reduxForm} onChange={handleFormChange} /> : <Login />}
     </Container>
-  )
-  
+  );
 };
 
 export default Default;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_BASE_URL , API_TIME_OUT} from '../constants';
+import { API_BASE_URL, API_TIME_OUT } from '../constants';
 import { store } from '../redux';
 import { getAccessToken } from '../redux/auth';
 import AppError, { ErrorCode } from './error';
@@ -10,7 +10,7 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(async (conf) => {
-  const accessToken = await store.dispatch(getAccessToken()).then(res => res.payload) as string;
+  const accessToken = (await store.dispatch(getAccessToken()).then((res) => res.payload)) as string;
   conf.headers.Authorization = `Bearer ${accessToken}`;
 
   return conf;
@@ -27,7 +27,7 @@ instance.interceptors.response.use(
     });
     return Promise.reject(err);
   },
-  (err) => Promise.reject(new AppError({ code: ErrorCode.UNKNOW, message: err.message })),
+  (err) => Promise.reject(new AppError({ code: ErrorCode.UNKNOW, message: err.message }))
 );
 
 export default instance;

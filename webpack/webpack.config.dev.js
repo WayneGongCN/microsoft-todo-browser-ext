@@ -2,13 +2,12 @@ const { merge } = require('webpack-merge');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const baseConfig = require('./webpack.config.base');
 
-
 module.exports = (env) => {
   const devConfig = {
-  /**
-   * webpack --env mode=development ...
-   * webpack --env mode=production ...
-   */
+    /**
+     * webpack --env mode=development ...
+     * webpack --env mode=production ...
+     */
     mode: 'development',
 
     /**

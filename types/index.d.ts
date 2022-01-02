@@ -1,7 +1,7 @@
-import { AuthenticationResult } from "@azure/msal-browser";
-import { backgroundContext } from "../src/background";
-import { ETaskContentTypes, ETaskImportance, ETaskStatus, TimeZone } from "../src/constants/enums";
-import { ErrorCode } from "../src/helpers/error";
+import { AuthenticationResult } from '@azure/msal-browser';
+import { backgroundContext } from '../src/background';
+import { ETaskContentTypes, ETaskImportance, ETaskStatus, TimeZone } from '../src/constants/enums';
+import { ErrorCode } from '../src/helpers/error';
 
 interface ITaskBody {
   contentType: ETaskContentTypes;
@@ -43,9 +43,9 @@ interface IPopupForm {
 }
 
 interface ITasklistResult {
-  "@odata.context": string;
+  '@odata.context': string;
   value: {
-    "@odata.etag": string;
+    '@odata.etag': string;
     displayName: string;
     id: string;
     isOwner: boolean;
@@ -55,17 +55,17 @@ interface ITasklistResult {
 }
 
 interface ITasksResult {
-  "@odata.context": string;
+  '@odata.context': string;
   value: ITask[];
 }
 
 interface ITaskResult {
-  "@odata.etag": string;
+  '@odata.etag': string;
   body: unknown;
   createdDateTime: string;
   dueDateTime: any;
   id: string;
-  importance: "normal";
+  importance: 'normal';
   isReminderOn: false;
   lastModifiedDateTime: string;
   recurrence: unknown;

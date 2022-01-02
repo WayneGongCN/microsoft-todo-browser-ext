@@ -1,18 +1,18 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ICreateTaskParams, IPopupForm, ITaskResult } from "../../types";
-import { TIME_ZONE } from "../constants";
-import { ETaskContentTypes, ETaskImportance, NotifyType, TimeZone } from "../constants/enums";
-import { bindAsyncActions, getActiveTab, openMicrosoftTodo } from "../helpers";
-import Notify from "../helpers/notification";
-import request from "../helpers/request";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { ICreateTaskParams, IPopupForm, ITaskResult } from '../../types';
+import { TIME_ZONE } from '../constants';
+import { ETaskContentTypes, ETaskImportance, NotifyType } from '../constants/enums';
+import { bindAsyncActions, getActiveTab, openMicrosoftTodo } from '../helpers';
+import Notify from '../helpers/notification';
+import request from '../helpers/request';
 
 const mapToTaskParams = async (popupForm: IPopupForm): Promise<ICreateTaskParams> => {
   const { title, describe, bookmark, importance, dateTime } = popupForm;
 
-  let bookmarkContent = "";
+  let bookmarkContent = '';
   if (bookmark) {
     const tab = await getActiveTab();
-    bookmarkContent = `\n---\n${tab.title}\n${tab.url}`
+    bookmarkContent = `\n---\n${tab.title}\n${tab.url}`;
   }
 
   const content = `${describe}\n${bookmarkContent}`;
@@ -39,15 +39,15 @@ const mapToTaskParams = async (popupForm: IPopupForm): Promise<ICreateTaskParams
  *
  * https://github.com/microsoftgraph/microsoft-graph-docs/blob/main/api-reference/v1.0/api/todotasklist-post-tasks.md
  */
-export const createTask = createAsyncThunk<ITaskResult, IPopupForm>("task/createTask", async (params, { dispatch, rejectWithValue }) => {
+export const createTask = createAsyncThunk<ITaskResult, IPopupForm>('task/createTask', async (params, { dispatch, rejectWithValue }) => {
   const { tasklistId, ...taskMeta } = params;
   const data = await mapToTaskParams(taskMeta);
   return request
     .post<void, ITaskResult, ICreateTaskParams>(`me/todo/lists/${tasklistId}/tasks`, data)
     .then((res) => {
       new Notify({
-        title: "Add a task success",
-        message: "Open task on Microsoft To Do.",
+        title: 'Add a task success',
+        message: 'Open task on Microsoft To Do.',
       })
         .onClick(() => openMicrosoftTodo(NotifyType.TASK, res.id))
         .show();
@@ -60,7 +60,7 @@ export const createTask = createAsyncThunk<ITaskResult, IPopupForm>("task/create
 });
 
 export const taskSlice = createSlice({
-  name: "task",
+  name: 'task',
 
   initialState: {
     tasks: {} as Record<string, ITaskResult[]>,
@@ -76,10 +76,10 @@ export const taskSlice = createSlice({
       .addCase(createTask.pending, (state) => {
         state.creating = true;
       })
-      .addCase(createTask.fulfilled, (state, { payload, meta }) => {
+      .addCase(createTask.fulfilled, (state) => {
         state.creating = false;
       })
-      .addCase(createTask.rejected, (state, { payload }) => {
+      .addCase(createTask.rejected, (state) => {
         state.creating = false;
       });
   },

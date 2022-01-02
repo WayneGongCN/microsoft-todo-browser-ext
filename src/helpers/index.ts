@@ -1,5 +1,7 @@
-import { NotifyType } from "../constants/enums";
+import { NotifyType } from '../constants/enums';
 
+// TODO: fix type
+// eslint-disable-next-line
 export const bindAsyncActions = (slice: any, asyncActioMap: Record<string, Function>) => {
   Object.keys(asyncActioMap).forEach((key) => {
     slice[key] = asyncActioMap[key];
@@ -8,9 +10,9 @@ export const bindAsyncActions = (slice: any, asyncActioMap: Record<string, Funct
 
 export const openMicrosoftTodo = (type?: NotifyType, id?: string) =>
   new Promise((resolve, reject) => {
-    const prefix = "https://to-do.live.com";
+    const prefix = 'https://to-do.live.com';
 
-    let url = "";
+    let url = '';
     if (type === NotifyType.TASK) {
       url = `${prefix}/tasks/id/${id}/details`;
     } else if (type === NotifyType.TASKLIST) {
@@ -33,7 +35,7 @@ export const getActiveTab = (): Promise<chrome.tabs.Tab> =>
         const firstActiveTab = tabs[0];
         resolve(firstActiveTab);
       } else {
-        reject(new Error("Not found active tab."));
+        reject(new Error('Not found active tab.'));
       }
     });
   });

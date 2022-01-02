@@ -1,6 +1,6 @@
-import { Grid, Link } from "@material-ui/core";
-import React from "react";
-import { openMicrosoftTodo } from "../../../helpers";
+import { Grid, Link } from '@material-ui/core';
+import React from 'react';
+import { openMicrosoftTodo } from '../../../helpers';
 
 const OpenMSTodo: React.FC<any> = () => {
   return (

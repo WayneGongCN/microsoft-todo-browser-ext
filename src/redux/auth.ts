@@ -1,10 +1,10 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { State } from ".";
-import { msalAcquireTokenSilent, msalAuthentication } from "../helpers/msal";
-import { AUTH_SCOPES } from "../constants";
-import { bindAsyncActions } from "../helpers";
-import { ErrorCode } from "../helpers/error";
-import { SerializAuthenticationResult } from "../../types";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { State } from '.';
+import { msalAcquireTokenSilent, msalAuthentication } from '../helpers/msal';
+import { AUTH_SCOPES } from '../constants';
+import { bindAsyncActions } from '../helpers';
+import { ErrorCode } from '../helpers/error';
+import { SerializAuthenticationResult } from '../../types';
 
 const initialState = {
   authenticationResult: null as null | SerializAuthenticationResult,
@@ -16,12 +16,12 @@ const initialState = {
  * 登录 MS 账号
  */
 export const authentication = createAsyncThunk<SerializAuthenticationResult, void, { state: State; payload: SerializAuthenticationResult }>(
-  "app/authenticationResult",
+  'app/authenticationResult',
   () => msalAuthentication({ scopes: AUTH_SCOPES })
 );
 
 export const acquireTokenSilent = createAsyncThunk<SerializAuthenticationResult, void, { state: State; payload: SerializAuthenticationResult }>(
-  "app/acquireTokenSilent",
+  'app/acquireTokenSilent',
   () => {
     return msalAcquireTokenSilent({ scopes: AUTH_SCOPES });
   }
@@ -30,7 +30,7 @@ export const acquireTokenSilent = createAsyncThunk<SerializAuthenticationResult,
 /**
  * 获取 Access Token
  */
-export const getAccessToken = createAsyncThunk<string, void, { state: State }>("app/getAccessToken", (_, { getState, dispatch }) => {
+export const getAccessToken = createAsyncThunk<string, void, { state: State }>('app/getAccessToken', (_, { getState, dispatch }) => {
   const { auth } = getState();
   const { authenticationResult } = auth;
   const now = Date.now();
@@ -44,20 +44,20 @@ export const getAccessToken = createAsyncThunk<string, void, { state: State }>("
 });
 
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {},
 
   extraReducers: (builder) => {
     builder
-      .addCase(authentication.pending, (state, { payload }) => {
+      .addCase(authentication.pending, (state) => {
         state.loading = true;
       })
       .addCase(authentication.fulfilled, (state, { payload }) => {
         state.authenticationResult = payload;
         state.loading = false;
       })
-      .addCase(authentication.rejected, (state, action) => {
+      .addCase(authentication.rejected, (state) => {
         state.loading = false;
       });
   },

@@ -1,14 +1,14 @@
-import '../helpers/quickAdd'
-import { store } from "../redux";
-import authSlice, { asyncChunk as authSliceAsyncChunk, authentication } from "../redux/auth";
-import popupSlice from "../redux/popup";
-import taskSlice, { asyncChunk as taskSlickAsyncChunk } from "../redux/task";
-import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from "../redux/tasklist";
-import Notify from "../helpers/notification";
-import report from '../helpers/report'
-import { Page } from "../constants/enums";
+import '../helpers/quickAdd';
+import { store } from '../redux';
+import authSlice, { asyncChunk as authSliceAsyncChunk } from '../redux/auth';
+import popupSlice from '../redux/popup';
+import taskSlice, { asyncChunk as taskSlickAsyncChunk } from '../redux/task';
+import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from '../redux/tasklist';
+import Notify from '../helpers/notification';
+import report from '../helpers/report';
+import { Page } from '../constants/enums';
 
-report(Page.BACKGROUND)
+report(Page.BACKGROUND);
 
 export const backgroundContext = {
   Notify,
@@ -18,7 +18,6 @@ export const backgroundContext = {
   tasklistSlice: tasklistSlice as typeof tasklistSlice & typeof tasklistAsyncChunk,
   popupSlice: popupSlice as typeof popupSlice,
 };
+// eslint-disable-next-line
 // @ts-ignore
 window.backgroundContext = backgroundContext;
-
-// store.dispatch(authentication()).then(console.log)

@@ -1,17 +1,17 @@
-import { REPORT_ERROR, REPORT_SAMPLE_RATE } from "../constants";
-import { version } from "../../package.json";
-import { Page } from "../constants/enums";
+import { REPORT_ERROR, REPORT_SAMPLE_RATE } from '../constants';
+import { version } from '../../package.json';
+import { Page } from '../constants/enums';
 
 export default async (page: Page) => {
   if (!REPORT_ERROR) return;
 
   let Sentry = null;
   if (page === Page.BACKGROUND) {
-    Sentry = await import("@sentry/browser");
+    Sentry = await import('@sentry/browser');
   } else if (page === Page.POPUP) {
-    Sentry = await import("@sentry/react");
+    Sentry = await import('@sentry/react');
   }
-  const Integrations = await import("@sentry/tracing");
+  const Integrations = await import('@sentry/tracing');
 
   Sentry.init({
     environment: process.env.NODE_ENV,

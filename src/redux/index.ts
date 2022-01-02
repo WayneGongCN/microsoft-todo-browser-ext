@@ -1,10 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit";
-import authSlice from "./auth";
-import { createLogger } from "redux-logger";
-import taskSlice from "./task";
-import tasklistSlice from "./tasklist";
-import popupSlice from "./popup";
-import { IS_DEV } from "../constants";
+import { configureStore } from '@reduxjs/toolkit';
+import authSlice from './auth';
+import { createLogger } from 'redux-logger';
+import taskSlice from './task';
+import tasklistSlice from './tasklist';
+import popupSlice from './popup';
+import { IS_DEV } from '../constants';
 
 export const store = configureStore({
   devTools: IS_DEV,
@@ -17,9 +17,7 @@ export const store = configureStore({
   },
 
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat([
-      createLogger({ collapsed: true, duration: true }),
-    ]);
+    return getDefaultMiddleware().concat([createLogger({ collapsed: true, duration: true })]);
   },
 });
 

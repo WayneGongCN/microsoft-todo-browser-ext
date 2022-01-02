@@ -1,33 +1,30 @@
 export enum ETaskContentTypes {
-  TEXT = "text",
-  HTML = "html",
+  TEXT = 'text',
+  HTML = 'html',
 }
-
 
 export enum ETaskStatus {
-  notStarted = "notStarted",
-  inProgress = "inProgress",
-  completed = "completed",
-  waitingOnOthers = "waitingOnOthers",
-  deferred = "deferred",
+  notStarted = 'notStarted',
+  inProgress = 'inProgress',
+  completed = 'completed',
+  waitingOnOthers = 'waitingOnOthers',
+  deferred = 'deferred',
 }
-
 
 export enum ETaskImportance {
-  HIGH = "high",
-  NORMAL = "normal",
-  LOW = "low",
+  HIGH = 'high',
+  NORMAL = 'normal',
+  LOW = 'low',
 }
 
-
 export enum TimeZone {
-  UTC = 'UTC'
+  UTC = 'UTC',
 }
 
 export enum NotifyType {
   TODO,
   TASK,
-  TASKLIST
+  TASKLIST,
 }
 
 export enum Page {
