@@ -28,11 +28,11 @@ chrome.runtime.getBackgroundPage(async (ctx: Window & { backgroundContext: Backg
 
   render(
     <Provider store={backgroundContext.store}>
-      <Container disableGutters>
-        <Suspense fallback={<div>{logger.timeEnd('firstRender')}Loading</div>}>
+      <Suspense fallback={<div>{logger.timeEnd('firstRender')}Loading</div>}>
+        <Container disableGutters>
           <Theme />
-        </Suspense>
-      </Container>
+        </Container>
+      </Suspense>
     </Provider>,
     document.getElementById('root')
   );

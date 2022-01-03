@@ -15,7 +15,14 @@ export const popupSlice = createSlice({
 
   reducers: {
     updateForm: (state, { payload }) => {
-      state.form = payload;
+      state.form = { ...payload };
+    },
+
+    /**
+     * 重置表单，tasklist 保持上次选中的内容
+     */
+    resetForm: (state) => {
+      state.form = { ...DEFAULT_FORM_VALS, tasklistId: state.form.tasklistId };
     },
   },
 
@@ -29,7 +36,7 @@ export const popupSlice = createSlice({
         state.creating = false;
         state.form = { ...DEFAULT_FORM_VALS, tasklistId: state.form.tasklistId };
       })
-      .addCase(createTask.rejected, (state, { payload }) => {
+      .addCase(createTask.rejected, (state) => {
         state.creating = false;
       })
 
@@ -37,14 +44,14 @@ export const popupSlice = createSlice({
       .addCase(getTasklist.pending, (state) => {
         state.loadingTasklist = true;
       })
-      .addCase(getTasklist.fulfilled, (state, { payload, meta }) => {
+      .addCase(getTasklist.fulfilled, (state, { payload }) => {
         state.loadingTasklist = false;
-        const firstTasklist = payload.value[0];
-        if (firstTasklist) {
+        if (!state.form.tasklistId) {
+          const firstTasklist = payload.value[0];
           state.form.tasklistId = firstTasklist.id;
         }
       })
-      .addCase(getTasklist.rejected, (state, { payload }) => {
+      .addCase(getTasklist.rejected, (state) => {
         state.loadingTasklist = false;
       });
   },

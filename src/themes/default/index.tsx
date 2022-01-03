@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { State } from '../../redux';
 import TaskForm from './components/TaskForm';
@@ -13,23 +13,11 @@ const Default: React.FC<void> = () => {
     logger.timeEnd('theme');
   }, []);
 
-  const reduxForm = useSelector((state: State) => state.popup.form);
-  useEffect(() => {
-    logger.log('reduxForm: ', reduxForm);
-  }, [reduxForm]);
-
-  const handleFormChange = useCallback((val) => {
-    logger.log(val);
-    // TODO:
-    // dispatch(popupSlice.actions.updateForm(val));
-  }, []);
-
   const authed = useSelector((state: State) => state.auth.authenticationResult);
   return (
     <Container style={{ width: 350, padding: 10 }}>
       <OpenMSTodo />
-      {/* <TaskForm defaultValues={reduxForm} onChange={handleFormChange} /> */}
-      {authed ? <TaskForm defaultValues={reduxForm} onChange={handleFormChange} /> : <Login />}
+      {authed ? <TaskForm /> : <Login />}
     </Container>
   );
 };
