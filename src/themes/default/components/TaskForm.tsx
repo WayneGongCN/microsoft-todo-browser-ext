@@ -3,7 +3,6 @@ import { useDispatch, useSelector, useStore } from 'react-redux';
 import { Dispatch, State } from '../../../redux';
 import { Controller, useForm } from 'react-hook-form';
 import { backgroundContext } from '../../../popup';
-import { DEFAULT_FORM_VALS } from '../../../constants';
 import { logger } from '../../../helpers/logger';
 
 import InputLabel from '@material-ui/core/InputLabel';
@@ -69,15 +68,14 @@ const TaskForm: React.FC = () => {
   }, []);
 
   // 更新 tasklistId
-  const tasklistId = useSelector((state: State) => state.popup.form.tasklistId) 
+  const tasklistId = useSelector((state: State) => state.popup.form.tasklistId);
   useEffect(() => {
-    setValue('tasklistId', tasklistId)
-  }, [tasklistId])
+    setValue('tasklistId', tasklistId);
+  }, [tasklistId]);
 
   // 重置表单
   const handleReset = useCallback(() => {
-    dispatch(popupSlice.actions.resetForm())
-    console.log(store.getState().popup.form)
+    dispatch(popupSlice.actions.resetForm());
     reset(store.getState().popup.form);
   }, []);
 

@@ -31,18 +31,19 @@ const clearAccount = () => {
  * 退出登录
  */
 export const logout = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     const onRedirectNavigate = (url: string) => {
-      chrome.identity.launchWebAuthFlow({ url, interactive: true }, (responseUrl) => {
+      chrome.identity.launchWebAuthFlow({ url, interactive: true }, () => {
         if (chrome.runtime.lastError) reject(chrome.runtime.lastError.message);
-
-        clearAccount();
-        resolve(responseUrl);
+        resolve();
       });
     };
 
     msalInstance.logoutRedirect({ onRedirectNavigate }).catch(reject);
-  }).catch((e) => Promise.reject(new AppError({ code: ErrorCode.ACQUIRE_TOKEN, message: e?.message || e })));
+  }).catch((e) => {
+    clearAccount();
+    return Promise.reject(new AppError({ code: ErrorCode.ACQUIRE_TOKEN, message: e?.message || e }));
+  });
 };
 
 const serializeAuthenticationResult = (res: AuthenticationResult): SerializAuthenticationResult => ({

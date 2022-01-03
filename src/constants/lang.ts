@@ -14,3 +14,5 @@ export const LANG_POPUP_BOOKMARK_TOOLTIP = getI18nText('popupBookmarkTooltip');
 
 export const LANG_POPUP_LOADING_TEXT = getI18nText('popupLoadingText');
 export const LANG_POPUP_LOGIN_TEXT = getI18nText('popupLoginText');
+
+export const LNAG_UNTITLE = getI18nText('untitle');

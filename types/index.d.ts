@@ -34,7 +34,7 @@ interface ICreateTaskParams {
 
 interface IPopupForm {
   id?: string;
-  tasklistId?: string;
+  tasklistId: string;
   title?: string;
   describe?: string;
   dateTime?: string;

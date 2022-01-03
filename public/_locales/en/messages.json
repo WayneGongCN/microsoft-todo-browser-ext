@@ -50,5 +50,9 @@
   "popupLoginText": {
     "message": "Login",
     "description": ""
+  },
+  "untitle": {
+    "message": "Untitle",
+    "description": ""
   }
 }

@@ -50,5 +50,9 @@
   "popupLoginText": {
     "message": "登录",
     "description": "登陆按钮文字"
+  },
+  "untitle": {
+    "message": "无标题",
+    "description": ""
   }
 }

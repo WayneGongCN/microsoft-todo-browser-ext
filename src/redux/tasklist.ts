@@ -9,7 +9,7 @@ import request from '../helpers/request';
  * https://github.com/microsoftgraph/microsoft-graph-docs/blob/main/api-reference/v1.0/api/todo-list-lists.md
  */
 export const getTasklist = createAsyncThunk<ITasklistResult>('task/fetTasklist', (_, { rejectWithValue }) =>
-  request.get<any, ITasklistResult>('me/todo/lists').catch((e) => rejectWithValue(e.serializ()))
+  request.get<void, ITasklistResult>('me/todo/lists').catch((e) => rejectWithValue(e.serializ()))
 );
 
 /**
@@ -18,7 +18,7 @@ export const getTasklist = createAsyncThunk<ITasklistResult>('task/fetTasklist',
  * https://github.com/microsoftgraph/microsoft-graph-docs/blob/main/api-reference/v1.0/api/todotasklist-list-tasks.md
  */
 export const getTasksByTasklistId = createAsyncThunk<ITasksResult, string>('task/getTask', (tasklistId, { rejectWithValue }) =>
-  request.get<any, ITasksResult>(`me/todo/lists/${tasklistId}/tasks`).catch((e) => {
+  request.get<void, ITasksResult>(`me/todo/lists/${tasklistId}/tasks`).catch((e) => {
     rejectWithValue(e.serializ());
     return Promise.reject(e);
   })
@@ -32,7 +32,7 @@ export const getTasksByTasklistId = createAsyncThunk<ITasksResult, string>('task
 export const getTaskById = createAsyncThunk<ITasklistResult, { tasklistId: string; taskId: string }>(
   'task/getTask',
   ({ tasklistId, taskId }, { rejectWithValue }) =>
-    request.get<any, ITasklistResult>(`me/todo/lists/${tasklistId}/tasks/${taskId}`).catch((e) => {
+    request.get<void, ITasklistResult>(`me/todo/lists/${tasklistId}/tasks/${taskId}`).catch((e) => {
       rejectWithValue(e.serializ());
       return Promise.reject(e);
     })
@@ -43,6 +43,7 @@ export const tasklistSlice = createSlice({
 
   initialState: {
     lists: [] as ITasklistResult['value'],
+    quickAddTasklistId: null as null | string,
     loading: false,
   },
 
@@ -56,25 +57,10 @@ export const tasklistSlice = createSlice({
       })
       .addCase(getTasklist.fulfilled, (state, { payload }) => {
         state.lists = payload.value;
+        state.quickAddTasklistId = payload.value[0].id;
         state.loading = false;
       })
       .addCase(getTasklist.rejected, (state) => {
-        state.lists = [];
-        state.loading = false;
-      })
-
-      // getTasksByTasklistId
-      .addCase(getTasksByTasklistId.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(getTasksByTasklistId.fulfilled, (state, { payload, meta: { arg: tasklistId } }) => {
-        (state as any).tasks = payload.value.map((x) => ({
-          ...x,
-          tasklistId,
-        }));
-        state.loading = false;
-      })
-      .addCase(getTasksByTasklistId.rejected, (state) => {
         state.lists = [];
         state.loading = false;
       });

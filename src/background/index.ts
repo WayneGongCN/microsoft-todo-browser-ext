@@ -7,6 +7,7 @@ import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from '../redux/taskli
 import Notify from '../helpers/notification';
 import report from '../helpers/report';
 import { Page } from '../constants/enums';
+import { logout } from '../helpers/msal';
 
 report(Page.BACKGROUND);
 
@@ -17,6 +18,7 @@ export const backgroundContext = {
   taskSlice: taskSlice as typeof taskSlice & typeof taskSlickAsyncChunk,
   tasklistSlice: tasklistSlice as typeof tasklistSlice & typeof tasklistAsyncChunk,
   popupSlice: popupSlice as typeof popupSlice,
+  logout,
 };
 
 // eslint-disable-next-line
