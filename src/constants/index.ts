@@ -33,3 +33,4 @@ export const DEFAULT_FORM_VALS: IPopupForm = {
 };
 
 export const ENABLE_QUICK_ADD = true;
+export const ENABLE_LOG = IS_DEV;
