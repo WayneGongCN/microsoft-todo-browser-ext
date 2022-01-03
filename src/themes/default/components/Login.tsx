@@ -1,13 +1,15 @@
-import { Button, CircularProgress, Container } from '@material-ui/core';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../../redux';
 import { backgroundContext } from '../../../popup/';
 import { LANG_POPUP_LOADING_TEXT, LANG_POPUP_LOGIN_TEXT } from '../../../constants/lang';
+import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const { authSlice } = backgroundContext;
 
-const Login: React.FC<any> = () => {
+const Login: React.FC = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state: State) => state.auth.loading);
 

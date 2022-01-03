@@ -2,7 +2,8 @@ import { AuthenticationResult, PublicClientApplication, RedirectRequest, SilentR
 import { SerializAuthenticationResult } from '../../types';
 import { EXT_ID } from '../constants';
 import { logger } from './logger';
-import AppError, { ErrorCode } from './error';
+import AppError from './error';
+import { ErrorCode } from '../constants/enums';
 
 const DEFAULT_MSAL_CONF = {
   auth: {

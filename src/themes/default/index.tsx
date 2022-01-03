@@ -5,7 +5,7 @@ import TaskForm from './components/TaskForm';
 import { useEffect } from 'react';
 import { logger } from '../../helpers/logger';
 import Login from './components/Login';
-import { Container } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
 import OpenMSTodo from './components/OpenMSToDo';
 
 const Default: React.FC<void> = () => {

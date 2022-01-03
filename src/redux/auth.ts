@@ -3,8 +3,9 @@ import { State } from '.';
 import { msalAcquireTokenSilent, msalAcquireTokenRedirect, msalGetAllAccounts } from '../helpers/msal';
 import { AUTH_SCOPES } from '../constants';
 import { bindAsyncActions } from '../helpers';
-import AppError, { ErrorCode } from '../helpers/error';
+import AppError from '../helpers/error';
 import { SerializAuthenticationResult } from '../../types';
+import { ErrorCode } from '../constants/enums';
 
 const SLICE_NAME = 'auth';
 const initialState = {

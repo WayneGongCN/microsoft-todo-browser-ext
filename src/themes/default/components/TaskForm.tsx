@@ -20,7 +20,8 @@ import Star from '@material-ui/icons/Star';
 import StarOutline from '@material-ui/icons/StarOutline';
 import Bookmarks from '@material-ui/icons/Bookmarks';
 import RotateLeft from '@material-ui/icons/RotateLeft';
-import { FormHelperText, Tooltip } from '@material-ui/core';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Tooltip from '@material-ui/core/Tooltip';
 import {
   LANG_POPUP_TITLE,
   LANG_POPUP_DESCRIBE,

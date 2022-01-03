@@ -1,6 +1,7 @@
 import { AuthenticationResult } from '@azure/msal-browser';
 import { backgroundContext } from '../src/background';
 import { ETaskContentTypes, ETaskImportance, ETaskStatus, TimeZone } from '../src/constants/enums';
+import { EContentMessage } from '../src/content';
 import { ErrorCode } from '../src/helpers/error';
 
 interface ITaskBody {
@@ -71,6 +72,11 @@ interface ITaskResult {
   recurrence: unknown;
   status: string;
   title: string;
+}
+
+interface IContentMessage {
+  type: EContentMessage;
+  payload?: any;
 }
 
 interface SerializError {

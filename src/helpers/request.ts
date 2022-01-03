@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { API_BASE_URL, API_TIME_OUT } from '../constants';
+import { ErrorCode } from '../constants/enums';
 import { store } from '../redux';
 import { acquireToken } from '../redux/auth';
-import AppError, { ErrorCode } from './error';
+import AppError from './error';
 import { logger } from './logger';
 
 const instance = axios.create({

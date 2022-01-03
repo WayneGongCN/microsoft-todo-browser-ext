@@ -1,12 +1,12 @@
 import React, { Suspense } from 'react';
 import { Provider } from 'react-redux';
-import Container from '@material-ui/core/Container';
 import { render } from 'react-dom';
 import { logger } from '../helpers/logger';
 import { EThemes, loadTheme } from '../themes';
 import { BackgroundContext } from '../../types';
 import report from '../helpers/report';
 import { Page } from '../constants/enums';
+import Container from '@material-ui/core/Container';
 
 report(Page.POPUP);
 

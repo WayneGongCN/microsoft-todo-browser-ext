@@ -1,11 +1,5 @@
 import { SerializError } from '../../types';
-
-export enum ErrorCode {
-  UNKNOW = -1,
-  NOT_FOUND_ACCOUNT,
-  ACQUIRE_TOKEN,
-  ACQUIRE_TOKEN_SILENT,
-}
+import { ErrorCode } from '../constants/enums';
 
 const errorMessageMap = {
   [ErrorCode.UNKNOW]: '',

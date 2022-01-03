@@ -1,4 +1,6 @@
+import { IContentMessage } from '../../types';
 import { NotifyType } from '../constants/enums';
+import { logger } from './logger';
 
 // TODO: fix type
 // eslint-disable-next-line
@@ -40,9 +42,11 @@ export const getActiveTab = (): Promise<chrome.tabs.Tab> =>
     });
   });
 
-export const sendMessageToActiveTab = (msg: chrome.tabs.MessageSendOptions): Promise<chrome.tabs.Tab> => {
+export const sendMessageToActiveTab = (msg: IContentMessage): Promise<chrome.tabs.Tab> => {
   return getActiveTab().then((tab) => {
-    chrome.tabs.sendMessage(tab.id, msg);
+    chrome.tabs.sendMessage(tab.id, msg, (response) => {
+      logger.log('response: ', response);
+    });
     return tab;
   });
 };

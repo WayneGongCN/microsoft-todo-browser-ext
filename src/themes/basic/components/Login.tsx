@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../../../redux';

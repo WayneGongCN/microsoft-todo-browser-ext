@@ -16,12 +16,12 @@ module.exports = (env) => ({
   browser_action: {
     default_popup: 'popup.html',
   },
-  // content_scripts: [
-  //   {
-  //     matches: ['<all_urls>'],
-  //     js: ['content.js'],
-  //   },
-  // ],
+  content_scripts: [
+    {
+      matches: ['<all_urls>'],
+      js: ['content.js'],
+    },
+  ],
   icons:
     env.NODE_ENV === 'development'
       ? { 128: './icons/todo-dev-128.png' }

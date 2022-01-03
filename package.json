@@ -10,11 +10,12 @@
     "test": "jest",
     "dev": "webpack --config webpack/webpack.config.dev.js --env NODE_ENV=development --watch",
     "build": "webpack --config webpack/webpack.config.prod.js --env NODE_ENV=production",
-    "format": "prettier --write .",
     "upload": "node scripts/upload.js",
     "changelog": "conventional-changelog -p angular -o CHANGELOG.md  -i CHANGELOG.md",
     "release": "standard-version",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "eslint --cache --fix",
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",
@@ -83,6 +84,7 @@
     "redux-logger": "^3.0.6",
     "uuid": "^8.3.2"
   },
+  "sideEffects": false,
   "babel": {
     "presets": [
       [
@@ -96,7 +98,6 @@
       "@babel/preset-typescript"
     ]
   },
-  
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
     "plugins": [
@@ -123,27 +124,31 @@
       "sourceType": "module"
     }
   },
-
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
     ]
   },
-
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-
   "lint-staged": {
     "*.ts": "eslint --cache --fix",
     "*.{ts,css}": "prettier --write"
   },
-  
   "prettier": {
     "printWidth": 160,
     "singleQuote": true,
-    "parser": "typescript"
+    "parser": "typescript",
+    "overrides": [
+      {
+        "files": "*.css",
+        "options": {
+          "parser": "css"
+        }
+      }
+    ]
   }
 }

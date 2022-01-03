@@ -3,6 +3,8 @@ import { ENABLE_QUICK_ADD } from '../constants';
 import { createTask } from '../redux/task';
 import { getTasklist } from '../redux/tasklist';
 import { LNAG_UNTITLE } from '../constants/lang';
+import { sendMessageToActiveTab } from '.';
+import { EContentMessage } from '../constants/enums';
 
 export const QUICK_ADD_MENU_ITEMS = [
   {
@@ -34,13 +36,18 @@ chrome.contextMenus.removeAll(() => {
       tasklistId = store.getState().tasklist.quickAddTasklistId;
     }
 
-    store.dispatch(
-      createTask({
-        title: taskTitle,
-        describe: selectionText || '',
-        bookmark: true,
-        tasklistId,
-      })
-    );
+    sendMessageToActiveTab({ type: EContentMessage.CURSOR_LOADING });
+    store
+      .dispatch(
+        createTask({
+          title: taskTitle,
+          describe: selectionText || '',
+          bookmark: true,
+          tasklistId,
+        })
+      )
+      .finally(() => {
+        sendMessageToActiveTab({ type: EContentMessage.CURSOR_RESET });
+      });
   });
 });
