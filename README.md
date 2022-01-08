@@ -12,7 +12,7 @@ Microsoft To Do 浏览器扩展（[Chrome](https://chrome.google.com/webstore/de
 ## Todo
 
 - [x] ~~Quick add task~~
-- [ ] TypeScript
+- [x] TypeScript
 - [ ] Unit testing
 - [ ] Setting page
 - [ ] Firefox
