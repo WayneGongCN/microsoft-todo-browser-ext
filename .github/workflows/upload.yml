@@ -11,19 +11,19 @@ jobs:
   upload:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-        check-latest: true
-    - run: echo ${{ secrets.EXTENSION_ID }}
-    - run: echo "EXTENSION_ID=${{ secrets.EXTENSION_ID }}" >> .env
-    - run: echo "MSAL_CLIENT_ID=${{ secrets.MSAL_CLIENT_ID }}" >> .env
-    - run: echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env
-    - run: echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
-    - run: echo "REFRESH_TOKEN=${{ secrets.REFRESH_TOKEN }}" >> .env
-    - run: ls -alh
-    - run: npm install
-    - run: npm run build
-    - run: npm run upload
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          check-latest: true
+      - run: echo ${{ secrets.EXTENSION_ID }}
+      - run: echo "EXTENSION_ID=${{ secrets.EXTENSION_ID }}" >> .env
+      - run: echo "MSAL_CLIENT_ID=${{ secrets.MSAL_CLIENT_ID }}" >> .env
+      - run: echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env
+      - run: echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
+      - run: echo "REFRESH_TOKEN=${{ secrets.REFRESH_TOKEN }}" >> .env
+      - run: ls -alh
+      - run: npm install
+      - run: npm run build
+      - run: npm run upload

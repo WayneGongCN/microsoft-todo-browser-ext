@@ -16,9 +16,11 @@ Microsoft To Do 浏览器扩展（[Chrome](https://chrome.google.com/webstore/de
 - [ ] Unit testing
 - [ ] Setting page
 - [ ] Firefox
-## 
+
+##
 
 Inspired by [ukhan/add-to-ms-todo](https://github.com/ukhan/add-to-ms-todo)
 
 ## License
+
 [MIT](https://opensource.org/licenses/MIT)

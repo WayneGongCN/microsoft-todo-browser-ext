@@ -7,63 +7,148 @@
   "license": "MIT",
   "scripts": {
     "commit": "cz",
-    "dev": "webpack --config webpack.config.js --env mode=development NODE_ENV=development --watch",
-    "build": "webpack --config webpack.config.js --env mode=production NODE_ENV=production",
-    "upload": "node scripts/upload.js"
+    "test": "jest",
+    "dev": "webpack --config webpack/webpack.config.dev.js --env NODE_ENV=development --watch",
+    "build": "webpack --config webpack/webpack.config.prod.js --env NODE_ENV=production",
+    "upload": "node scripts/upload.js",
+    "changelog": "conventional-changelog -p angular -o CHANGELOG.md  -i CHANGELOG.md",
+    "release": "standard-version",
+    "prepare": "husky install",
+    "lint": "eslint --cache --fix",
+    "format": "prettier --write ."
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
+    "@babel/core": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "@babel/preset-typescript": "^7.16.5",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@types/chrome": "0.0.128",
-    "babel-loader": "^8.2.2",
+    "@types/jest": "^27.0.3",
+    "@types/material-ui": "^0.21.8",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.3",
+    "@types/react-redux": "^7.1.16",
+    "@types/redux-logger": "^3.0.8",
+    "@types/uuid": "^8.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
+    "adm-zip": "^0.5.9",
+    "babel-jest": "^27.4.5",
+    "chrome-webstore-upload": "^1.0.0",
     "clean-webpack-plugin": "^3.0.0",
     "commitizen": "^4.2.3",
+    "conventional-changelog-cli": "^2.1.1",
     "copy-webpack-plugin": "^7.0.0",
     "css-loader": "^5.1.3",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^7.17.0",
-    "eslint-config-airbnb": "^18.2.1",
+    "dotenv": "^10.0.0",
+    "dotenv-webpack": "^7.0.3",
+    "eslint": "^8.6.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-webpack-plugin": "^2.4.1",
     "html-webpack-plugin": "^5.0.0-beta.5",
-    "husky": "^4.3.8",
+    "husky": ">=6",
+    "jest": "^27.4.5",
+    "lint-staged": ">=10",
+    "prettier": "2.5.1",
+    "source-map-loader": "^2.0.1",
+    "standard-version": "^9.1.1",
     "style-loader": "^2.0.0",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.4",
     "webpack": "^5.14.0",
-    "webpack-cli": "^4.3.1"
+    "webpack-bundle-analyzer": "^4.5.0",
+    "webpack-cli": "^4.3.1",
+    "webpack-merge": "^5.8.0"
   },
   "dependencies": {
     "@azure/msal-browser": "^2.9.0",
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
-    "adm-zip": "^0.5.4",
-    "chrome-webstore-upload": "^0.4.4",
-    "dotenv": "^8.2.0",
-    "dotenv-webpack": "^6.0.0",
-    "prop-types": "^15.7.2",
+    "@reduxjs/toolkit": "^1.5.1",
+    "@sentry/browser": "^6.16.1",
+    "@sentry/react": "^6.16.1",
+    "@sentry/tracing": "^6.16.1",
+    "axios": "^0.24.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-hook-form": "^7.22.2",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
-    "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.3.0"
+    "uuid": "^8.3.2"
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+  "sideEffects": false,
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "@babel/preset-typescript"
+    ]
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "react"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "prettier"
+    ],
+    "env": {
+      "webextensions": true,
+      "browser": true,
+      "es2021": true,
+      "node": true
+    },
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": 12,
+      "sourceType": "module"
     }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "lint-staged": {
+    "*.ts": "eslint --cache --fix",
+    "*.{ts,css}": "prettier --write"
+  },
+  "prettier": {
+    "printWidth": 160,
+    "singleQuote": true,
+    "parser": "typescript",
+    "overrides": [
+      {
+        "files": "*.css",
+        "options": {
+          "parser": "css"
+        }
+      }
+    ]
   }
 }

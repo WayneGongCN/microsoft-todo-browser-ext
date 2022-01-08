@@ -1,0 +1,58 @@
+{
+  "popupTitleText": {
+    "message": "Title",
+    "description": "popup title text"
+  },
+  "popupDescribeText": {
+    "message": "Describe",
+    "description": "popup describe text"
+  },
+  "popupDateTimeText": {
+    "message": "Reminder Date",
+    "description": "popup dateTime text"
+  },
+  "popupTaskListText": {
+    "message": "Task List",
+    "description": "popup task list text"
+  },
+  "popupResetTooltip": {
+    "message": "reset",
+    "description": "popup reset tooltip"
+  },
+  "popupCreatingText": {
+    "message": "Creating",
+    "description": "popup creating btn text"
+  },
+  "popupAddTaskBtn": {
+    "message": "Add a task",
+    "description": "add task button text"
+  },
+  "popupTitleValidation": {
+    "message": "Title is required.",
+    "description": "title validation text"
+  },
+  "popupTaskListValidation": {
+    "message": "Tasklist is required.",
+    "description": "Tasklist validation text"
+  },
+  "popupImportanceTooltip": {
+    "message": "Importance",
+    "description": "star tooltip text"
+  },
+  "popupBookmarkTooltip": {
+    "message": "Bookmark",
+    "description": "bookmark tooltip text"
+  },
+  "popupLoadingText": {
+    "message": "Loading",
+    "description": ""
+  },
+  "popupLoginText": {
+    "message": "Login",
+    "description": ""
+  },
+  "untitle": {
+    "message": "Untitle",
+    "description": ""
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "module": "es2020",
+    "target": "es2020",
+    "jsx": "react",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
+  "include": ["types/*", "src/**/*"],
+  "exclude": ["node_modules"]
+}
