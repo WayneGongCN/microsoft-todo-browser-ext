@@ -11,7 +11,7 @@ import { logout } from '../helpers/msal';
 
 report(Page.BACKGROUND);
 
-export const backgroundContext = {
+const backgroundContext = {
   Notify,
   store,
   authSlice: authSlice as typeof authSlice & typeof authSliceAsyncChunk,

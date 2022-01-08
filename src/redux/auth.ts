@@ -24,6 +24,8 @@ export const acquireTokenSilent = createAsyncThunk<SerializAuthenticationResult,
     const accounts = msalGetAllAccounts();
     if (accounts.length) {
       return msalAcquireTokenSilent({ scopes: AUTH_SCOPES, account: accounts[0] });
+    } else {
+      return Promise.reject(new AppError({ code: ErrorCode.NOT_FOUND_ACCOUNT, message: 'Not found accounts' }));
     }
   }
 );

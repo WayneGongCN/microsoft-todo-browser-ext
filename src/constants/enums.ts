@@ -43,3 +43,8 @@ export enum ErrorCode {
   ACQUIRE_TOKEN,
   ACQUIRE_TOKEN_SILENT,
 }
+
+export enum EThemes {
+  BASIC = 'basic',
+  DEFAULT = 'default',
+}

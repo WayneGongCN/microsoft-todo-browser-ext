@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { Dispatch, State } from '../../../redux';
 import { Controller, useForm } from 'react-hook-form';
-import { backgroundContext } from '../../../popup';
 import { logger } from '../../../helpers/logger';
 
 import InputLabel from '@material-ui/core/InputLabel';
@@ -35,6 +34,7 @@ import {
   LANG_POPUP_ADDTASK,
   LANG_POPUP_TITLE_VALIDATION,
 } from '../../../constants/lang';
+import { backgroundContext } from '../..';
 
 const { tasklistSlice, taskSlice, popupSlice } = backgroundContext;
 
