@@ -32,5 +32,4 @@ export const DEFAULT_FORM_VALS: IPopupForm = {
   dateTime: '',
 };
 
-export const ENABLE_QUICK_ADD = true;
 export const ENABLE_LOG = IS_DEV;
