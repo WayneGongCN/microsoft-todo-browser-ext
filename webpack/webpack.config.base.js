@@ -42,7 +42,9 @@ module.exports = (env) => ({
     /**
      * parse .env file
      */
-    new Dotenv(),
+    new Dotenv({
+      path: path.resolve(`./.env.${env.NODE_ENV}`)
+    }),
 
     new HtmlWebpackPlugin({
       filename: 'popup.html',
