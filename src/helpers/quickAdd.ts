@@ -1,5 +1,4 @@
 import { store } from '../redux';
-import { ENABLE_QUICK_ADD } from '../constants';
 import { createTask } from '../redux/task';
 import { getTasklist } from '../redux/tasklist';
 import { LNAG_UNTITLE } from '../constants/lang';
@@ -15,8 +14,7 @@ export const QUICK_ADD_MENU_ITEMS = [
 ];
 
 chrome.contextMenus.removeAll(() => {
-  if (!ENABLE_QUICK_ADD) return;
-
+  console.log('sssss');
   QUICK_ADD_MENU_ITEMS.forEach((item) => {
     chrome.contextMenus.create(item, () => {
       if (chrome.runtime.lastError) throw new Error(chrome.runtime.lastError.message);
@@ -30,7 +28,7 @@ chrome.contextMenus.removeAll(() => {
     let taskTitle = selectionText || TabTitle || LNAG_UNTITLE;
     taskTitle = taskTitle.length > 130 ? taskTitle.slice(0, 130) + ' ...' : taskTitle;
 
-    let tasklistId = store.getState().tasklist.quickAddTasklistId;
+    let tasklistId = store.getState().options.form.quickAddTaskTasklistId;
     if (!tasklistId) {
       await store.dispatch(getTasklist());
       tasklistId = store.getState().tasklist.quickAddTasklistId;

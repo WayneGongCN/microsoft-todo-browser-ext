@@ -5,9 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { logger } from '../../../helpers/logger';
 
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
@@ -34,9 +32,10 @@ import {
   LANG_POPUP_ADDTASK,
   LANG_POPUP_TITLE_VALIDATION,
 } from '../../../constants/lang';
-import { backgroundContext } from '../..';
+import { backgroundContext } from '../../../helpers/loader';
+import TasklistSelect from '../../../components/TasklistSelect';
 
-const { tasklistSlice, taskSlice, popupSlice } = backgroundContext;
+const { taskSlice, popupSlice } = backgroundContext;
 
 const TaskForm: React.FC = () => {
   const dispatch = useDispatch<Dispatch>();
@@ -44,7 +43,6 @@ const TaskForm: React.FC = () => {
 
   // loading 状态
   const creating = useSelector((state: State) => state.popup.creating);
-  const loadingTasklist = useSelector((state: State) => state.popup.loadingTasklist);
 
   // 获取表单初始状态（仅首次渲染时获取）
   const defaultValues = useMemo(() => store.getState().popup.form, []);
@@ -60,12 +58,6 @@ const TaskForm: React.FC = () => {
   // form 变化时更新 redux
   useEffect(() => {
     watch((val) => dispatch(popupSlice.actions.updateForm(val)));
-  }, []);
-
-  // 获取 tasklist
-  const tasklists = useSelector((state: State) => state.tasklist.lists);
-  useEffect(() => {
-    dispatch(tasklistSlice.getTasklist());
   }, []);
 
   // 更新 tasklistId
@@ -133,13 +125,7 @@ const TaskForm: React.FC = () => {
               rules={{ required: true }}
               render={({ field }) => (
                 <>
-                  <Select labelId="task-list-label" disabled={loadingTasklist} {...field}>
-                    {tasklists.map((x) => (
-                      <MenuItem key={x.id} value={x.id}>
-                        {x.displayName}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                  <TasklistSelect labelId="task-list-label" {...field}/>
                   {Boolean(errors.tasklistId) && <FormHelperText>{LANG_POPUP_TASKLIST_VALIDATION}</FormHelperText>}
                 </>
               )}

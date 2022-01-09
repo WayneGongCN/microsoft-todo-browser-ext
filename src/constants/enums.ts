@@ -30,6 +30,7 @@ export enum NotifyType {
 export enum Page {
   POPUP,
   BACKGROUND,
+  OPTIONS,
 }
 
 export enum EContentMessage {
@@ -47,4 +48,9 @@ export enum ErrorCode {
 export enum EThemes {
   BASIC = 'basic',
   DEFAULT = 'default',
+}
+
+export enum EQuickTaskTitle {
+  SELECTION = 'SELECTION',
+  ACTIVE_TAB = 'ACTIVE_TAB',
 }

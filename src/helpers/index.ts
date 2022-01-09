@@ -1,5 +1,7 @@
-import { IContentMessage } from '../../types';
-import { NotifyType } from '../constants/enums';
+import { lazy } from 'react';
+import { BackgroundContext, IContentMessage } from '../../types';
+import { ErrorCode, EThemes, NotifyType } from '../constants/enums';
+import AppError from './error';
 import { logger } from './logger';
 
 // TODO: fix type

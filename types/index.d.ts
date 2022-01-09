@@ -1,5 +1,5 @@
 import { AuthenticationResult } from '@azure/msal-browser';
-import { backgroundContext } from '../src/background';
+import { backgroundContext } from '../src/pages/background';
 import { ETaskContentTypes, ETaskImportance, ETaskStatus, TimeZone } from '../src/constants/enums';
 import { EContentMessage } from '../src/content';
 import { ErrorCode } from '../src/helpers/error';
@@ -84,6 +84,17 @@ interface SerializError {
   message: string;
   stack: string;
   time: number;
+}
+
+interface IBuyMeACoffeeOptions {
+  text?: string;
+  emoji?: string;
+  slug?: string;
+  button_colour?: string;
+  font_colour?: string;
+  font_family?: string;
+  outline_colour?: string;
+  coffee_colour?: string;
 }
 
 type Modify<T, R> = Omit<T, keyof R> & R;

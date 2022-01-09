@@ -1,8 +1,8 @@
-import { IContentMessage } from '../../types';
-import { EXT_ID } from '../constants';
-import { EContentMessage, ErrorCode } from '../constants/enums';
-import AppError from '../helpers/error';
-import './content.css';
+import { IContentMessage } from '../../../types';
+import { EXT_ID } from '../../constants';
+import { EContentMessage, ErrorCode } from '../../constants/enums';
+import AppError from '../../helpers/error';
+import '../../styles/content.css';
 
 const CURSOR_LOADING_CLASS = 'cursor--loading';
 

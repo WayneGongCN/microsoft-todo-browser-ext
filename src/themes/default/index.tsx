@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { logger } from '../../helpers/logger';
 import Login from './components/Login';
 import OpenMSTodo from './components/OpenMSToDo';
-import { backgroundContext } from '..';
+import { backgroundContext } from '../../helpers/loader';
 
 const Default: React.FC<void> = () => {
   useEffect(() => {

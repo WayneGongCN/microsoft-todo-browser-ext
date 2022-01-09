@@ -5,6 +5,7 @@ import taskSlice from './task';
 import tasklistSlice from './tasklist';
 import popupSlice from './popup';
 import { IS_DEV } from '../constants';
+import optionsSlice from './options';
 
 export const store = configureStore({
   devTools: IS_DEV,
@@ -14,6 +15,7 @@ export const store = configureStore({
     task: taskSlice.reducer,
     tasklist: tasklistSlice.reducer,
     popup: popupSlice.reducer,
+    options: optionsSlice.reducer,
   },
 
   middleware: (getDefaultMiddleware) => {
