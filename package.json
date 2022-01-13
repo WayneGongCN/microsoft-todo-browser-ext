@@ -1,7 +1,7 @@
 {
   "name": "microsoft-todo-browser-ext",
   "description": "Microsoft To Do browser extension",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "repository": "https://github.com/WayneGongCN/microsoft-todo-browser-ext.git",
   "author": "waynegong <Wayne.Gong.CN@hotmail.com>",
   "license": "MIT",
