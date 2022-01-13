@@ -2,7 +2,7 @@ const { merge } = require('webpack-merge');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const baseConfig = require('./webpack.config.base');
 
-module.exports = (env) => {
+module.exports = () => {
   const devConfig = {
     /**
      * webpack --env mode=development ...
@@ -28,5 +28,5 @@ module.exports = (env) => {
     ],
   };
 
-  return merge(baseConfig(env), devConfig);
+  return merge(baseConfig, devConfig);
 };

@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json');
 
-module.exports = (env) => ({
+module.exports = {
   manifest_version: 2,
   name: 'Microsoft To Do browser extension',
   default_locale: 'en',
@@ -22,8 +22,9 @@ module.exports = (env) => ({
       js: ['content.js'],
     },
   ],
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; object-src 'self'",
   icons:
-    env.NODE_ENV === 'development'
+    process.env.NODE_ENV === 'development'
       ? { 128: './icons/todo-dev-128.png' }
       : {
           16: './icons/todo-16.png',
@@ -32,4 +33,4 @@ module.exports = (env) => ({
           48: './icons/todo-48.png',
           128: './icons/todo-128.png',
         },
-});
+};

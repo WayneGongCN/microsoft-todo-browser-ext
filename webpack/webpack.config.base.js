@@ -1,13 +1,18 @@
-const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const Dotenv = require('dotenv-webpack');
 
+const path = require('path');
+const envFilePath = path.resolve(`./.env.${process.env.NODE_ENV}`);
+require('dotenv').config({
+  path: envFilePath,
+});
+
+const Dotenv = require('dotenv-webpack');
 const manifest = require('../src/manifest');
 
-module.exports = (env) => ({
+module.exports = {
   entry: {
     background: './src/background/index.ts',
     popup: './src/popup/index.tsx',
@@ -42,31 +47,38 @@ module.exports = (env) => ({
     /**
      * parse .env file
      */
-    new Dotenv({
-      path: path.resolve(`./.env.${env.NODE_ENV}`)
-    }),
+    new Dotenv({ path: envFilePath }),
 
     new HtmlWebpackPlugin({
       filename: 'popup.html',
       template: 'public/template.html',
       chunks: ['popup'],
+      environment: {
+        GTM_ID: process.env.GTM_ID,
+      },
     }),
     new HtmlWebpackPlugin({
       filename: 'options.html',
       template: 'public/template.html',
       chunks: ['options'],
+      environment: {
+        GTM_ID: process.env.GTM_ID,
+      },
     }),
 
     new CopyPlugin({
       patterns: [
         // build manifest.json with 'src/manifest.js'
-        { from: 'src/manifest.js', to: 'manifest.json', transform: () => JSON.stringify(manifest(env)) },
+        { from: 'src/manifest.js', to: 'manifest.json', transform: () => JSON.stringify(manifest) },
 
         // copy icons to dist/icons
         { from: 'public/icons', to: 'icons/' },
 
         // copy _locales to dist/_locales
         { from: 'public/_locales', to: '_locales/' },
+
+        // copy gtm.js to dist/gtm.js
+        { from: 'public/gtm.js', to: 'gtm.js' },
       ],
     }),
 
@@ -101,4 +113,4 @@ module.exports = (env) => ({
       },
     },
   },
-});
+}
