@@ -4,6 +4,12 @@ import { ETaskContentTypes, ETaskImportance, ETaskStatus, TimeZone } from '../sr
 import { EContentMessage } from '../src/content';
 import { ErrorCode } from '../src/helpers/error';
 
+declare global {
+  interface Window {
+    __VERSION: string;
+    backgroundContext: typeof backgroundContext;
+  }
+}
 interface ITaskBody {
   contentType: ETaskContentTypes;
   content: string;

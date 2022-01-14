@@ -1,9 +1,11 @@
 import { IPopupForm } from '../../types';
 import { TimeZone } from './enums';
+import { version } from '../../package.json';
 
 export const EXT_ID = chrome.runtime.id;
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const IS_PROD = process.env.NODE_ENV === 'production';
+export const VERSION = (window.__VERSION = version);
 
 export const API_BASE_URL = 'https://graph.microsoft.com/v1.0';
 export const AUTH_SCOPES = ['profile', 'Tasks.ReadWrite'];
@@ -16,7 +18,7 @@ export const TIME_FORMAT = 'HH:mm:ss';
 export const QUICK_ADD_DEFAULT_TASKLIST = '';
 export const REMENBER_LAST_USE_TASKLIST = true;
 
-export const REPORT_ERROR = true;
+export const REPORT = !IS_DEV;
 export const REPORT_SAMPLE_RATE = 1;
 
 export const NOTIFICATION_ICON_URL = `chrome-extension://${EXT_ID}/icons/todo-128.png`;

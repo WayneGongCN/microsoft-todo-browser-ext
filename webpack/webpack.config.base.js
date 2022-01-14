@@ -76,9 +76,6 @@ module.exports = {
 
         // copy _locales to dist/_locales
         { from: 'public/_locales', to: '_locales/' },
-
-        // copy gtm.js to dist/gtm.js
-        { from: 'public/gtm.js', to: 'gtm.js' },
       ],
     }),
 

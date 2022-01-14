@@ -19,7 +19,7 @@ const Login: React.FC = () => {
 
   return (
     <Container style={{ margin: '12px 0' }}>
-      <Button fullWidth color="primary" variant="contained" disabled={loading} endIcon={loading ? <CircularProgress size={20} /> : null} onClick={handleLogin}>
+      <Button id="btn-popup-login" fullWidth color="primary" variant="contained" disabled={loading} endIcon={loading ? <CircularProgress size={20} /> : null} onClick={handleLogin}>
         {loading ? LANG_POPUP_LOADING_TEXT + '...' : LANG_POPUP_LOGIN_TEXT}
       </Button>
     </Container>
