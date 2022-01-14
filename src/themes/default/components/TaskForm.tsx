@@ -95,6 +95,7 @@ const TaskForm: React.FC = () => {
           rules={{ required: true }}
           render={({ field }) => (
             <TextField
+            id="title"
               label={LANG_POPUP_TITLE}
               fullWidth
               autoFocus
@@ -189,6 +190,7 @@ const TaskForm: React.FC = () => {
 
         <Grid item xs={10}>
           <Button
+          id="btn"
             size="small"
             variant="contained"
             color="primary"

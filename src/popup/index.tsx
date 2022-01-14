@@ -5,8 +5,10 @@ import { themeWrap } from '../themes';
 import report from '../helpers/report';
 import { EThemes, Page } from '../constants/enums';
 import Container from '@material-ui/core/Container';
+import gtm from '../helpers/gtm';
 
 report(Page.POPUP);
+gtm();
 
 const themeName = EThemes.DEFAULT;
 logger.log('theme: ', themeName);
