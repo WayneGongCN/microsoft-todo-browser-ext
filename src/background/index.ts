@@ -22,8 +22,6 @@ const backgroundContext = {
   logout,
 };
 
-// eslint-disable-next-line
-// @ts-ignore
 window.backgroundContext = backgroundContext;
 
 store.dispatch(acquireTokenSilent());

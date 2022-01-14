@@ -1,5 +1,4 @@
-import { REPORT_ERROR, REPORT_SAMPLE_RATE } from '../constants';
-import { version } from '../../package.json';
+import { REPORT_ERROR, REPORT_SAMPLE_RATE, VERSION } from '../constants';
 import { Page } from '../constants/enums';
 
 export default async (page: Page) => {
@@ -15,7 +14,7 @@ export default async (page: Page) => {
 
   Sentry.init({
     environment: process.env.NODE_ENV,
-    release: version,
+    release: VERSION,
     dsn: process.env.SENTRY_DSN,
     integrations: [new Integrations.BrowserTracing()],
     tracesSampleRate: REPORT_SAMPLE_RATE,

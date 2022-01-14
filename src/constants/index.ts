@@ -1,9 +1,11 @@
 import { IPopupForm } from '../../types';
 import { TimeZone } from './enums';
+import { version } from '../../package.json';
 
 export const EXT_ID = chrome.runtime.id;
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const IS_PROD = process.env.NODE_ENV === 'production';
+export const VERSION = (window.__VERSION = version);
 
 export const API_BASE_URL = 'https://graph.microsoft.com/v1.0';
 export const AUTH_SCOPES = ['profile', 'Tasks.ReadWrite'];
