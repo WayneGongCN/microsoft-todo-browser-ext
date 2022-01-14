@@ -4,12 +4,12 @@ import popupSlice from '../redux/popup';
 import taskSlice, { asyncChunk as taskSlickAsyncChunk } from '../redux/task';
 import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from '../redux/tasklist';
 import Notify from '../helpers/notification';
-import report from '../helpers/report';
+import { initSentry } from '../helpers/report';
 import { Page } from '../constants/enums';
 import { logout } from '../helpers/msal';
 import initQuickAdd from '../helpers/quickAdd';
 
-report(Page.BACKGROUND);
+initSentry(Page.BACKGROUND);
 initQuickAdd();
 
 const backgroundContext = {
