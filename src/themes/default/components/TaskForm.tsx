@@ -127,16 +127,16 @@ const TaskForm: React.FC = () => {
       <Grid container item direction="row" alignItems="center" spacing={2} xs={12}>
         <Grid item xs={8}>
           <FormControl error={Boolean(errors.tasklistId)} fullWidth required>
-            <InputLabel id="task-list-label">{LANG_POPUP_TASKLIST}</InputLabel>
+            <InputLabel id="select-popup-tasklist">{LANG_POPUP_TASKLIST}</InputLabel>
             <Controller
               control={control}
               name="tasklistId"
               rules={{ required: true }}
               render={({ field }) => (
                 <>
-                  <Select labelId="task-list-label" disabled={loadingTasklist} {...field}>
-                    {tasklists.map((x) => (
-                      <MenuItem key={x.id} value={x.id}>
+                  <Select labelId="select-popup-tasklist" disabled={loadingTasklist} {...field}>
+                    {tasklists.map((x, idx) => (
+                      <MenuItem key={x.id} value={x.id} id={`select-popup-tasklist-${idx}`}>
                         {x.displayName}
                       </MenuItem>
                     ))}
@@ -154,7 +154,7 @@ const TaskForm: React.FC = () => {
             name="importance"
             render={({ field }) => (
               <Tooltip title={LANG_POPUP_IMPORTANCE_TOOLTIP}>
-                <Checkbox color="primary" icon={<StarOutline fontSize="medium" />} checkedIcon={<Star fontSize="medium" />} {...field} checked={field.value} />
+                <Checkbox id="checkbox-popup-add-importance" color="primary" icon={<StarOutline fontSize="medium" />} checkedIcon={<Star fontSize="medium" />} {...field} checked={field.value} />
               </Tooltip>
             )}
           />
@@ -167,6 +167,7 @@ const TaskForm: React.FC = () => {
             render={({ field }) => (
               <Tooltip title={LANG_POPUP_BOOKMARK_TOOLTIP}>
                 <Checkbox
+                  id="checkbox-popup-add-bookmark"
                   color="primary"
                   icon={<BookmarksOutlined fontSize="small" />}
                   checkedIcon={<Bookmarks fontSize="small" />}
@@ -182,7 +183,7 @@ const TaskForm: React.FC = () => {
       <Grid container item direction="row" alignItems="center" xs={12}>
         <Grid item xs>
           <Tooltip title={LANG_POPUP_RESET}>
-            <IconButton size="small" color="secondary" onClick={handleReset}>
+            <IconButton id="btn-popup-reset" size="small" color="secondary" onClick={handleReset}>
               <RotateLeft />
             </IconButton>
           </Tooltip>
@@ -190,7 +191,7 @@ const TaskForm: React.FC = () => {
 
         <Grid item xs={10}>
           <Button
-          id="btn"
+            id="btn-popup-add-task"
             size="small"
             variant="contained"
             color="primary"

@@ -1,8 +1,8 @@
-import { REPORT_ERROR, REPORT_SAMPLE_RATE, VERSION } from '../constants';
+import { REPORT, REPORT_SAMPLE_RATE, VERSION } from '../constants';
 import { Page } from '../constants/enums';
 
 export const initSentry = async (page: Page) => {
-  if (!REPORT_ERROR) return;
+  if (!REPORT) return;
 
   let Sentry = null;
   if (page === Page.BACKGROUND) {
@@ -22,7 +22,10 @@ export const initSentry = async (page: Page) => {
 };
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-export const initGTM = (i = process.env.GTM_ID, w = window, d = document, s = 'script', l = 'dataLayer') => {
+const dataLayer = 'dataLayer';
+export const initGTM = (i = process.env.GTM_ID, w = window, d = document, s = 'script', l = dataLayer) => {
+  if (!REPORT) return;
+
   // @ts-ignore
   w[l] = w[l] || [];
   // @ts-ignore
@@ -36,4 +39,14 @@ export const initGTM = (i = process.env.GTM_ID, w = window, d = document, s = 's
   j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl + process.env.GTM_ENV;
   // @ts-ignore
   f.parentNode.insertBefore(j, f);
+};
+
+export const gtag = function () {
+  if (!REPORT) return;
+
+  // @ts-ignore
+  window[dataLayer] = window[dataLayer] || [];
+  // @ts-ignore
+  // eslint-disable-next-line prefer-rest-params
+  window[dataLayer].push(arguments);
 };

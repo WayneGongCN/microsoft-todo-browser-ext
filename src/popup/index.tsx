@@ -5,6 +5,7 @@ import { themeWrap } from '../themes';
 import { initSentry, initGTM } from '../helpers/report';
 import { EThemes, Page } from '../constants/enums';
 import Container from '@material-ui/core/Container';
+import './style.css'
 
 initSentry(Page.POPUP);
 initGTM();

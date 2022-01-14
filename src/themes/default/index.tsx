@@ -23,7 +23,3 @@ const Default: React.FC<void> = () => {
 };
 
 export default Default;
-
-document.addEventListener('click', e => {
-  console.log(e.target)
-})

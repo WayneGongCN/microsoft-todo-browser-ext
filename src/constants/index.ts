@@ -18,7 +18,7 @@ export const TIME_FORMAT = 'HH:mm:ss';
 export const QUICK_ADD_DEFAULT_TASKLIST = '';
 export const REMENBER_LAST_USE_TASKLIST = true;
 
-export const REPORT_ERROR = true;
+export const REPORT = !IS_DEV;
 export const REPORT_SAMPLE_RATE = 1;
 
 export const NOTIFICATION_ICON_URL = `chrome-extension://${EXT_ID}/icons/todo-128.png`;
