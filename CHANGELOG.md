@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.0.4...v1.1.0) (2022-01-15)
+
+
+### Features
+
+* 新增 Option 页面，支持基本配置 ([c903968](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/c9039682fb397b30a74ac3f01ca040f5019972fa)), closes [#38](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/38) [#24](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/24)
+
 ### [1.0.4](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.0.3...v1.0.4) (2022-01-14)
 
 ### [1.0.3](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.0.2...v1.0.3) (2022-01-13)
