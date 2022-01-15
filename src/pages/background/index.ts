@@ -1,16 +1,17 @@
-import '../../helpers/quickAdd';
 import { store } from '../../redux';
 import authSlice, { acquireTokenSilent, asyncChunk as authSliceAsyncChunk } from '../../redux/auth';
 import popupSlice from '../../redux/popup';
 import taskSlice, { asyncChunk as taskSlickAsyncChunk } from '../../redux/task';
 import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from '../../redux/tasklist';
 import Notify from '../../helpers/notification';
-import report from '../../helpers/report';
 import { Page } from '../../constants/enums';
 import { logout } from '../../helpers/msal';
 import optionsSlice from '../../redux/options';
+import { initSentry } from '../../helpers/report';
+import initQuickAdd from '../../helpers/quickAdd';
 
-report(Page.BACKGROUND);
+initSentry(Page.BACKGROUND);
+initQuickAdd();
 
 const backgroundContext = {
   Notify,
@@ -23,8 +24,6 @@ const backgroundContext = {
   logout,
 };
 
-// eslint-disable-next-line
-// @ts-ignore
 window.backgroundContext = backgroundContext;
 
 store.dispatch(acquireTokenSilent());

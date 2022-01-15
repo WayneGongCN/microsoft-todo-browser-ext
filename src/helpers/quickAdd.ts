@@ -13,39 +13,40 @@ export const QUICK_ADD_MENU_ITEMS = [
   },
 ];
 
-chrome.contextMenus.removeAll(() => {
-  console.log('sssss');
-  QUICK_ADD_MENU_ITEMS.forEach((item) => {
-    chrome.contextMenus.create(item, () => {
-      if (chrome.runtime.lastError) throw new Error(chrome.runtime.lastError.message);
+export default () => {
+  chrome.contextMenus.removeAll(() => {
+    QUICK_ADD_MENU_ITEMS.forEach((item) => {
+      chrome.contextMenus.create(item, () => {
+        if (chrome.runtime.lastError) throw new Error(chrome.runtime.lastError.message);
+      });
+    });
+
+    chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+      const { selectionText } = info;
+      const { title: TabTitle } = tab;
+
+      let taskTitle = selectionText || TabTitle || LNAG_UNTITLE;
+      taskTitle = taskTitle.length > 130 ? taskTitle.slice(0, 130) + ' ...' : taskTitle;
+
+      let tasklistId = store.getState().tasklist.quickAddTasklistId;
+      if (!tasklistId) {
+        await store.dispatch(getTasklist());
+        tasklistId = store.getState().tasklist.quickAddTasklistId;
+      }
+
+      sendMessageToActiveTab({ type: EContentMessage.CURSOR_LOADING });
+      store
+        .dispatch(
+          createTask({
+            title: taskTitle,
+            describe: selectionText || '',
+            bookmark: true,
+            tasklistId,
+          })
+        )
+        .finally(() => {
+          sendMessageToActiveTab({ type: EContentMessage.CURSOR_RESET });
+        });
     });
   });
-
-  chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-    const { selectionText } = info;
-    const { title: TabTitle } = tab;
-
-    let taskTitle = selectionText || TabTitle || LNAG_UNTITLE;
-    taskTitle = taskTitle.length > 130 ? taskTitle.slice(0, 130) + ' ...' : taskTitle;
-
-    let tasklistId = store.getState().options.form.quickAddTaskTasklistId;
-    if (!tasklistId) {
-      await store.dispatch(getTasklist());
-      tasklistId = store.getState().tasklist.quickAddTasklistId;
-    }
-
-    sendMessageToActiveTab({ type: EContentMessage.CURSOR_LOADING });
-    store
-      .dispatch(
-        createTask({
-          title: taskTitle,
-          describe: selectionText || '',
-          bookmark: true,
-          tasklistId,
-        })
-      )
-      .finally(() => {
-        sendMessageToActiveTab({ type: EContentMessage.CURSOR_RESET });
-      });
-  });
-});
+};

@@ -25,7 +25,7 @@ instance.interceptors.request.use(async (conf) => {
 
 instance.interceptors.response.use(
   (res) => {
-    if (res.status >= 200 && res.status <= 400) {
+    if (res.status >= 200 && res.status < 400) {
       return res.data;
     }
     const err = new AppError({

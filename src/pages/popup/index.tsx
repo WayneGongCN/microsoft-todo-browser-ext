@@ -1,12 +1,14 @@
 import React, { Suspense } from 'react';
 import { render } from 'react-dom';
 import { logger } from '../../helpers/logger';
-import report from '../../helpers/report';
 import { EThemes, Page } from '../../constants/enums';
-import Container from '@material-ui/core/Container';
 import { loadTheme, storeWrap } from '../../helpers/loader';
+import { initSentry, initGTM } from '../../helpers/report';
+import { Container } from '@material-ui/core';
+import './style.css'
 
-report(Page.POPUP);
+initSentry(Page.POPUP);
+initGTM();
 
 const themeName = EThemes.DEFAULT;
 logger.log('theme: ', themeName);
