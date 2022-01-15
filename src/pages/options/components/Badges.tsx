@@ -3,7 +3,7 @@ import React from 'react';
 import { EXT_URL, ISSUE_URL, RATE_URL, REPO_URL } from '../../../constants';
 
 const Badges: React.FC = () => {
-  const badgePrefix = `https://img.shields.io/`;
+  const badgePrefix = `https://img.shields.io`;
   const badgesUrl = [
     {
       name: 'version',
