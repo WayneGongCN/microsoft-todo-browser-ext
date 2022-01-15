@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.1.0...v1.1.1) (2022-01-15)
+
+
+### Bug Fixes
+
+* 修复 Badge url 错误 ([cf27f67](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/cf27f67633d30856c8a964f47b50e52353846f06)), closes [#46](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/46)
+* 修复 Quick 重复创建 task ([67bbc0b](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/67bbc0ba1e0b40a243837fd4208ffba5754a15a6)), closes [#48](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/48)
+* 优化页面标题 ([#52](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/52)) ([1554c1a](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/1554c1ab8956de807eded5d4046ffe600f73294a)), closes [#47](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/47)
+* notfacation 文案修复 ([28a7911](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/28a7911d4464a4b86aaf787ee7ef26081cb24713)), closes [#45](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/45)
+
 ## [1.1.0](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.0.4...v1.1.0) (2022-01-15)
 
 
