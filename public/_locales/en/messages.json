@@ -2,6 +2,9 @@
   "untitle": {
     "message": "Untitle"
   },
+  "addTask": {
+    "message": "Add task"
+  },
   "quickAddTask": {
     "message": "Quick add task"
   },

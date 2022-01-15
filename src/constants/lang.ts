@@ -2,6 +2,7 @@ import { getI18nText } from '../helpers';
 
 export const LNAG_UNTITLE = getI18nText('untitle');
 export const LNAG_SUCCESS = getI18nText('success');
+export const LNAG_ADD_TASK = getI18nText('addTask');
 export const LNAG_QUICK_ADD_TASK = getI18nText('quickAddTask');
 export const LNAG_OPEN_MS_TODO = getI18nText('openMSTODO');
 
