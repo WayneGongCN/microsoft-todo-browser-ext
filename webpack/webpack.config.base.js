@@ -14,10 +14,10 @@ const manifest = require('../src/manifest');
 
 module.exports = {
   entry: {
-    background: './src/background/index.ts',
-    popup: './src/popup/index.tsx',
-    content: './src/content/index.ts',
-    // options: './src/options.tsx',
+    background: './src/pages/background/index.ts',
+    popup: './src/pages/popup/index.tsx',
+    content: './src/pages/content/index.ts',
+    options: './src/pages/options/index.tsx',
   },
 
   output: {

@@ -43,7 +43,6 @@ export const tasklistSlice = createSlice({
 
   initialState: {
     lists: [] as ITasklistResult['value'],
-    quickAddTasklistId: null as null | string,
     loading: false,
   },
 
@@ -57,7 +56,6 @@ export const tasklistSlice = createSlice({
       })
       .addCase(getTasklist.fulfilled, (state, { payload }) => {
         state.lists = payload.value;
-        state.quickAddTasklistId = payload.value[0].id;
         state.loading = false;
       })
       .addCase(getTasklist.rejected, (state) => {

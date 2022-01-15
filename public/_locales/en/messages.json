@@ -1,58 +1,93 @@
 {
+  "untitle": {
+    "message": "Untitle"
+  },
+  "quickAddTask": {
+    "message": "Quick add task"
+  },
+  "success": {
+    "message": "success"
+  },
+  "openMSTODO": {
+    "message": "Open in Microsoft To Do"
+  },
+
+
   "popupTitleText": {
-    "message": "Title",
-    "description": "popup title text"
+    "message": "Title"
   },
   "popupDescribeText": {
-    "message": "Describe",
-    "description": "popup describe text"
+    "message": "Describe"
   },
   "popupDateTimeText": {
-    "message": "Reminder Date",
-    "description": "popup dateTime text"
+    "message": "Reminder Date"
   },
   "popupTaskListText": {
-    "message": "Task List",
-    "description": "popup task list text"
+    "message": "Task List"
   },
   "popupResetTooltip": {
-    "message": "reset",
-    "description": "popup reset tooltip"
+    "message": "reset"
   },
   "popupCreatingText": {
-    "message": "Creating",
-    "description": "popup creating btn text"
+    "message": "Creating"
   },
   "popupAddTaskBtn": {
-    "message": "Add a task",
-    "description": "add task button text"
+    "message": "Add a task"
   },
   "popupTitleValidation": {
-    "message": "Title is required.",
-    "description": "title validation text"
+    "message": "Title is required."
   },
   "popupTaskListValidation": {
-    "message": "Tasklist is required.",
-    "description": "Tasklist validation text"
+    "message": "Tasklist is required."
   },
   "popupImportanceTooltip": {
-    "message": "Importance",
-    "description": "star tooltip text"
+    "message": "Importance"
   },
   "popupBookmarkTooltip": {
-    "message": "Bookmark",
-    "description": "bookmark tooltip text"
+    "message": "Bookmark"
   },
   "popupLoadingText": {
-    "message": "Loading",
-    "description": ""
+    "message": "Loading"
   },
   "popupLoginText": {
-    "message": "Login",
-    "description": ""
+    "message": "Login"
   },
-  "untitle": {
-    "message": "Untitle",
-    "description": ""
+
+
+  "optionsEnableQuickAdd": {
+    "message": "Enable \"Quick add task\" feature"
+  },
+  "optionsEnableQuickAddHelp": {
+    "message": "\"Quick add task\" is a right-click menu item that can quickly add the selected content to the specified task list"
+  },
+  "optionsQuickAddTasklist": {
+    "message": "\"Quick add task\" default task list"
+  },
+  "optionsQuickAddTasklistHelp": {
+    "message": "When using \"Quick add task\", the task will be added to the selected task list"
+  },
+  "optionsQuickAddTitle": {
+    "message": "\"Quick add task\" default title"
+  },
+  "optionsQuickAddTitleSelection": {
+    "message": "Use selected content as task title"
+  },
+  "optionsQuickAddTitleTabTitle": {
+    "message": "Use the title of the current page as the task title"
+  },
+  "optionsQuickAddTitleHelp": {
+    "message": "When using \"Quick add task\", the selected content will be used as the task title, the title longer than 130 characters will be omitted with ..."
+  },
+  "optionsEnableAutoReset": {
+    "message": "Automatically reset task form"
+  },
+  "optionsEnableAutoResetHelp": {
+    "message": "After the task is successfully created, the content of the current form is automatically reset, which is suitable for scenarios where multiple tasks are created continuously"
+  },
+  "optionsReportIssue": {
+    "message": "Report issue"
+  },
+  "optionsRateExtension": {
+    "message": "Rate the extension"
   }
 }

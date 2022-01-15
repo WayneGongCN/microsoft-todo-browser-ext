@@ -7,7 +7,7 @@ export const initSentry = async (page: Page) => {
   let Sentry = null;
   if (page === Page.BACKGROUND) {
     Sentry = await import('@sentry/browser');
-  } else if (page === Page.POPUP) {
+  } else if (page === Page.POPUP || page === Page.OPTIONS) {
     Sentry = await import('@sentry/react');
   }
   const Integrations = await import('@sentry/tracing');

@@ -1,6 +1,5 @@
 import { IContentMessage } from '../../types';
 import { NotifyType } from '../constants/enums';
-import { logger } from './logger';
 
 // TODO: fix type
 // eslint-disable-next-line
@@ -10,24 +9,28 @@ export const bindAsyncActions = (slice: any, asyncActioMap: Record<string, Funct
   });
 };
 
-export const openMicrosoftTodo = (type?: NotifyType, id?: string) =>
+export const openUrl = (options: chrome.tabs.CreateProperties) =>
   new Promise((resolve, reject) => {
-    const prefix = 'https://to-do.live.com';
-
-    let url = '';
-    if (type === NotifyType.TASK) {
-      url = `${prefix}/tasks/id/${id}/details`;
-    } else if (type === NotifyType.TASKLIST) {
-      url = `${prefix}/tasks/${id}`;
-    } else {
-      url = `${prefix}/tasks/inbox`;
-    }
-
-    chrome.tabs.create({ active: true, url }, (tab) => {
+    chrome.tabs.create(options, (tab) => {
       if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
       return resolve(tab);
     });
   });
+
+export const openMicrosoftTodo = (type?: NotifyType, id?: string) => {
+  const prefix = 'https://to-do.live.com';
+
+  let url = '';
+  if (type === NotifyType.TASK) {
+    url = `${prefix}/tasks/id/${id}/details`;
+  } else if (type === NotifyType.TASKLIST) {
+    url = `${prefix}/tasks/${id}`;
+  } else {
+    url = `${prefix}/tasks/inbox`;
+  }
+
+  return openUrl({ url });
+};
 
 export const getActiveTab = (): Promise<chrome.tabs.Tab> =>
   new Promise((resolve, reject) => {
@@ -44,13 +47,13 @@ export const getActiveTab = (): Promise<chrome.tabs.Tab> =>
 
 export const sendMessageToActiveTab = (msg: IContentMessage): Promise<chrome.tabs.Tab> => {
   return getActiveTab().then((tab) => {
-    chrome.tabs.sendMessage(tab.id, msg, (response) => {
-      logger.log('response: ', response);
+    return new Promise((resolve, reject) => {
+      chrome.tabs.sendMessage(tab.id, msg, (response) => {
+        if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
+        resolve(response);
+      });
     });
-    return tab;
   });
 };
 
-export const getI18nText = (msgName: string): string => {
-  return chrome.i18n.getMessage(msgName);
-};
+export const getI18nText = (name: string): string => chrome.i18n.getMessage(name);

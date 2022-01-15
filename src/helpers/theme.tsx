@@ -1,16 +1,15 @@
 import React from 'react';
-import AppError from '../helpers/error';
 import { lazy } from 'react';
 import { Provider } from 'react-redux';
 import { BackgroundContext } from '../../types';
 import { ErrorCode, EThemes } from '../constants/enums';
-import { logger } from '../helpers/logger';
+import AppError from './error';
+import { logger } from './logger';
 
 /**
  * 获取 Background 页面的上下文
  */
-export let backgroundContext: BackgroundContext;
-const getBackgroundCtx = () => {
+export const getBackgroundCtx = () => {
   logger.time('getBackgroundPage');
   return new Promise((resolve, reject) => {
     chrome.runtime.getBackgroundPage((ctx: Window & { backgroundContext: BackgroundContext }) => {
@@ -28,30 +27,31 @@ const getBackgroundCtx = () => {
  * @param theme
  * @returns
  */
-const loadTheme = (theme: EThemes) => {
+export const loadTheme = (theme: EThemes) => {
   logger.time(`load theme: ${theme}`);
-  return lazy(() => {
-    return import(`./${theme}/`).then((res) => {
+  return lazy(() =>
+    import(`../themes/${theme}/`).then((res) => {
       logger.timeEnd(`load theme: ${theme}`);
       return res;
-    });
-  });
+    })
+  );
 };
 
 /**
- * 为 Theme 包裹 Provider store
+ * 为 Component 包裹 Provider store
  * @param theme
  * @returns
  */
-export const themeWrap = (theme: EThemes) =>
-  lazy(async () => {
-    backgroundContext = await getBackgroundCtx();
-    const ThemeComponent = await loadTheme(theme);
-    return {
-      default: () => (
-        <Provider store={backgroundContext.store}>
-          <ThemeComponent />
-        </Provider>
-      ),
-    } as never;
-  });
+export let backgroundContext: BackgroundContext;
+export const storeWrap = (Component: React.LazyExoticComponent<React.ComponentType<any>> | React.FC) => {
+    return lazy(async () => {
+      backgroundContext = await getBackgroundCtx();
+      return {
+        default: () => (
+          <Provider store={backgroundContext.store}>
+            <Component />
+          </Provider>
+        ),
+      } as never;
+    });
+}
