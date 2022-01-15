@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Select, SelectProps } from '@material-ui/core';
-import { backgroundContext } from '../helpers/loader';
+import { backgroundContext } from '../helpers/theme';
 import { State } from '../redux';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -18,9 +18,9 @@ export default React.forwardRef<unknown, SelectProps>(function TasklistSelect(pr
 
   return (
     <>
-      <Select labelId="task-list-label" disabled={loadingTasklist} {...props}>
-        {tasklists.map((x) => (
-          <MenuItem key={x.id} value={x.id}>
+      <Select disabled={loadingTasklist} {...props}>
+        {tasklists.map((x, idx) => (
+          <MenuItem id={`com-task-list-${idx}`} key={x.id} value={x.id}>
             {x.displayName}
           </MenuItem>
         ))}

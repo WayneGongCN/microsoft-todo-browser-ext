@@ -3,15 +3,13 @@ import authSlice, { acquireTokenSilent, asyncChunk as authSliceAsyncChunk } from
 import popupSlice from '../../redux/popup';
 import taskSlice, { asyncChunk as taskSlickAsyncChunk } from '../../redux/task';
 import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from '../../redux/tasklist';
+import optionsSlice from '../../redux/options';
 import Notify from '../../helpers/notification';
 import { Page } from '../../constants/enums';
 import { logout } from '../../helpers/msal';
-import optionsSlice from '../../redux/options';
 import { initSentry } from '../../helpers/report';
-import initQuickAdd from '../../helpers/quickAdd';
 
 initSentry(Page.BACKGROUND);
-initQuickAdd();
 
 const backgroundContext = {
   Notify,

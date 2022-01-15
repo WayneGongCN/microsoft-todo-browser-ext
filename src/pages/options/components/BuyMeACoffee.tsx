@@ -18,7 +18,7 @@ const BuyMeACoffee: React.FC<IBuyMeACoffeeOptions> = (props) => {
 
   return (
     <a href={url} target="_blank" rel="noreferrer">
-      <img src={imgUrl} style={{height: '3.2em'}}/>
+      <img id="options-btn-buy-coffee" src={imgUrl} style={{height: '3.1em'}}/>
     </a>
   );
 };

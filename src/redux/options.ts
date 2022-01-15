@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { APP_DEFAULT_OPTIONS } from '../constants';
+import { initQuickAdd } from '../helpers/quickAdd';
 import { getTasklist } from './tasklist';
 
 export const optionsSlice = createSlice({
@@ -12,7 +13,8 @@ export const optionsSlice = createSlice({
 
   reducers: {
     updateForm: (state, { payload }) => {
-      state.form = { ...payload };
+      if (payload.enableQuickAdd !== state.form.enableQuickAdd) setTimeout(initQuickAdd);
+      state.form = { ...state.form, ...payload };
     },
 
     /**

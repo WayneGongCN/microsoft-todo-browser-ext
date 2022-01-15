@@ -6,7 +6,7 @@ import { openMicrosoftTodo } from '../../../helpers';
 const OpenMSTodo: React.FC<any> = () => {
   return (
     <Grid container direction="row-reverse">
-      <Link component="button" onClick={() => openMicrosoftTodo()} id="btn-popup-open-ms-todo">
+      <Link component="button" onClick={() => openMicrosoftTodo()} id="popup-btn-open-ms">
         Microsoft To Do
       </Link>
     </Grid>

@@ -1,58 +1,92 @@
 {
+  "untitle": {
+    "message": "无标题"
+  },
+  "quickAddTask": {
+    "message": "快速创建 To Do"
+  },
+  "success": {
+    "message": "成功"
+  },
+  "openMSTODO": {
+    "message": "在微软 To Do 中打开"
+  },
+
   "popupTitleText": {
-    "message": "标题",
-    "description": "popup面板标题"
+    "message": "标题"
   },
   "popupDescribeText": {
-    "message": "描述",
-    "description": "popup面板描述"
+    "message": "描述"
   },
   "popupDateTimeText": {
-    "message": "提醒我",
-    "description": "Reminder Date"
+    "message": "提醒我"
   },
   "popupTaskListText": {
-    "message": "任务列表",
-    "description": "popup任务列表"
+    "message": "任务列表"
   },
   "popupResetTooltip": {
-    "message": "重置",
-    "description": "popup面板 重置按钮提示文案"
+    "message": "重置"
   },
   "popupCreatingText": {
-    "message": "正在创建",
-    "description": "popup面板 正在创建提示文案"
+    "message": "正在创建"
   },
   "popupAddTaskBtn": {
-    "message": "添加任务",
-    "description": "popup面板 添加任务按钮文案"
+    "message": "添加任务"
   },
   "popupTitleValidation": {
-    "message": "标题必填",
-    "description": "标题校验文案"
+    "message": "标题必填"
   },
   "popupTaskListValidation": {
-    "message": "标题列表必选",
-    "description": "标题列表校验文案"
+    "message": "标题列表必选"
   },
   "popupImportanceTooltip": {
-    "message": "重要",
-    "description": "star tooltip text"
+    "message": "重要"
   },
   "popupBookmarkTooltip": {
-    "message": "书签",
-    "description": "bookmark tooltip text"
+    "message": "书签"
   },
   "popupLoadingText": {
-    "message": "加载中",
-    "description": "登陆按钮加载中文字"
+    "message": "加载中"
   },
   "popupLoginText": {
-    "message": "登录",
-    "description": "登陆按钮文字"
+    "message": "登录"
   },
-  "untitle": {
-    "message": "无标题",
-    "description": ""
+
+
+  "optionsEnableQuickAdd": {
+    "message": "开启 \"快速创建 To Do\" 功能"
+  },
+  "optionsEnableQuickAddHelp": {
+    "message": "\"快速创建 To Do\" 是一个右键菜单项，可将选中内容快速添加到指定任务列表"
+  },
+  "optionsQuickAddTasklist": {
+    "message": "\"快速创建 To Do\" 默认任务列表"
+  },
+  "optionsQuickAddTasklistHelp": {
+    "message": "使用 \"快速创建 To Do\" 时，会将任务添加到选择的任务列表中"
+  },
+  "optionsQuickAddTitle": {
+    "message": "\"快速创建 To Do\" 默认标题"
+  },
+  "optionsQuickAddTitleSelection": {
+    "message": "使用选中的内容作为任务标题"
+  },
+  "optionsQuickAddTitleTabTitle": {
+    "message": "使用选当前页面的标题作为任务标题"
+  },
+  "optionsQuickAddTitleHelp": {
+    "message": "使用 \"快速创建 To Do\" 时，将使用选择的内容作为任务标题，标题超过 130 个字符将会以 ... 省略"
+  },
+  "optionsEnableAutoReset": {
+    "message": "自动清空"
+  },
+  "optionsEnableAutoResetHelp": {
+    "message": "创建任务成功后自动清空当前表单内容，适用于连续创建多个任务的场景"
+  },
+  "optionsReportIssue": {
+    "message": "提议与反馈"
+  },
+  "optionsRateExtension": {
+    "message": "为插件评分"
   }
 }

@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ICreateTaskParams, IPopupForm, ITaskResult } from '../../types';
 import { TIME_ZONE } from '../constants';
 import { ETaskContentTypes, ETaskImportance, NotifyType } from '../constants/enums';
+import { LNAG_OPEN_MS_TODO, LNAG_QUICK_ADD_TASK, LNAG_SUCCESS } from '../constants/lang';
 import { bindAsyncActions, getActiveTab, openMicrosoftTodo } from '../helpers';
 import Notify from '../helpers/notification';
 import request from '../helpers/request';
@@ -46,8 +47,8 @@ export const createTask = createAsyncThunk<ITaskResult, IPopupForm>('task/create
     .post<void, ITaskResult, ICreateTaskParams>(`me/todo/lists/${tasklistId}/tasks`, data)
     .then((res) => {
       new Notify({
-        title: 'Add a task success',
-        message: 'Open task on Microsoft To Do.',
+        title: `${LNAG_QUICK_ADD_TASK} ${LNAG_SUCCESS}`,
+        message: LNAG_OPEN_MS_TODO,
       })
         .onClick(() => openMicrosoftTodo(NotifyType.TASK, res.id))
         .show();

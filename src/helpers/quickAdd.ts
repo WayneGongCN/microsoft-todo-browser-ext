@@ -3,18 +3,18 @@ import { createTask } from '../redux/task';
 import { getTasklist } from '../redux/tasklist';
 import { LNAG_UNTITLE } from '../constants/lang';
 import { sendMessageToActiveTab } from '.';
-import { EContentMessage } from '../constants/enums';
+import { EContentMessage, EQuickTaskTitle } from '../constants/enums';
+import { QUICK_ADD_MENU_ITEMS } from '../constants';
+import optionsSlice from '../redux/options';
 
-export const QUICK_ADD_MENU_ITEMS = [
-  {
-    id: 'QUICK_ADD',
-    title: 'Quick add task...',
-    contexts: ['all'],
-  },
-];
+export const initQuickAdd = () => {
+  const state = store.getState();
+  const { options } = state;
+  const { enableQuickAdd } = options.form;
 
-export default () => {
   chrome.contextMenus.removeAll(() => {
+    if (!enableQuickAdd) return;
+
     QUICK_ADD_MENU_ITEMS.forEach((item) => {
       chrome.contextMenus.create(item, () => {
         if (chrome.runtime.lastError) throw new Error(chrome.runtime.lastError.message);
@@ -24,14 +24,19 @@ export default () => {
     chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       const { selectionText } = info;
       const { title: TabTitle } = tab;
+      const state = store.getState();
+      const { options } = state;
+      const { quickTaskTitleType } = options.form;
 
-      let taskTitle = selectionText || TabTitle || LNAG_UNTITLE;
+      let taskTitle = quickTaskTitleType === EQuickTaskTitle.ACTIVE_TAB ? TabTitle : selectionText;
+      taskTitle = taskTitle || LNAG_UNTITLE;
       taskTitle = taskTitle.length > 130 ? taskTitle.slice(0, 130) + ' ...' : taskTitle;
 
-      let tasklistId = store.getState().tasklist.quickAddTasklistId;
-      if (!tasklistId) {
+      let { quickAddTaskTasklistId } = options.form;
+      if (!quickAddTaskTasklistId) {
         await store.dispatch(getTasklist());
-        tasklistId = store.getState().tasklist.quickAddTasklistId;
+        quickAddTaskTasklistId = store.getState().tasklist.lists[0]?.id;
+        store.dispatch(optionsSlice.actions.updateForm({ quickAddTaskTasklistId }));
       }
 
       sendMessageToActiveTab({ type: EContentMessage.CURSOR_LOADING });
@@ -41,12 +46,10 @@ export default () => {
             title: taskTitle,
             describe: selectionText || '',
             bookmark: true,
-            tasklistId,
+            tasklistId: quickAddTaskTasklistId,
           })
         )
-        .finally(() => {
-          sendMessageToActiveTab({ type: EContentMessage.CURSOR_RESET });
-        });
+        .finally(() => sendMessageToActiveTab({ type: EContentMessage.CURSOR_RESET }));
     });
   });
 };
