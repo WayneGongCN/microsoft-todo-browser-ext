@@ -7,7 +7,7 @@ export const EXT_ID = chrome.runtime.id;
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const IS_PROD = process.env.NODE_ENV === 'production';
 export const VERSION = (window.__VERSION = version);
-export const BUILD_TARGET = (window.__VERSION = process.env.BUILD_TARGET);
+export const BUILD_TARGET = (window.__BUILD_TARGET = process.env.BUILD_TARGET);
 
 export const API_BASE_URL = 'https://graph.microsoft.com/v1.0';
 export const AUTH_SCOPES = ['profile', 'Tasks.ReadWrite'];

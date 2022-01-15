@@ -7,6 +7,7 @@ import { ErrorCode } from '../src/helpers/error';
 declare global {
   interface Window {
     __VERSION: string;
+    __BUILD_TARGET: string;
     backgroundContext: typeof backgroundContext;
   }
 }
