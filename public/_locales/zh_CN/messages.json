@@ -2,6 +2,9 @@
   "untitle": {
     "message": "无标题"
   },
+  "addTask": {
+    "message": "创建任务"
+  },
   "quickAddTask": {
     "message": "快速创建 To Do"
   },
