@@ -4,7 +4,6 @@ import { ErrorCode } from '../constants/enums';
 import { store } from '../redux';
 import { acquireToken } from '../redux/auth';
 import AppError from './error';
-import { logger } from './logger';
 
 const instance = axios.create({
   baseURL: API_BASE_URL,
@@ -13,13 +12,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(async (conf) => {
   const accessToken = (await store.dispatch(acquireToken()).then((res) => res.payload)) as string;
-
-  if (accessToken) {
-    conf.headers.Authorization = `Bearer ${accessToken}`;
-  } else {
-    logger.warn('accessToken error');
-  }
-
+  conf.headers.Authorization = `Bearer ${accessToken}`;
   return conf;
 });
 

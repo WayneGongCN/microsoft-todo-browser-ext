@@ -18,14 +18,16 @@ const initialState = {
  * 静默获取 Token
  * - 登录态过期不会拉起登录弹窗
  */
-export const acquireTokenSilent = createAsyncThunk<SerializAuthenticationResult, void, { state: State; payload: SerializAuthenticationResult }>(
+const acquireTokenSilent = createAsyncThunk<SerializAuthenticationResult, void, { state: State; payload: SerializAuthenticationResult }>(
   `${SLICE_NAME}/acquireTokenSilent`,
-  (_) => {
+  (_, { rejectWithValue }) => {
     const accounts = msalGetAllAccounts();
     if (accounts.length) {
       return msalAcquireTokenSilent({ scopes: AUTH_SCOPES, account: accounts[0] });
     } else {
-      return Promise.reject(new AppError({ code: ErrorCode.NOT_FOUND_ACCOUNT, message: 'Not found accounts' }));
+      const err = new AppError({ code: ErrorCode.NOT_FOUND_ACCOUNT, message: 'Not found accounts' });
+      rejectWithValue(err.serializ());
+      return Promise.reject(err);
     }
   }
 );
@@ -36,30 +38,40 @@ export const acquireTokenSilent = createAsyncThunk<SerializAuthenticationResult,
  * - 登录态过期则会拉起登录弹窗
  */
 export const acquireTokenRedirect = createAsyncThunk<SerializAuthenticationResult, void, { state: State; payload: SerializAuthenticationResult }>(
-  `${SLICE_NAME}/authenticationResult`,
+  `${SLICE_NAME}/acquireTokenRedirect`,
   (_, { rejectWithValue }) =>
     msalAcquireTokenRedirect({ scopes: AUTH_SCOPES }).catch((e: AppError) => {
-      return rejectWithValue(e.serializ());
+      rejectWithValue(e.serializ());
+      return Promise.reject(e);
     })
 );
 
 /**
  * 获取 Token
- * - 如果没有 Token 或 Token 过期，则调用 acquireTokenRedirect 刷新 Token
- * - 如果 Token 没有过期则直接返回
+ * - 如果有 Token 且没有过期，则直接返回 Token
+ * - 如果有 Token 但已经过期，则调用 acquireTokenSilent 刷新 Token，刷新失败则调用 acquireTokenRedirect 重新登陆
+ * - 如果没有 Token 则调用 acquireTokenRedirect 重新登陆
  */
-export const acquireToken = createAsyncThunk<string, void, { state: State; payload: SerializAuthenticationResult }>(
+export const acquireToken = createAsyncThunk<string, boolean | void, { state: State; payload: SerializAuthenticationResult }>(
   `${SLICE_NAME}/acquireToken`,
-  (_, { getState, dispatch, rejectWithValue }) => {
+  (silent = false, { getState, dispatch, rejectWithValue }) => {
     const { auth } = getState();
     const { authenticationResult } = auth;
     const now = Date.now();
-    const needAuthentication = now > (authenticationResult?.expiresOn || 0);
+    const isExpires = now > (authenticationResult?.expiresOn || 0);
 
-    if (needAuthentication) {
-      return dispatch(acquireTokenRedirect())
+    if (isExpires && !silent) {
+      return dispatch(acquireTokenSilent())
+        .catch(() => dispatch(acquireTokenRedirect()))
         .then((res) => (res.payload as SerializAuthenticationResult).accessToken)
-        .catch((e) => rejectWithValue(e.serializ()));
+        .catch((e) => {
+          rejectWithValue(e.serializ());
+          return Promise.reject(e);
+        });
+    } else if (silent) {
+      const err = new AppError({ code: ErrorCode.UNKNOW, message: 'Token expired but silent is true' });
+      rejectWithValue(err.serializ());
+      return Promise.reject(err);
     } else {
       return Promise.resolve(authenticationResult.accessToken);
     }
@@ -100,7 +112,7 @@ export const authSlice = createSlice({
 });
 
 export const asyncChunk = {
-  authentication: acquireTokenRedirect,
+  acquireTokenRedirect,
   acquireTokenSilent,
 };
 bindAsyncActions(authSlice, asyncChunk);

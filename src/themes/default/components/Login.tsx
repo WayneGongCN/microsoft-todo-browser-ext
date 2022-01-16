@@ -14,7 +14,7 @@ const Login: React.FC = () => {
   const loading = useSelector((state: State) => state.auth.loading);
 
   const handleLogin = useCallback(() => {
-    dispatch(authSlice.authentication());
+    dispatch(authSlice.acquireTokenRedirect());
   }, [dispatch]);
 
   return (
