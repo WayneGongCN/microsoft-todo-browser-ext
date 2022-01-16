@@ -8,7 +8,7 @@
 [Material-UI](https://material-ui.com/)，通过 [Webpack](https://webpack.js.org/) 构建；
 
 
-![Microsofot To Do browser extension chinese](https://user-images.githubusercontent.com/20236883/149649995-d91d2a80-adda-4b3e-b0a5-17793f244582.gif)
+![简介_CN](https://user-images.githubusercontent.com/20236883/149657874-69b5c166-3fc6-43f6-8118-2364aaf331c6.gif)
 
 
 ## Todo
