@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.1.1...v1.1.2) (2022-01-17)
+
+
+### Bug Fixes
+
+* 修复 Build target 标识错误 ([2312634](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/23126343d236ab14c257fef15fbded0b83f8d7bf))
+
 ### [1.1.1](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.1.0...v1.1.1) (2022-01-15)
 
 
