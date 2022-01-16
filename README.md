@@ -7,14 +7,15 @@ Microsoft To Do 浏览器扩展（[Chrome](https://chrome.google.com/webstore/de
 使用 [React](https://reactjs.org/)、
 [Material-UI](https://material-ui.com/)，通过 [Webpack](https://webpack.js.org/) 构建；
 
-![img](./docs/images/640.png)
+![Microsofot To Do browser extension chinese](https://user-images.githubusercontent.com/20236883/149649995-d91d2a80-adda-4b3e-b0a5-17793f244582.gif)
+
 
 ## Todo
 
 - [x] ~~Quick add task~~
 - [x] TypeScript
 - [ ] Unit testing
-- [ ] Setting page
+- [x] Setting page
 - [ ] Firefox
 
 ##
