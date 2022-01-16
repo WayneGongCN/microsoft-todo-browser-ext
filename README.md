@@ -21,15 +21,17 @@
 ## Todo
 
 - [x] ~~Quick add task~~
-- [x] TypeScript
+- [x] ~~TypeScript~~
+- [x] ~~Setting page~~
 - [ ] Unit testing
-- [x] Setting page
 - [ ] Firefox
 
-##
-
-Inspired by [ukhan/add-to-ms-todo](https://github.com/ukhan/add-to-ms-todo)
 
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)
+
+
+##
+
+<a href="https://www.buymeacoffee.com/waynegong"><img src="https://img.buymeacoffee.com/button-api/?text=Buy+me+a+coffee&slug=waynegong&button_colour=0078d4&font_colour=ffffff&font_family=Cookie&outline_colour=ffffff&coffee_colour=ffffff"></a>
