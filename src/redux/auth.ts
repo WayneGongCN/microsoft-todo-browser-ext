@@ -16,7 +16,7 @@ const initialState = {
 
 /**
  * 静默获取 Token
- * - 登录态过期不会拉起登录弹窗
+ * - 若登录态过期不会拉起登录弹窗
  */
 export const acquireTokenSilent = createAsyncThunk<SerializAuthenticationResult, void, { state: State; payload: SerializAuthenticationResult }>(
   `${SLICE_NAME}/acquireTokenSilent`,
@@ -45,8 +45,8 @@ export const acquireTokenRedirect = createAsyncThunk<SerializAuthenticationResul
 
 /**
  * 获取 Token
- * - 如果没有 Token 或 Token 过期，则调用 acquireTokenRedirect 刷新 Token
- * - 如果 Token 没有过期则直接返回
+ * - 如果已有 Token 且 Token 没有过期则直接返回
+ * - 如果没有 Token 或 Token 过期，则调用 acquireTokenRedirect 刷新 Token 或登录
  */
 export const acquireToken = createAsyncThunk<string, void, { state: State; payload: SerializAuthenticationResult }>(
   `${SLICE_NAME}/acquireToken`,

@@ -1,5 +1,5 @@
 import { store, persistor } from '../../redux';
-import authSlice, { acquireTokenSilent, asyncChunk as authSliceAsyncChunk } from '../../redux/auth';
+import authSlice, { asyncChunk as authSliceAsyncChunk } from '../../redux/auth';
 import popupSlice from '../../redux/popup';
 import taskSlice, { asyncChunk as taskSlickAsyncChunk } from '../../redux/task';
 import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from '../../redux/tasklist';
@@ -23,5 +23,3 @@ const backgroundContext = {
   logout,
 };
 window.backgroundContext = backgroundContext;
-
-store.dispatch(acquireTokenSilent());
