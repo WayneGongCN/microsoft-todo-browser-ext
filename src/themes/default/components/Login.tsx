@@ -5,11 +5,11 @@ import { LANG_POPUP_LOADING_TEXT, LANG_POPUP_LOGIN_TEXT } from '../../../constan
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { backgroundContext } from '../../../helpers/theme';
+import { backgroundContext } from '../../../helpers/background';
 
-const { authSlice } = backgroundContext;
 
 const Login: React.FC = () => {
+  const { authSlice } = backgroundContext;
   const dispatch = useDispatch();
   const loading = useSelector((state: State) => state.auth.loading);
 

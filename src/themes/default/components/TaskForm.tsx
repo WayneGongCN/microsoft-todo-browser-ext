@@ -32,12 +32,12 @@ import {
   LANG_POPUP_ADDTASK,
   LANG_POPUP_TITLE_VALIDATION,
 } from '../../../constants/lang';
-import { backgroundContext } from '../../../helpers/theme';
+import { backgroundContext } from '../../../helpers/background';
 import TasklistSelect from '../../../components/TasklistSelect';
-
-const { taskSlice, popupSlice } = backgroundContext;
+import { timing } from '../../../helpers/report';
 
 const TaskForm: React.FC = () => {
+  const { taskSlice, popupSlice } = backgroundContext;
   const dispatch = useDispatch<Dispatch>();
   const store = useStore<State>();
 
@@ -74,12 +74,19 @@ const TaskForm: React.FC = () => {
 
   // 提交表单
   const autoResetPopup = useSelector((state: State) => state.options.form.autoResetPopup);
-  const submit = useCallback((val, err) => {
-    logger.log('submit', val, err);
-    dispatch(taskSlice.createTask(val)).then(() => {
-      autoResetPopup && handleReset()
-    });
-  }, [autoResetPopup]);
+  const submit = useCallback(
+    (val, err) => {
+      logger.log('submit', val, err);
+      dispatch(taskSlice.createTask(val)).then(() => {
+        autoResetPopup && handleReset();
+      });
+    },
+    [autoResetPopup]
+  );
+
+  useEffect(() => {
+    timing('popup form rendered', performance.now());
+  }, []);
 
   return (
     <Grid container direction="column" spacing={2}>
@@ -107,7 +114,7 @@ const TaskForm: React.FC = () => {
         <Controller
           control={control}
           name="describe"
-          render={({ field }) => <TextField id='popup-input-desc' label={LANG_POPUP_DESCRIBE} maxRows={10} fullWidth multiline {...field} />}
+          render={({ field }) => <TextField id="popup-input-desc" label={LANG_POPUP_DESCRIBE} maxRows={10} fullWidth multiline {...field} />}
         />
       </Grid>
 
@@ -115,7 +122,16 @@ const TaskForm: React.FC = () => {
         <Controller
           control={control}
           name="dateTime"
-          render={({ field }) => <TextField id='popup-input-remind-datetime' label={LANG_POPUP_DATETIME} type="datetime-local" InputLabelProps={{ shrink: true }} fullWidth {...field} />}
+          render={({ field }) => (
+            <TextField
+              id="popup-input-remind-datetime"
+              label={LANG_POPUP_DATETIME}
+              type="datetime-local"
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              {...field}
+            />
+          )}
         />
       </Grid>
 
@@ -129,7 +145,7 @@ const TaskForm: React.FC = () => {
               rules={{ required: true }}
               render={({ field }) => (
                 <>
-                  <TasklistSelect labelId="popup-select-tasklist" {...field}/>
+                  <TasklistSelect labelId="popup-select-tasklist" {...field} />
                   {Boolean(errors.tasklistId) && <FormHelperText>{LANG_POPUP_TASKLIST_VALIDATION}</FormHelperText>}
                 </>
               )}
@@ -143,7 +159,14 @@ const TaskForm: React.FC = () => {
             name="importance"
             render={({ field }) => (
               <Tooltip title={LANG_POPUP_IMPORTANCE_TOOLTIP}>
-                <Checkbox id="popup-checkbox-importance" color="primary" icon={<StarOutline fontSize="medium" />} checkedIcon={<Star fontSize="medium" />} {...field} checked={field.value} />
+                <Checkbox
+                  id="popup-checkbox-importance"
+                  color="primary"
+                  icon={<StarOutline fontSize="medium" />}
+                  checkedIcon={<Star fontSize="medium" />}
+                  {...field}
+                  checked={field.value}
+                />
               </Tooltip>
             )}
           />

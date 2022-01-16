@@ -1,34 +1,41 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { render } from 'react-dom';
-import { initSentry, initGTM } from '../../helpers/report';
+import { initSentry, initGTM, timing } from '../../helpers/report';
 import { Page } from '../../constants/enums';
 import { storeWrap } from '../../helpers/theme';
 import OptionsForm from './components/OptionsForm';
 import Badges from './components/Badges';
 import { Container, Grid } from '@material-ui/core';
-import { persistor } from '../../redux';
-import { PersistGate } from 'redux-persist/integration/react'
+import { PersistGate } from 'redux-persist/integration/react';
+import { backgroundContext } from '../../helpers/background';
 import '../../styles/style.css';
-
 
 initSentry(Page.OPTIONS);
 initGTM();
 
-const OptionsPage = storeWrap(() => (
-  <PersistGate loading={null} persistor={persistor}>
-    <Container disableGutters maxWidth="sm">
-      <Grid container spacing={3}>
-        <OptionsForm />
+const OptionsPage = storeWrap(() => {
+  const { persistor } = backgroundContext;
 
-        <Grid container item>
-          <Grid item>
-            <Badges />
+  useEffect(() => {
+    timing('options rendered', performance.now())
+  }, [])
+
+  return (
+    <PersistGate loading={null} persistor={persistor}>
+      <Container disableGutters maxWidth="sm">
+        <Grid container spacing={3}>
+          <OptionsForm />
+
+          <Grid container item>
+            <Grid item>
+              <Badges />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </Container>
-  </PersistGate>
-));
+      </Container>
+    </PersistGate>
+  );
+});
 
 render(
   <Suspense fallback={<div>Loading ...</div>}>

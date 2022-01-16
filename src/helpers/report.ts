@@ -1,5 +1,6 @@
 import { REPORT, REPORT_SAMPLE_RATE, VERSION } from '../constants';
 import { Page } from '../constants/enums';
+import { logger } from './logger';
 
 export const initSentry = async (page: Page) => {
   if (!REPORT) return;
@@ -41,7 +42,7 @@ export const initGTM = (i = process.env.GTM_ID, w = window, d = document, s = 's
   f.parentNode.insertBefore(j, f);
 };
 
-export const gtag = function () {
+export const gtag = function (...args: any[]) {
   if (!REPORT) return;
 
   // @ts-ignore
@@ -49,4 +50,13 @@ export const gtag = function () {
   // @ts-ignore
   // eslint-disable-next-line prefer-rest-params
   window[dataLayer].push(arguments);
+};
+
+export const timing = (name: string, value: number, category = '') => {
+  logger.log('timing: ', name, value);
+  gtag('send', 'timing', {
+    name,
+    value: Math.round(value),
+    event_category: category,
+  });
 };

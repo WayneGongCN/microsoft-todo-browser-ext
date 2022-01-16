@@ -2,11 +2,12 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { Dispatch, State } from '../../../redux';
-import { backgroundContext } from '../../../helpers/theme';
+import { backgroundContext } from '../../../helpers/background';
 import { FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, Radio, RadioGroup, Switch, Button, Grid } from '@material-ui/core';
 import TasklistSelect from '../../../components/TasklistSelect';
 import BuyMeACoffee from './BuyMeACoffee';
 import { openUrl } from '../../../helpers';
+import { timing } from '../../../helpers/report';
 import { ISSUE_URL, RATE_URL } from '../../../constants';
 import { EQuickTaskTitle } from '../../../constants/enums';
 import {
@@ -46,10 +47,13 @@ const OptionsForm: React.FC = () => {
 
   // btn
   const handleBtnClick = useCallback((e) => {
-    console.log(e.target);
     const url = e.target?.dataset?.url;
     url && openUrl({ url });
   }, []);
+
+  useEffect(() => {
+    timing('options rendered', performance.now())
+  }, [])
 
   // render
   const enableQuickAdd = useSelector((state: State) => state.options.form.enableQuickAdd);
