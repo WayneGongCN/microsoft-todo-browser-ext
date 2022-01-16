@@ -1,4 +1,10 @@
 {
+  "extensionName": {
+    "message": "Microsoft To Do Browser Extension - open source unofficial implementation"
+  },
+  "extensionDescription": {
+    "message": "An open source, free browser extension for Microsoft To Do that keeps you focused from work to play."
+  },
   "untitle": {
     "message": "Untitle"
   },

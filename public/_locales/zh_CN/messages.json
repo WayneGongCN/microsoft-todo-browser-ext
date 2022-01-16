@@ -1,4 +1,10 @@
 {
+  "extensionName": {
+    "message": "Microsoft To Do 浏览器扩展 - 微软待办 todo list 清单"
+  },
+  "extensionDescription": {
+    "message": "开源、免费的 Microsoft To Do 浏览器扩展，让你从工作到娱乐都保持专注。"
+  },
   "untitle": {
     "message": "无标题"
   },

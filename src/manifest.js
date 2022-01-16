@@ -2,12 +2,20 @@
 const packageJson = require('../package.json');
 
 module.exports = {
+  // version
   manifest_version: 2,
-  name: 'Microsoft To Do browser extension',
-  default_locale: 'en',
   version: packageJson.version,
-  description: packageJson.description,
+
+  // 基本信息
+  name: '__MSG_extensionName__',
+  description: '__MSG_extensionDescription__',
+  default_locale: 'en',
+
+  // 权限
   permissions: ['identity', 'tabs', 'contextMenus', 'notifications', 'storage'],
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; object-src 'self'",
+
+  // 
   background: {
     scripts: ['background.js'],
     persistent: false,
@@ -22,7 +30,8 @@ module.exports = {
       js: ['content.js'],
     },
   ],
-  "content_security_policy": "script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; object-src 'self'",
+
+  // 图片资源
   icons:
     process.env.NODE_ENV === 'development'
       ? { 128: './icons/todo-dev-128.png' }
