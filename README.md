@@ -1,5 +1,12 @@
 # Microsoft To Do 浏览器扩展
 
+<a href="https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/ffpljgmbiankjaokoefefmkoghcgoodn" target="_blank">![](https://img.shields.io/chrome-web-store/v/ffpljgmbiankjaokoefefmkoghcgoodn?style=social)</a>
+<a href="https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/ffpljgmbiankjaokoefefmkoghcgoodn" target="_blank">![](https://img.shields.io/chrome-web-store/users/ffpljgmbiankjaokoefefmkoghcgoodn?style=social)</a>
+<a href="https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/ffpljgmbiankjaokoefefmkoghcgoodn/reviews" target="_blank">![](https://img.shields.io/chrome-web-store/stars/ffpljgmbiankjaokoefefmkoghcgoodn?style=social)</a>
+<a href="https://github.com/WayneGongCN/microsoft-todo-browser-ext" target="_blank">![](https://img.shields.io/github/stars/waynegongcn/microsoft-todo-browser-ext?style=social)</a>
+<a href="https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues" target="_blank">![](https://img.shields.io/github/issues/waynegongcn/microsoft-todo-browser-ext?style=social)</a>
+
+
 [Microsoft To Do 浏览器扩展](https://mstodo-ext.waynegong.cn/)（[Chrome](https://chrome.google.com/webstore/detail/microsoft-to-do-chrome-ex/ffpljgmbiankjaokoefefmkoghcgoodn)、~~Firefox~~）
 
 基于 [Microsoft Graph To Do API](https://docs.microsoft.com/en-us/graph/todo-concept-overview) .
