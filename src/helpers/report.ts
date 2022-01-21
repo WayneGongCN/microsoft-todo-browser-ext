@@ -42,21 +42,16 @@ export const initGTM = (i = process.env.GTM_ID, w = window, d = document, s = 's
   f.parentNode.insertBefore(j, f);
 };
 
-export const gtag = function (...args: any[]) {
-  if (!REPORT) return;
-
+export const ga =
   // @ts-ignore
-  window[dataLayer] = window[dataLayer] || [];
-  // @ts-ignore
-  // eslint-disable-next-line prefer-rest-params
-  window[dataLayer].push(arguments);
-};
+  window.ga ||
+  function () {
+    if (!REPORT) return;
+    // eslint-disable-next-line prefer-rest-params
+    (ga.q = ga.q || []).push(arguments);
+  };
 
-export const timing = (name: string, value: number, category = '') => {
+export const timing = (name: string, value: number, category = 'Default', label = '') => {
   logger.log('timing: ', name, value);
-  gtag('send', 'timing', {
-    name,
-    value: Math.round(value),
-    event_category: category,
-  });
+  ga('send', 'timing', category, name, Math.round(value), label);
 };

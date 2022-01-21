@@ -6,6 +6,8 @@ import { ErrorCode } from '../src/helpers/error';
 
 declare global {
   interface Window {
+    __IS_DEV: boolean;
+    __IS_PROD: boolean;
     __VERSION: string;
     __BUILD_TARGET: string;
     backgroundContext: typeof backgroundContext;
