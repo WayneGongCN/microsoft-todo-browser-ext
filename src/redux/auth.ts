@@ -16,7 +16,7 @@ const initialState = {
 
 /**
  * 静默获取 Token
- * - 登录态过期不会拉起登录弹窗
+ * - 若登录态过期不会拉起登录弹窗
  */
 const acquireTokenSilent = createAsyncThunk<SerializAuthenticationResult, void, { state: State; payload: SerializAuthenticationResult }>(
   `${SLICE_NAME}/acquireTokenSilent`,

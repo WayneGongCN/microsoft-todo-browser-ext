@@ -11,7 +11,7 @@ import storage from 'redux-persist/lib/storage';
 import { onPresistReady } from '../helpers/persist';
 
 const rootReducer = {
-  auth: authSlice.reducer,
+  auth: persistReducer({ key: 'auth', storage }, authSlice.reducer),
   task: taskSlice.reducer,
   tasklist: tasklistSlice.reducer,
   popup: popupSlice.reducer,
