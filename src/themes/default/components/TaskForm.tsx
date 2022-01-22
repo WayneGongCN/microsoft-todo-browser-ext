@@ -34,7 +34,7 @@ import {
 } from '../../../constants/lang';
 import { backgroundContext } from '../../../helpers/background';
 import TasklistSelect from '../../../components/TasklistSelect';
-import { timing } from '../../../helpers/report';
+import { now, timing } from '../../../helpers/report';
 
 const TaskForm: React.FC = () => {
   const { taskSlice, popupSlice } = backgroundContext;
@@ -85,7 +85,7 @@ const TaskForm: React.FC = () => {
   );
 
   useEffect(() => {
-    timing('popup form rendered', performance.now());
+    timing('popup form rendered', now());
   }, []);
 
   return (

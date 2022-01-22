@@ -4,8 +4,13 @@ import { version } from '../../package.json';
 import { LNAG_QUICK_ADD_TASK } from './lang';
 
 export const EXT_ID = chrome.runtime.id;
+
 export const IS_DEV = (window.__IS_DEV = process.env.NODE_ENV === 'development');
 export const IS_PROD = (window.__IS_PROD = process.env.NODE_ENV === 'production');
+export const IS_BG_PAGE = location.href.includes('background');
+export const IS_POPUP_PAGE = location.href.includes('popup');
+export const IS_OPTION_PAGE = location.href.includes('option');
+
 export const VERSION = (window.__VERSION = version);
 export const BUILD_TARGET = (window.__BUILD_TARGET = process.env.BUILD_TARGET);
 

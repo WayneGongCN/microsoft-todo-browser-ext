@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 import { render } from 'react-dom';
-import { initSentry, initGTM, timing } from '../../helpers/report';
+import { initSentry, initGTM, timing, now } from '../../helpers/report';
 import { Page } from '../../constants/enums';
 import { storeWrap } from '../../helpers/theme';
 import OptionsForm from './components/OptionsForm';
@@ -23,7 +23,7 @@ const OptionsPage = storeWrap(() => {
   const account = useSelector((state: State) => state.auth.authenticationResult?.account);
 
   useEffect(() => {
-    timing('options rendered', performance.now());
+    timing('options rendered', now());
   }, []);
 
   return (

@@ -6,6 +6,8 @@ import { ErrorCode } from '../src/helpers/error';
 
 declare global {
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    ga: Function;
     __IS_DEV: boolean;
     __IS_PROD: boolean;
     __VERSION: string;

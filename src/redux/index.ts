@@ -1,4 +1,4 @@
-import { AnyAction, configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import authSlice from './auth';
 import { createLogger } from 'redux-logger';
 import taskSlice from './task';

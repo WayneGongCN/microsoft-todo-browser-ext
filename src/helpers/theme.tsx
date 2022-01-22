@@ -3,7 +3,7 @@ import { lazy } from 'react';
 import { Provider } from 'react-redux';
 import { EThemes } from '../constants/enums';
 import { getBackgroundCtx } from './background';
-import { timing } from './report';
+import { now, timing } from './report';
 
 /**
  * 异步加载 Theme
@@ -11,9 +11,10 @@ import { timing } from './report';
  * @returns
  */
 export const loadTheme = (theme: EThemes) => {
+  const startTime = now();
   return lazy(() =>
     import(`../themes/${theme}/`).then(async (res) => {
-      timing('theme loaded', performance.now());
+      timing('theme loaded', now() - startTime);
       return res;
     })
   );

@@ -1,14 +1,15 @@
 import { BackgroundContext } from '../../types';
 import { ErrorCode } from '../constants/enums';
 import AppError from './error';
-import { timing } from './report';
+import { now, timing } from './report';
 
 export let backgroundContext: BackgroundContext;
 
-const loadBackground = (): Promise<BackgroundContext> =>
-  new Promise((resolve, reject) => {
+const loadBackground = (): Promise<BackgroundContext> => {
+  const startTime = now();
+  return new Promise((resolve, reject) => {
     chrome.runtime.getBackgroundPage((ctx: Window & { backgroundContext: BackgroundContext }) => {
-      timing('background loaded', performance.now())
+      timing('background loaded', now() - startTime)
       const lastError = chrome.runtime.lastError;
       if (lastError) reject(new AppError({ code: ErrorCode.UNKNOW, message: lastError?.message }));
       else {
@@ -17,6 +18,7 @@ const loadBackground = (): Promise<BackgroundContext> =>
       }
     });
   });
+}
 
 /**
  * 获取 Background 页面的上下文

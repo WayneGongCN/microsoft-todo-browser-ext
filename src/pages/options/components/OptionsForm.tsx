@@ -7,7 +7,7 @@ import { FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, R
 import TasklistSelect from '../../../components/TasklistSelect';
 import BuyMeACoffee from './BuyMeACoffee';
 import { openUrl } from '../../../helpers';
-import { timing } from '../../../helpers/report';
+import { now, timing } from '../../../helpers/report';
 import { ISSUE_URL, RATE_URL } from '../../../constants';
 import { EQuickTaskTitle } from '../../../constants/enums';
 import {
@@ -54,7 +54,7 @@ const OptionsForm: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    timing('options rendered', performance.now());
+    timing('options form rendered', now());
   }, []);
 
   // render

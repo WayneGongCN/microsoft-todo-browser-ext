@@ -5,12 +5,12 @@ import TaskForm from './components/TaskForm';
 import Login from '../../components/Login';
 import OpenMSTodo from './components/OpenMSToDo';
 import { backgroundContext } from '../../helpers/background';
-import { timing } from '../../helpers/report';
+import { now, timing } from '../../helpers/report';
 import { Container } from '@material-ui/core';
 
 const Default: React.FC<void> = () => {
   useEffect(() => {
-    timing('popup rendered', performance.now());
+    timing('popup rendered', now());
   }, []);
 
   const authed = useSelector((state: State) => state.auth.authenticationResult);

@@ -6,6 +6,7 @@ import { bindAsyncActions } from '../helpers';
 import { SerializAuthenticationResult } from '../../types';
 import { ErrorCode } from '../constants/enums';
 import { logger } from '../helpers/logger';
+import { now, timing } from '../helpers/report';
 
 const SLICE_NAME = 'auth';
 const initialState = {
@@ -23,20 +24,31 @@ const initialState = {
 export const acquireToken = createAsyncThunk<SerializAuthenticationResult, boolean, { state: State }>(`${SLICE_NAME}/acquireToken`, (silent, { getState }) => {
   const { auth } = getState();
   const { authenticationResult } = auth;
-  const now = Date.now();
-  const isExpires = now > (authenticationResult?.expiresOn || 0);
+  const curTime = Date.now();
+  const isExpires = curTime > (authenticationResult?.expiresOn || 0);
 
   if (!isExpires) {
     return Promise.resolve(authenticationResult);
   } else {
+    const startTime = now();
     const accounts = msalGetAllAccounts();
-    return msalAcquireTokenSilent({ scopes: AUTH_SCOPES, account: accounts[0] }).catch((e) => {
-      if (silent) throw e;
-      else {
-        logger.warn('msalAcquireTokenSilent fail try msalAcquireTokenRedirect');
-        return msalAcquireTokenRedirect({ scopes: AUTH_SCOPES });
-      }
-    });
+    return msalAcquireTokenSilent({ scopes: AUTH_SCOPES, account: accounts[0] })
+      .catch((e) => {
+        if (silent) {
+          logger.warn('msalAcquireTokenSilent fail silent is true.');
+          throw e;
+        } else {
+          logger.warn('msalAcquireTokenSilent fail try msalAcquireTokenRedirect.');
+          return msalAcquireTokenRedirect({ scopes: AUTH_SCOPES }).catch((e) => {
+            logger.warn('msalAcquireTokenRedirect fail');
+            throw e;
+          });
+        }
+      })
+      .then((res) => {
+        timing('acquireToken', now() - startTime);
+        return res;
+      });
   }
 });
 

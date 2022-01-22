@@ -42,16 +42,19 @@ export const initGTM = (i = process.env.GTM_ID, w = window, d = document, s = 's
   f.parentNode.insertBefore(j, f);
 };
 
-export const ga =
-  // @ts-ignore
-  window.ga ||
-  function () {
-    if (!REPORT) return;
-    // eslint-disable-next-line prefer-rest-params
-    (ga.q = ga.q || []).push(arguments);
-  };
+export const now = () => performance.now();
 
-export const timing = (name: string, value: number, category = 'Default', label = '') => {
-  logger.log('timing: ', name, value);
-  ga('send', 'timing', category, name, Math.round(value), label);
+export const timing = function (name: string, value: number, category = 'Default', label = '') {
+  if (!REPORT) return;
+
+  if (window.ga) {
+    logger.log('timing: ', name, value);
+    window.ga('gtm4.send', 'timing', category, name, Math.round(value), label);
+  } else {
+    setTimeout(() => {
+      // @ts-ignore
+      // eslint-disable-next-line prefer-rest-params
+      timing(...arguments);
+    }, 1000);
+  }
 };
