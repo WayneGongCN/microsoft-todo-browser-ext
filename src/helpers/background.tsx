@@ -5,7 +5,7 @@ import { timing } from './report';
 
 export let backgroundContext: BackgroundContext;
 
-const loadBackground = () =>
+const loadBackground = (): Promise<BackgroundContext> =>
   new Promise((resolve, reject) => {
     chrome.runtime.getBackgroundPage((ctx: Window & { backgroundContext: BackgroundContext }) => {
       timing('background loaded', performance.now())
@@ -21,6 +21,6 @@ const loadBackground = () =>
 /**
  * 获取 Background 页面的上下文
  */
-export const getBackgroundCtx = async () => {
+export const getBackgroundCtx = async (): Promise<BackgroundContext> => {
   return backgroundContext || await loadBackground();
 };

@@ -9,16 +9,17 @@ export default React.forwardRef<unknown, SelectProps>(function TasklistSelect(pr
   const { tasklistSlice } = backgroundContext;
   const dispatch = useDispatch();
   const loadingTasklist = useSelector((state: State) => state.popup.loadingTasklist);
+  const account = useSelector((state: State) => state.auth.authenticationResult?.account);
 
   // 获取 tasklist
   const tasklists = useSelector((state: State) => state.tasklist.lists);
   useEffect(() => {
-    dispatch(tasklistSlice.getTasklist());
-  }, []);
+    account && dispatch(tasklistSlice.getTasklist());
+  }, [account]);
 
   return (
     <>
-      <Select disabled={loadingTasklist} ref={ref} {...props} >
+      <Select disabled={loadingTasklist || !account} ref={ref} {...props} >
         {tasklists.map((x, idx) => (
           <MenuItem id={`com-task-list-${idx}`} key={x.id} value={x.id}>
             {x.displayName}

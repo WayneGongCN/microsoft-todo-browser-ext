@@ -6,12 +6,11 @@ import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from '../../redux/tas
 import optionsSlice from '../../redux/options';
 import Notify from '../../helpers/notification';
 import { Page } from '../../constants/enums';
-import { logout } from '../../helpers/msal';
 import { initSentry } from '../../helpers/report';
 
 initSentry(Page.BACKGROUND);
 
-const backgroundContext = {
+export const backgroundContext = {
   Notify,
   store,
   persistor,
@@ -20,6 +19,5 @@ const backgroundContext = {
   tasklistSlice: tasklistSlice as typeof tasklistSlice & typeof tasklistAsyncChunk,
   popupSlice: popupSlice,
   optionsSlice: optionsSlice,
-  logout,
 };
 window.backgroundContext = backgroundContext;

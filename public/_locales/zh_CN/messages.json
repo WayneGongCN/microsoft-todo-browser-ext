@@ -54,13 +54,18 @@
   "popupBookmarkTooltip": {
     "message": "书签"
   },
-  "popupLoadingText": {
+  "loadingText": {
     "message": "加载中"
   },
-  "popupLoginText": {
+  "loginText": {
     "message": "登录"
   },
-
+  "logoutText": {
+    "message": "登出"
+  },
+  "loginTip": {
+    "message": "请登录"
+  },
 
   "optionsEnableQuickAdd": {
     "message": "开启 \"快速创建 To Do\" 功能"

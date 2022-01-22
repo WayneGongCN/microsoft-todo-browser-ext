@@ -11,6 +11,7 @@ import { timing } from '../../../helpers/report';
 import { ISSUE_URL, RATE_URL } from '../../../constants';
 import { EQuickTaskTitle } from '../../../constants/enums';
 import {
+  LANG_LOGIN_TIP,
   LANG_OPTIONS_ENABLE_AUTO_RESET,
   LANG_OPTIONS_ENABLE_AUTO_RESET_HELP,
   LANG_OPTIONS_ENABLE_QUICK_ADD,
@@ -40,6 +41,7 @@ const OptionsForm: React.FC = () => {
   }, []);
 
   // tasklist
+  const account = useSelector((state: State) => state.auth.authenticationResult?.account);
   const tasklistId = useSelector((state: State) => state.options.form.quickAddTaskTasklistId);
   useEffect(() => {
     setValue('quickAddTaskTasklistId', tasklistId);
@@ -52,8 +54,8 @@ const OptionsForm: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    timing('options rendered', performance.now())
-  }, [])
+    timing('options rendered', performance.now());
+  }, []);
 
   // render
   const enableQuickAdd = useSelector((state: State) => state.options.form.enableQuickAdd);
@@ -63,7 +65,7 @@ const OptionsForm: React.FC = () => {
         {/* quickAddTaskTasklist */}
         <Grid item xs={12} lg={12}>
           <FormControl fullWidth>
-            <InputLabel id="options-quck-add-task-list">{LANG_OPTIONS_QUICK_ADD_TASKLIST}</InputLabel>
+            <InputLabel id="options-quck-add-task-list">{account ? LANG_OPTIONS_QUICK_ADD_TASKLIST : LANG_LOGIN_TIP}</InputLabel>
             <Controller
               name="quickAddTaskTasklistId"
               control={control}

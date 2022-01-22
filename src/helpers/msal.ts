@@ -31,7 +31,7 @@ const clearAccount = () => {
 /**
  * 退出登录
  */
-export const logout = () => {
+export const logoutRedirect = () => {
   return new Promise<void>((resolve, reject) => {
     const onRedirectNavigate = (url: string) => {
       chrome.identity.launchWebAuthFlow({ url, interactive: true }, () => {
