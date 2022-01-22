@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.1.1...v1.2.0) (2022-01-22)
+
+
+### Features
+
+* option 页面支持退出登录，优化了登录相关的逻辑 ([#53](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/53)) ([9786838](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/9786838e976ae9e63cb2d4ac556711d2a83e5ec5))
+
+
+### Bug Fixes
+
+* 修复 Build target 标识错误 ([2312634](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/23126343d236ab14c257fef15fbded0b83f8d7bf))
+* 修复 GA timing 上报 ([01440f8](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/01440f85472cc814f8876055d35554abd6fa65c4))
+
 ### [1.1.2](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.1.1...v1.1.2) (2022-01-17)
 
 
