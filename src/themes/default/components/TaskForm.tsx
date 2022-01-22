@@ -17,8 +17,13 @@ import Star from '@material-ui/icons/Star';
 import StarOutline from '@material-ui/icons/StarOutline';
 import Bookmarks from '@material-ui/icons/Bookmarks';
 import RotateLeft from '@material-ui/icons/RotateLeft';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Tooltip from '@material-ui/core/Tooltip';
+import { backgroundContext } from '../../../helpers/background';
+import TasklistSelect from '../../../components/TasklistSelect';
+import { now, timing } from '../../../helpers/report';
+import { openUrl } from '../../../helpers';
 import {
   LANG_POPUP_TITLE,
   LANG_POPUP_DESCRIBE,
@@ -31,10 +36,9 @@ import {
   LANG_POPUP_CREATING,
   LANG_POPUP_ADDTASK,
   LANG_POPUP_TITLE_VALIDATION,
+  LANG_OPEN_OPTIONS_PAGE_TOOLTIP,
 } from '../../../constants/lang';
-import { backgroundContext } from '../../../helpers/background';
-import TasklistSelect from '../../../components/TasklistSelect';
-import { now, timing } from '../../../helpers/report';
+import { OPTIONS_PAGE_URL } from '../../../constants';
 
 const TaskForm: React.FC = () => {
   const { taskSlice, popupSlice } = backgroundContext;
@@ -84,12 +88,16 @@ const TaskForm: React.FC = () => {
     [autoResetPopup]
   );
 
+  const handleClickOptions = useCallback(() => {
+    openUrl({ url: OPTIONS_PAGE_URL });
+  }, []);
+
   useEffect(() => {
     timing('popup form rendered', now());
   }, []);
 
   return (
-    <Grid container direction="column" spacing={2}>
+    <Grid container item spacing={2}>
       <Grid item xs={12}>
         <Controller
           control={control}
@@ -135,8 +143,8 @@ const TaskForm: React.FC = () => {
         />
       </Grid>
 
-      <Grid container item direction="row" alignItems="center" spacing={2} xs={12}>
-        <Grid item xs={8}>
+      <Grid container item direction="row" alignItems="center" justifyContent="space-between" xs={12}>
+        <Grid item xs={7} style={{ marginTop: '8px' }}>
           <FormControl error={Boolean(errors.tasklistId)} fullWidth required>
             <InputLabel id="popup-select-tasklist">{LANG_POPUP_TASKLIST}</InputLabel>
             <Controller
@@ -153,7 +161,7 @@ const TaskForm: React.FC = () => {
           </FormControl>
         </Grid>
 
-        <Grid item xs={2} style={{ marginTop: '8px' }}>
+        <Grid item xs={1} style={{ marginTop: '8px' }}>
           <Controller
             control={control}
             name="importance"
@@ -172,7 +180,7 @@ const TaskForm: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={2} style={{ marginTop: '8px' }}>
+        <Grid item xs={1} style={{ marginTop: '8px' }}>
           <Controller
             control={control}
             name="bookmark"
@@ -189,6 +197,15 @@ const TaskForm: React.FC = () => {
               </Tooltip>
             )}
           />
+        </Grid>
+
+        {/* More */}
+        <Grid item xs={1} style={{ marginTop: '8px' }}>
+          <Tooltip title={LANG_OPEN_OPTIONS_PAGE_TOOLTIP}>
+            <IconButton id="popup-btn-options" size="small" onClick={handleClickOptions}>
+              <MoreHorizIcon></MoreHorizIcon>
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
 

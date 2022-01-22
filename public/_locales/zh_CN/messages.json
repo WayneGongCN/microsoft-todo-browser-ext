@@ -22,10 +22,10 @@
   },
   
   "popupTitleText": {
-    "message": "标题"
+    "message": "任务标题"
   },
   "popupDescribeText": {
-    "message": "描述"
+    "message": "任务备注"
   },
   "popupDateTimeText": {
     "message": "提醒我"
@@ -34,7 +34,7 @@
     "message": "任务列表"
   },
   "popupResetTooltip": {
-    "message": "重置"
+    "message": "重置表单内容"
   },
   "popupCreatingText": {
     "message": "正在创建"
@@ -43,16 +43,19 @@
     "message": "添加任务"
   },
   "popupTitleValidation": {
-    "message": "标题必填"
+    "message": "任务标题不能为空"
   },
   "popupTaskListValidation": {
-    "message": "标题列表必选"
+    "message": "必须选择一个任务列表"
   },
   "popupImportanceTooltip": {
-    "message": "重要"
+    "message": "设为重要"
   },
   "popupBookmarkTooltip": {
-    "message": "书签"
+    "message": "保存书签"
+  },
+  "openOptionsPageTooltip": {
+    "message": "打开插件配置页"
   },
   "loadingText": {
     "message": "加载中"

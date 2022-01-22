@@ -55,6 +55,9 @@
   "popupBookmarkTooltip": {
     "message": "Bookmark"
   },
+  "openOptionsPageTooltip": {
+    "message": "Open options page"
+  },
   "loadingText": {
     "message": "Loading"
   },

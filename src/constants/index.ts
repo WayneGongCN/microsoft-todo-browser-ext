@@ -19,6 +19,7 @@ export const AUTH_SCOPES = ['profile', 'Tasks.ReadWrite'];
 export const API_TIME_OUT = 1000 * 60;
 
 export const EXT_URL = `https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/${EXT_ID}`;
+export const OPTIONS_PAGE_URL = `chrome-extension://${EXT_ID}/options.html`;
 export const REPO_URL = 'https://github.com/WayneGongCN/microsoft-todo-browser-ext';
 export const ISSUE_URL = `${REPO_URL}/issues/new`;
 export const RATE_URL = `https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/${EXT_ID}/reviews`;

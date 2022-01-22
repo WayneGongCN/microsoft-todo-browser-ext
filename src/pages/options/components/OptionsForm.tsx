@@ -3,12 +3,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { Dispatch, State } from '../../../redux';
 import { backgroundContext } from '../../../helpers/background';
-import { FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, Radio, RadioGroup, Switch, Button, Grid } from '@material-ui/core';
+import { FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, Radio, RadioGroup, Switch, Grid } from '@material-ui/core';
 import TasklistSelect from '../../../components/TasklistSelect';
-import BuyMeACoffee from './BuyMeACoffee';
-import { openUrl } from '../../../helpers';
 import { now, timing } from '../../../helpers/report';
-import { ISSUE_URL, RATE_URL } from '../../../constants';
 import { EQuickTaskTitle } from '../../../constants/enums';
 import {
   LANG_LOGIN_TIP,
@@ -16,14 +13,12 @@ import {
   LANG_OPTIONS_ENABLE_AUTO_RESET_HELP,
   LANG_OPTIONS_ENABLE_QUICK_ADD,
   LANG_OPTIONS_ENABLE_QUICK_ADD_HELP,
-  LANG_OPTIONS_ISSUE,
   LANG_OPTIONS_QUICK_ADD_TASKLIST,
   LANG_OPTIONS_QUICK_ADD_TASKLIST_HELP,
   LANG_OPTIONS_QUICK_ADD_TITLE,
   LANG_OPTIONS_QUICK_ADD_TITLE_HELP,
   LANG_OPTIONS_QUICK_ADD_TITLE_SELECTION,
   LANG_OPTIONS_QUICK_ADD_TITLE_TAB_TITLE,
-  LANG_OPTIONS_RATE,
 } from '../../../constants/lang';
 
 const OptionsForm: React.FC = () => {
@@ -46,12 +41,6 @@ const OptionsForm: React.FC = () => {
   useEffect(() => {
     setValue('quickAddTaskTasklistId', tasklistId);
   }, [tasklistId]);
-
-  // btn
-  const handleBtnClick = useCallback((e) => {
-    const url = e.target?.dataset?.url;
-    url && openUrl({ url });
-  }, []);
 
   useEffect(() => {
     timing('options form rendered', now());
@@ -104,7 +93,7 @@ const OptionsForm: React.FC = () => {
   }, [enableQuickAdd]);
 
   return (
-    <Grid container item spacing={6}>
+    <Grid container item spacing={4}>
       {/* Quick add task */}
       <Grid container item xs={12} lg={12} spacing={3}>
         {/* enableQuickAdd */}
@@ -138,23 +127,6 @@ const OptionsForm: React.FC = () => {
             )}
           />
           <FormHelperText>{LANG_OPTIONS_ENABLE_AUTO_RESET_HELP}</FormHelperText>
-        </Grid>
-      </Grid>
-
-      {/* Btns */}
-      <Grid container item xs={12} lg={12} spacing={2}>
-        <Grid item>
-          <Button id="options-btn-issue" variant="contained" data-url={ISSUE_URL} onClick={handleBtnClick}>
-            {LANG_OPTIONS_ISSUE}
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button id="options-btn-rate" variant="contained" data-url={RATE_URL} onClick={handleBtnClick}>
-            {LANG_OPTIONS_RATE}
-          </Button>
-        </Grid>
-        <Grid item>
-          <BuyMeACoffee />
         </Grid>
       </Grid>
     </Grid>
