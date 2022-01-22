@@ -55,11 +55,17 @@
   "popupBookmarkTooltip": {
     "message": "Bookmark"
   },
-  "popupLoadingText": {
+  "loadingText": {
     "message": "Loading"
   },
-  "popupLoginText": {
+  "loginText": {
     "message": "Login"
+  },
+  "logoutText": {
+    "message": "Logout"
+  },
+  "loginTip": {
+    "message": "Please login"
   },
 
 

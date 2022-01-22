@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { SerializAuthenticationResult } from '../../types';
 import { API_BASE_URL, API_TIME_OUT } from '../constants';
 import { ErrorCode } from '../constants/enums';
 import { store } from '../redux';
@@ -11,7 +12,10 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(async (conf) => {
-  const accessToken = (await store.dispatch(acquireToken()).then((res) => res.payload)) as string;
+  const { payload } = await store.dispatch(acquireToken(false));
+  const accessToken = (payload as SerializAuthenticationResult)?.accessToken;
+  if (!accessToken) throw new Error('accessToken is null');
+
   conf.headers.Authorization = `Bearer ${accessToken}`;
   return conf;
 });

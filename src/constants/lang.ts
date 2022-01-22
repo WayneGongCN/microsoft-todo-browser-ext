@@ -5,6 +5,10 @@ export const LNAG_SUCCESS = getI18nText('success');
 export const LNAG_ADD_TASK = getI18nText('addTask');
 export const LNAG_QUICK_ADD_TASK = getI18nText('quickAddTask');
 export const LNAG_OPEN_MS_TODO = getI18nText('openMSTODO');
+export const LANG_LOADING_TEXT = getI18nText('loadingText');
+export const LANG_LOGIN_TEXT = getI18nText('loginText');
+export const LANG_LOGOUT_TEXT = getI18nText('logoutText');
+export const LANG_LOGIN_TIP = getI18nText('loginTip');
 
 /**
  * Popup
@@ -20,8 +24,6 @@ export const LANG_POPUP_TITLE_VALIDATION = getI18nText('popupTitleValidation');
 export const LANG_POPUP_TASKLIST_VALIDATION = getI18nText('popupTaskListValidation');
 export const LANG_POPUP_IMPORTANCE_TOOLTIP = getI18nText('popupImportanceTooltip');
 export const LANG_POPUP_BOOKMARK_TOOLTIP = getI18nText('popupBookmarkTooltip');
-export const LANG_POPUP_LOADING_TEXT = getI18nText('popupLoadingText');
-export const LANG_POPUP_LOGIN_TEXT = getI18nText('popupLoginText');
 
 /**
  * Options

@@ -1,8 +1,8 @@
 import { store } from '../redux';
-import { acquireTokenSilent } from '../redux/auth';
+import { acquireToken } from '../redux/auth';
 import { initQuickAdd } from './quickAdd';
 
 export const onPresistReady = () => {
   initQuickAdd();
-  store.dispatch(acquireTokenSilent());
+  store.dispatch(acquireToken(true));
 };
