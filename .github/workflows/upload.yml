@@ -1,16 +1,29 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: CI
+name: Upload
 
 on:
   push:
-    tags: v*
+    tags:        
+      - v*
+  workflow_dispatch:
 
 jobs:
-  build:
+  upload:
     runs-on: ubuntu-latest
     steps:
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_BUILD_TARGET: ChromeStore
+          envkey_EXTENSION_ID: ffpljgmbiankjaokoefefmkoghcgoodn
+          envkey_MSAL_CLIENT_ID: a5491fb2-111a-4c43-976c-280a507814dc
+          envkey_SENTRY_DSN: https://365de3b2d6514a4caca2e06294ff74d0@o1093323.ingest.sentry.io/6112552
+          envkey_GTM_ID: GTM-WVNS69V
+          envkey_CLIENT_ID: 846943702071-dg8uf689j8bsn816avetglmtpis4hr3m.apps.googleusercontent.com
+          envkey_Renvkey_EFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+
       - name: Checkout
         uses: actions/checkout@v2
 
