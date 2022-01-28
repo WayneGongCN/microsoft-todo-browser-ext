@@ -23,6 +23,8 @@ jobs:
           envkey_GTM_ID: GTM-WVNS69V
           envkey_CLIENT_ID: 846943702071-dg8uf689j8bsn816avetglmtpis4hr3m.apps.googleusercontent.com
           envkey_Renvkey_EFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          file_name: .env.production
+
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -37,6 +39,9 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Zip
+        run: npm run zip
 
       - name: Upload
         run: npm run upload
