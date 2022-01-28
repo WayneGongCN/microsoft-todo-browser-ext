@@ -36,7 +36,9 @@ jobs:
             EOF
 
       - name: Install
-        run: npm install
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install
 
       - name: Build
         run: npm run build
