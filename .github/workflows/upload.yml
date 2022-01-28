@@ -1,29 +1,29 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Upload
+name: CI
 
 on:
   push:
     tags: v*
 
 jobs:
-  upload:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Inital Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-          check-latest: true
-      - run: echo ${{ secrets.EXTENSION_ID }}
-      - run: echo "EXTENSION_ID=${{ secrets.EXTENSION_ID }}" >> .env
-      - run: echo "MSAL_CLIENT_ID=${{ secrets.MSAL_CLIENT_ID }}" >> .env
-      - run: echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env
-      - run: echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
-      - run: echo "REFRESH_TOKEN=${{ secrets.REFRESH_TOKEN }}" >> .env
-      - run: ls -alh
-      - run: npm install
-      - run: npm run build
-      - run: npm run upload
+      
+      - name: Install
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload
+        run: npm run upload

@@ -54,18 +54,12 @@ module.exports = {
       template: 'public/template.html',
       chunks: ['popup'],
       title: "Popup - Microsoft To Do browser extension",
-      environment: {
-        GTM_ID: process.env.GTM_ID,
-      },
     }),
     new HtmlWebpackPlugin({
       filename: 'options.html',
       template: 'public/template.html',
       chunks: ['options'],
       title: "Options - Microsoft To Do browser extension",
-      environment: {
-        GTM_ID: process.env.GTM_ID,
-      },
     }),
 
     new CopyPlugin({
