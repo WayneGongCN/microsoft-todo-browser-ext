@@ -16,4 +16,17 @@ const options = {
 const myZipFile = fs.createReadStream('./dist.zip');
 const store = chromeWebstoreUpload(options);
 
-store.uploadExisting(myZipFile).then(console.log);
+store
+  .uploadExisting(myZipFile)
+  .then((res) => {
+    if (res && res.uploadState === 'SUCCESS') {
+      console.log(res);
+      process.exit(0);
+    } else {
+      return Promise.reject(res);
+    }
+  })
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
