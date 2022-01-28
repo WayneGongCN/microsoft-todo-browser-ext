@@ -5,7 +5,7 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: join(__dirname, '.env.production') });
+dotenv.config({ path: join(__dirname, '../.env.production') });
 
 const options = {
   extensionId: process.env.EXTENSION_ID,
