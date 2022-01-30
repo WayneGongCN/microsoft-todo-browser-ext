@@ -11,7 +11,8 @@ const DEFAULT_MSAL_CONF: Configuration = {
   auth: {
     clientId: process.env.MSAL_CLIENT_ID,
     authority: 'https://login.microsoftonline.com/consumers',
-    redirectUri: `https://${EXT_ID}.chromiumapp.org/`,
+    // see: https://developer.chrome.com/docs/extensions/reference/identity/#method-getRedirectURL
+    redirectUri: chrome.identity.getRedirectURL(),
   },
   cache: {
     cacheLocation: 'localStorage',
