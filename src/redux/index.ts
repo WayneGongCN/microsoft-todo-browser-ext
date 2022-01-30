@@ -11,10 +11,10 @@ import storage from 'redux-persist/lib/storage';
 import { onPresistReady } from '../helpers/persist';
 
 const rootReducer = {
-  auth: persistReducer({ key: 'auth', storage }, authSlice.reducer),
   task: taskSlice.reducer,
   tasklist: tasklistSlice.reducer,
   popup: popupSlice.reducer,
+  auth: persistReducer({ key: 'auth', storage }, authSlice.reducer),
   options: persistReducer({ key: 'options', storage }, optionsSlice.reducer),
 };
 
@@ -27,7 +27,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat([createLogger({ collapsed: true, duration: true })]);
+    }).concat([IS_DEV && createLogger({ collapsed: true, duration: true })].filter(Boolean));
   },
 });
 

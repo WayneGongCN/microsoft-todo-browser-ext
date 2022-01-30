@@ -2,10 +2,10 @@ import { REPORT, REPORT_SAMPLE_RATE, VERSION } from '../constants';
 import { Page } from '../constants/enums';
 import { logger } from './logger';
 
+let Sentry: any = null;
 export const initSentry = async (page: Page) => {
   if (!REPORT) return;
 
-  let Sentry = null;
   if (page === Page.BACKGROUND) {
     Sentry = await import('@sentry/browser');
   } else if (page === Page.POPUP || page === Page.OPTIONS) {
@@ -20,6 +20,16 @@ export const initSentry = async (page: Page) => {
     integrations: [new Integrations.BrowserTracing()],
     tracesSampleRate: REPORT_SAMPLE_RATE,
   });
+};
+
+export const report = (e: string | Error) => {
+  if (Sentry && REPORT) {
+    if (typeof e === 'string') {
+      Sentry.captureMessage(e);
+    } else if (e) {
+      Sentry.captureException(e);
+    }
+  }
 };
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */

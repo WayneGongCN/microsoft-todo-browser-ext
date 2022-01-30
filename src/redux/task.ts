@@ -55,7 +55,7 @@ export const createTask = createAsyncThunk<ITaskResult, IPopupForm>('task/create
       return res;
     })
     .catch((e) => {
-      rejectWithValue(e.serializ());
+      rejectWithValue(e?.serializ());
       return Promise.reject(e);
     });
 });

@@ -1,11 +1,13 @@
-import { AuthenticationResult, PublicClientApplication, RedirectRequest, SilentRequest } from '@azure/msal-browser';
+import { AuthenticationResult, Configuration, PublicClientApplication, RedirectRequest, SilentRequest } from '@azure/msal-browser';
 import { SerializAuthenticationResult } from '../../types';
 import { EXT_ID } from '../constants';
 import { logger } from './logger';
 import AppError from './error';
 import { ErrorCode } from '../constants/enums';
 
-const DEFAULT_MSAL_CONF = {
+const CLOSE_AUTH_POPUP_EVENT = 'The user did not approve access.';
+
+const DEFAULT_MSAL_CONF: Configuration = {
   auth: {
     clientId: process.env.MSAL_CLIENT_ID,
     authority: 'https://login.microsoftonline.com/consumers',
@@ -23,7 +25,7 @@ const msalInstance = new PublicClientApplication(DEFAULT_MSAL_CONF);
  * 清空登录态
  */
 const clearAccount = () => {
-  logger.log('clear account');
+  logger.warn('clear account');
   window?.localStorage.clear();
   window?.sessionStorage.clear();
 };
@@ -35,15 +37,17 @@ export const logoutRedirect = () => {
   return new Promise<void>((resolve, reject) => {
     const onRedirectNavigate = (url: string) => {
       chrome.identity.launchWebAuthFlow({ url, interactive: true }, () => {
-        if (chrome.runtime.lastError) reject(chrome.runtime.lastError.message);
-        resolve();
+        const lastError = chrome.runtime.lastError;
+        if (lastError && lastError.message !== CLOSE_AUTH_POPUP_EVENT)
+          return reject(new AppError({ code: ErrorCode.LAUNCH_WEB_AUTH_FLOW, message: lastError.message }));
+        return resolve();
       });
     };
 
     msalInstance.logoutRedirect({ onRedirectNavigate }).catch(reject);
   }).catch((e) => {
     clearAccount();
-    return Promise.reject(new AppError({ code: ErrorCode.ACQUIRE_TOKEN, message: e?.message || e }));
+    return Promise.reject(new AppError({ code: ErrorCode.LOGOUT, message: e?.message || e }));
   });
 };
 
@@ -62,7 +66,10 @@ export const msalAcquireTokenRedirect = (request: RedirectRequest): Promise<Seri
     const onRedirectNavigate = (url: string) => {
       // https://developer.chrome.com/docs/extensions/reference/identity/#method-launchWebAuthFlow
       chrome.identity.launchWebAuthFlow({ url, interactive: true }, (hashUrl) => {
-        if (chrome.runtime.lastError) reject(chrome.runtime.lastError.message);
+        const lastError = chrome.runtime.lastError;
+        if (lastError) {
+          return reject(new AppError({ code: ErrorCode.LAUNCH_WEB_AUTH_FLOW, message: lastError.message }));
+        }
 
         msalInstance.handleRedirectPromise(hashUrl).then(resolve).catch(reject);
       });

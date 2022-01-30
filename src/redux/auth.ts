@@ -32,6 +32,7 @@ export const acquireToken = createAsyncThunk<SerializAuthenticationResult, boole
   } else {
     const startTime = now();
     const accounts = msalGetAllAccounts();
+
     return msalAcquireTokenSilent({ scopes: AUTH_SCOPES, account: accounts[0] })
       .catch((e) => {
         if (silent) {

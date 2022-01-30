@@ -1,5 +1,6 @@
 import { IContentMessage } from '../../types';
-import { NotifyType } from '../constants/enums';
+import { ErrorCode, NotifyType } from '../constants/enums';
+import AppError from './error';
 
 // TODO: fix type
 // eslint-disable-next-line
@@ -12,7 +13,8 @@ export const bindAsyncActions = (slice: any, asyncActioMap: Record<string, Funct
 export const openUrl = (options: chrome.tabs.CreateProperties) =>
   new Promise((resolve, reject) => {
     chrome.tabs.create(options, (tab) => {
-      if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
+      const lastError = chrome.runtime.lastError;
+      if (lastError) return reject(new AppError({ code: ErrorCode.CREATE_TAB, message: lastError.message }));
       return resolve(tab);
     });
   });
@@ -35,12 +37,13 @@ export const openMicrosoftTodo = (type?: NotifyType, id?: string) => {
 export const getActiveTab = (): Promise<chrome.tabs.Tab> =>
   new Promise((resolve, reject) => {
     chrome.tabs.query({ active: true }, (tabs) => {
-      if (chrome.runtime.lastError) reject(chrome.runtime.lastError.message);
+      const lastError = chrome.runtime.lastError;
+      if (lastError) return reject(new AppError({ code: ErrorCode.QUERY_TAB, message: lastError.message }));
       else if (tabs && tabs.length > 0) {
         const firstActiveTab = tabs[0];
-        resolve(firstActiveTab);
+        return resolve(firstActiveTab);
       } else {
-        reject(new Error('Not found active tab.'));
+        reject(new AppError({ code: ErrorCode.NOT_FOUND_TAB }));
       }
     });
   });
@@ -49,8 +52,9 @@ export const sendMessageToActiveTab = (msg: IContentMessage): Promise<chrome.tab
   return getActiveTab().then((tab) => {
     return new Promise((resolve, reject) => {
       chrome.tabs.sendMessage(tab.id, msg, (response) => {
-        if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
-        resolve(response);
+        const lastError = chrome.runtime.lastError;
+        if (lastError) return reject(new AppError({ code: ErrorCode.SEND_MESSAGE, message: lastError.message }));
+        return resolve(response);
       });
     });
   });

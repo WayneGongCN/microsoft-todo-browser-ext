@@ -14,7 +14,7 @@ export default React.forwardRef<unknown, SelectProps>(function TasklistSelect(pr
   // 获取 tasklist
   const tasklists = useSelector((state: State) => state.tasklist.lists);
   useEffect(() => {
-    account && dispatch(tasklistSlice.getTasklist());
+    account && dispatch(tasklistSlice.fetchTasklist());
   }, [account]);
 
   return (

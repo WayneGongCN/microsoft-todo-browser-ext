@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { NOTIFICATION_ICON_URL, NOTIFICATION_TYPE } from '../constants';
+import { ErrorCode } from '../constants/enums';
+import AppError from './error';
 
 const clickCallbackMap = new Map<string, [() => void]>();
 const closeCallbackMap = new Map<string, [() => void]>();
@@ -36,7 +38,8 @@ export default class Notify {
   show() {
     return new Promise((resolve, reject) => {
       chrome.notifications.create(this.id, this.options, () => {
-        if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
+        const lastError = chrome.runtime.lastError;
+        if (lastError) return reject(new AppError({ code: ErrorCode.NOTIFY_SHOW, message: lastError.message }));
         return resolve(this);
       });
     });
@@ -45,7 +48,8 @@ export default class Notify {
   clear() {
     return new Promise((resolve, reject) => {
       chrome.notifications.clear(this.id, (wasCleared) => {
-        if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
+        const lastError = chrome.runtime.lastError;
+        if (lastError) return reject(new AppError({ code: ErrorCode.NOTIFY_CLEAR, message: lastError.message }));
         return resolve(wasCleared);
       });
     });

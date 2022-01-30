@@ -1,11 +1,12 @@
 import { store } from '../redux';
 import { createTask } from '../redux/task';
-import { getTasklist } from '../redux/tasklist';
+import { fetchTasklist } from '../redux/tasklist';
 import { LNAG_UNTITLE } from '../constants/lang';
 import { sendMessageToActiveTab } from '.';
-import { EContentMessage, EQuickTaskTitle } from '../constants/enums';
+import { EContentMessage, EQuickTaskTitle, ErrorCode } from '../constants/enums';
 import { QUICK_ADD_MENU_ITEMS } from '../constants';
 import optionsSlice from '../redux/options';
+import AppError from './error';
 
 let eventInit = false;
 const initEvent = () => {
@@ -25,7 +26,7 @@ const initEvent = () => {
 
     let { quickAddTaskTasklistId } = options.form;
     if (!quickAddTaskTasklistId) {
-      await store.dispatch(getTasklist());
+      await store.dispatch(fetchTasklist());
       quickAddTaskTasklistId = store.getState().tasklist.lists[0]?.id;
       store.dispatch(optionsSlice.actions.updateForm({ quickAddTaskTasklistId }));
     }
@@ -47,7 +48,8 @@ const initEvent = () => {
 const createMenu = () => {
   QUICK_ADD_MENU_ITEMS.forEach((item) => {
     chrome.contextMenus.create(item, () => {
-      if (chrome.runtime.lastError) throw new Error(chrome.runtime.lastError.message);
+      const lastError = chrome.runtime.lastError;
+      if (lastError) throw new AppError({ code: ErrorCode.CREATE_MENU, message: lastError.message });
     });
   });
 };

@@ -1,12 +1,7 @@
 import { SerializError } from '../../types';
 import { ErrorCode } from '../constants/enums';
-
-const errorMessageMap = {
-  [ErrorCode.UNKNOW]: '',
-  [ErrorCode.NOT_FOUND_ACCOUNT]: '',
-  [ErrorCode.ACQUIRE_TOKEN]: '',
-  [ErrorCode.ACQUIRE_TOKEN_SILENT]: '',
-};
+import { logger } from './logger';
+import { report } from './report';
 
 export default class AppError extends Error {
   code: ErrorCode;
@@ -16,17 +11,18 @@ export default class AppError extends Error {
    * 优先使用传入的 error message
    */
   constructor({ code, message }: { code: ErrorCode; message?: string }) {
-    super(message || errorMessageMap[code]);
-
+    super(message || 'UNKNOW');
     this.time = Date.now();
     this.code = code;
+
+    logger.warn(`Error code: ${this.code}`, this);
+    report(this);
   }
 
   serializ(): SerializError {
     return {
       code: this.code,
-      // 优先使用已定义过的 error message
-      message: errorMessageMap[this.code] || this.message,
+      message: this.message,
       stack: this.stack,
       time: this.time,
     };
