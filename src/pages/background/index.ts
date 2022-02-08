@@ -6,9 +6,9 @@ import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from '../../redux/tas
 import optionsSlice from '../../redux/options';
 import Notify from '../../helpers/notification';
 import { Page } from '../../constants/enums';
-import { initSentry } from '../../helpers/report';
+import { initReport } from '../../helpers/report';
 
-initSentry(Page.BACKGROUND);
+initReport(Page.BACKGROUND);
 
 export const backgroundContext = {
   Notify,

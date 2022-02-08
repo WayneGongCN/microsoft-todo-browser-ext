@@ -1,6 +1,6 @@
 import React, { Suspense, useCallback, useEffect } from 'react';
 import { render } from 'react-dom';
-import { initSentry, initGTM, timing, now } from '../../helpers/report';
+import { timing, now, initReport } from '../../helpers/report';
 import { Page } from '../../constants/enums';
 import { storeWrap } from '../../helpers/theme';
 import OptionsForm from './components/OptionsForm';
@@ -18,9 +18,6 @@ import { LANG_OPTIONS_ISSUE, LANG_OPTIONS_RATE } from '../../constants/lang';
 import { EXT_URL, ISSUE_URL, RATE_URL, REPO_URL } from '../../constants';
 import BuyMeACoffee from './components/BuyMeACoffee';
 import { openUrl } from '../../helpers';
-
-initSentry(Page.OPTIONS);
-initGTM();
 
 const OptionsPage = storeWrap(() => {
   const { persistor } = backgroundContext;
@@ -64,6 +61,7 @@ const OptionsPage = storeWrap(() => {
 
   useEffect(() => {
     timing('options rendered', now());
+    initReport(Page.OPTIONS);
   }, []);
 
   return (

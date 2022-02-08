@@ -3,9 +3,20 @@ import { Page } from '../constants/enums';
 import { logger } from './logger';
 
 let Sentry: any = null;
-export const initSentry = async (page: Page) => {
-  if (!REPORT) return;
+const reportQueue: any[] = [];
 
+export const report = (e: string | Error) => {
+  if (!REPORT) return;
+  if (!Sentry) return reportQueue.push(e);
+
+  if (typeof e === 'string') {
+    Sentry.captureMessage(e);
+  } else if (e) {
+    Sentry.captureException(e);
+  }
+};
+
+const initSentry = async (page: Page) => {
   if (page === Page.BACKGROUND) {
     Sentry = await import('@sentry/browser');
   } else if (page === Page.POPUP || page === Page.OPTIONS) {
@@ -20,23 +31,14 @@ export const initSentry = async (page: Page) => {
     integrations: [new Integrations.BrowserTracing()],
     tracesSampleRate: REPORT_SAMPLE_RATE,
   });
-};
 
-export const report = (e: string | Error) => {
-  if (Sentry && REPORT) {
-    if (typeof e === 'string') {
-      Sentry.captureMessage(e);
-    } else if (e) {
-      Sentry.captureException(e);
-    }
-  }
+  //
+  reportQueue.forEach((x) => report(x));
+  reportQueue.length = 0;
 };
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-const dataLayer = 'dataLayer';
-export const initGTM = (i = process.env.GTM_ID, w = window, d = document, s = 'script', l = dataLayer) => {
-  if (!REPORT) return;
-
+const initGTM = (i = process.env.GTM_ID, w = window, d = document, s = 'script', l = 'dataLayer') => {
   // @ts-ignore
   w[l] = w[l] || [];
   // @ts-ignore
@@ -67,4 +69,11 @@ export const timing = function (name: string, value: number, category = 'Default
       timing(...arguments);
     }, 1000);
   }
+};
+
+export const initReport = (page: Page) => {
+  if (!REPORT) return;
+
+  initSentry(page);
+  if (page !== Page.BACKGROUND) initGTM();
 };

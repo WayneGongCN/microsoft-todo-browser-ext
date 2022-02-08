@@ -1,9 +1,9 @@
 import React from 'react';
 import { lazy } from 'react';
 import { Provider } from 'react-redux';
-import { EThemes } from '../constants/enums';
+import { EThemes, Page } from '../constants/enums';
 import { getBackgroundCtx } from './background';
-import { now, timing } from './report';
+import { initReport, now, timing } from './report';
 
 /**
  * 异步加载 Theme
@@ -15,6 +15,7 @@ export const loadTheme = (theme: EThemes) => {
   return lazy(() =>
     import(`../themes/${theme}/`).then(async (res) => {
       timing('theme loaded', now() - startTime);
+      initReport(Page.POPUP);
       return res;
     })
   );
