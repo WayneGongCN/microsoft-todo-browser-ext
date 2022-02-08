@@ -1,8 +1,7 @@
-import { store } from '../redux';
-import { acquireToken } from '../redux/auth';
+import { logger } from './logger';
 import { initQuickAdd } from './quickAdd';
 
 export const onPresistReady = () => {
+  logger.log('PresistReady');
   initQuickAdd();
-  store.dispatch(acquireToken(true));
 };

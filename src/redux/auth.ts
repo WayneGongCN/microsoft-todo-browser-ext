@@ -21,37 +21,49 @@ const initialState = {
  * - 如果有 Token 但已经过期，则调用 acquireTokenSilent 刷新 Token，刷新失败则调用 acquireTokenRedirect 重新登陆
  * - 如果没有 Token 则调用 acquireTokenRedirect 重新登陆
  */
-export const acquireToken = createAsyncThunk<SerializAuthenticationResult, boolean, { state: State }>(`${SLICE_NAME}/acquireToken`, (silent, { getState }) => {
-  const { auth } = getState();
-  const { authenticationResult } = auth;
-  const curTime = Date.now();
-  const isExpires = curTime > (authenticationResult?.expiresOn || 0);
+export const acquireToken = createAsyncThunk<SerializAuthenticationResult, boolean, { state: State }>(
+  `${SLICE_NAME}/acquireToken`,
+  (silent = false, { getState }) => {
+    const { auth } = getState();
+    const { authenticationResult } = auth;
+    const curTime = Date.now();
+    const isExpires = curTime > (authenticationResult?.expiresOn || 0);
 
-  if (!isExpires) {
-    return Promise.resolve(authenticationResult);
-  } else {
-    const startTime = now();
-    const accounts = msalGetAllAccounts();
+    if (!isExpires) {
+      return Promise.resolve(authenticationResult);
+    } else {
+      const startTime = now();
+      const accounts = msalGetAllAccounts();
 
-    return msalAcquireTokenSilent({ scopes: AUTH_SCOPES, account: accounts[0] })
-      .catch((e) => {
-        if (silent) {
-          logger.warn('msalAcquireTokenSilent fail silent is true.');
+      const fallback = () => {
+        return msalAcquireTokenRedirect({ scopes: AUTH_SCOPES }).catch((e) => {
+          logger.warn('msalAcquireTokenRedirect fail');
           throw e;
-        } else {
-          logger.warn('msalAcquireTokenSilent fail try msalAcquireTokenRedirect.');
-          return msalAcquireTokenRedirect({ scopes: AUTH_SCOPES }).catch((e) => {
-            logger.warn('msalAcquireTokenRedirect fail');
+        });
+      };
+
+      let promise = null;
+      if (accounts.length) {
+        promise = msalAcquireTokenSilent({ scopes: AUTH_SCOPES, account: accounts[0] }).catch((e) => {
+          if (silent) {
+            logger.warn('msalAcquireTokenSilent fail silent is true.');
             throw e;
-          });
-        }
-      })
-      .then((res) => {
+          } else {
+            logger.warn('msalAcquireTokenSilent fail try msalAcquireTokenRedirect.');
+            return fallback();
+          }
+        });
+      } else {
+        promise = fallback();
+      }
+
+      return promise.then((res) => {
         timing('acquireToken', now() - startTime);
         return res;
       });
+    }
   }
-});
+);
 
 export const logout = createAsyncThunk<void, void, { state: State }>(`${SLICE_NAME}/logout`, (_) => {
   return logoutRedirect();

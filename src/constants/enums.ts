@@ -55,6 +55,7 @@ export enum ErrorCode {
   NOTIFY_SHOW,
   NOTIFY_CLEAR,
   REQUEST,
+  RESPONSE,
 }
 
 export enum EThemes {
