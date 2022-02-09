@@ -4,11 +4,12 @@ import { createLogger } from 'redux-logger';
 import taskSlice from './task';
 import tasklistSlice from './tasklist';
 import popupSlice from './popup';
-import { IS_DEV } from '../constants';
+import { IS_DEV, IS_PROD } from '../constants';
 import optionsSlice from './options';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { onPresistReady } from '../helpers/persist';
+import { loggerMiddleWare } from '../helpers/logger';
 
 const rootReducer = {
   task: taskSlice.reducer,
@@ -27,7 +28,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat([IS_DEV && createLogger({ collapsed: true, duration: true })].filter(Boolean));
+    }).concat([IS_DEV && createLogger({ collapsed: true, duration: true }), IS_PROD && loggerMiddleWare].filter(Boolean));
   },
 });
 
