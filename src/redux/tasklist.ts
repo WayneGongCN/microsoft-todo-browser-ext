@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ITasklistResult, ITasksResult } from '../../types';
+import { ITasklistResult } from '../../types';
 import { bindAsyncActions } from '../helpers';
 import request from '../helpers/request';
 

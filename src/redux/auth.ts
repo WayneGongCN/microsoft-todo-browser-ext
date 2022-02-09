@@ -81,7 +81,10 @@ export const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(acquireToken.fulfilled, (state, { payload }) => {
-        state.authenticationResult = payload;
+        const oldToken = state.authenticationResult?.accessToken;
+        const newToken = payload.accessToken;
+        if (oldToken !== newToken) state.authenticationResult = payload;
+
         state.loading = false;
       })
       .addCase(acquireToken.rejected, (state) => {
