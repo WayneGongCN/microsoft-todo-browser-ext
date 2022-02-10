@@ -107,5 +107,8 @@
   },
   "optionsRateExtension": {
     "message": "Rate the extension"
+  },
+  "translateTip": {
+    "message": "Some languages may be machine translated, if there are errors, please contact the author. This software is open source software, we welcome contributions from anyone!"
   }
 }

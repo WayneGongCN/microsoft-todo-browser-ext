@@ -4,20 +4,21 @@ import { timing, now, initReport } from '../../helpers/report';
 import { Page } from '../../constants/enums';
 import { storeWrap } from '../../helpers/theme';
 import OptionsForm from './components/OptionsForm';
-import { Button, Container, Divider, Grid } from '@material-ui/core';
+import { Button, Container, Divider, FormHelperText, Grid } from '@material-ui/core';
 import { PersistGate } from 'redux-persist/integration/react';
 import { backgroundContext } from '../../helpers/background';
 import UserInfo from '../../components/UserInfo';
-import '../../styles/style.css';
 import { useSelector } from 'react-redux';
 import { State } from '../../redux';
 import Login from '../../components/Login';
 import Logout from '../../components/Logout';
 import OpenMSTodo from '../../components/OpenMSToDo';
-import { LANG_OPTIONS_ISSUE, LANG_OPTIONS_RATE } from '../../constants/lang';
+import { LANG_OPTIONS_ISSUE, LANG_OPTIONS_RATE, LANG_TRANSLATE_TIP } from '../../constants/lang';
 import { EXT_URL, ISSUE_URL, RATE_URL, REPO_URL } from '../../constants';
 import BuyMeACoffee from './components/BuyMeACoffee';
 import { openUrl } from '../../helpers';
+import '../../styles/style.css';
+import TranslateTip from '../../components/TranslateTip';
 
 const OptionsPage = storeWrap(() => {
   const { persistor } = backgroundContext;
@@ -98,6 +99,8 @@ const OptionsPage = storeWrap(() => {
             <Grid item>
               <BuyMeACoffee />
             </Grid>
+
+            <TranslateTip />
           </Grid>
 
           <Grid container justifyContent="flex-end" item xs={12} lg={12} spacing={2}>

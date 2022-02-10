@@ -80,7 +80,7 @@
     "message": "\"快速创建 To Do\" 默认任务列表"
   },
   "optionsQuickAddTasklistHelp": {
-    "message": "使用 \"快速创建 To Do\" 时，会将任务添加到选择的任务列表中"
+    "message": "使用 \"快速创建 To Do\" 时，将任务添加到上面选择的任务列表中"
   },
   "optionsQuickAddTitle": {
     "message": "\"快速创建 To Do\" 默认标题"
@@ -92,18 +92,21 @@
     "message": "使用选当前页面的标题作为任务标题"
   },
   "optionsQuickAddTitleHelp": {
-    "message": "使用 \"快速创建 To Do\" 时，将使用选择的内容作为任务标题，标题超过 130 个字符将会以 ... 省略"
+    "message": "将选中的内容作为任务标题，标题超过 130 个字符将会以 ... 省略"
   },
   "optionsEnableAutoReset": {
     "message": "自动清空"
   },
   "optionsEnableAutoResetHelp": {
-    "message": "创建任务成功后自动清空当前表单内容，适用于连续创建多个任务的场景"
+    "message": "创建任务成功后自动清空当前表单内容"
   },
   "optionsReportIssue": {
     "message": "提议与反馈"
   },
   "optionsRateExtension": {
     "message": "为插件评分"
+  },
+  "translateTip": {
+    "message": "部分语言可能为机器翻译，如果存在错误，请与作者联系。本软件是开源软件，我们欢迎任何人贡献！"
   }
 }

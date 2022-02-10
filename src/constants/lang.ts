@@ -43,5 +43,6 @@ export const LANG_OPTIONS_QUICK_ADD_TITLE_HELP = getI18nText('optionsQuickAddTit
 export const LANG_OPTIONS_ENABLE_AUTO_RESET = getI18nText('optionsEnableAutoReset'); // 自动清空
 export const LANG_OPTIONS_ENABLE_AUTO_RESET_HELP = getI18nText('optionsEnableAutoResetHelp'); // Task 创建成功自动重置表单
 
+export const LANG_TRANSLATE_TIP = getI18nText('translateTip'); // 机翻提示;
 export const LANG_OPTIONS_ISSUE = getI18nText('optionsReportIssue'); // '反馈 ISSUE';
 export const LANG_OPTIONS_RATE = getI18nText('optionsRateExtension'); //'为扩展评分';

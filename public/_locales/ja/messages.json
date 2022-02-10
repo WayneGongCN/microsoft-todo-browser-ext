@@ -1,0 +1,112 @@
+{
+  "extensionName": {
+    "message": "Microsoft ToDoブラウザ拡張機能"
+  },
+  "extensionDescription": {
+    "message": "Microsoft To Do用のオープンソースの無料ブラウザ拡張機能で、仕事から遊びに集中できます。"
+  },
+  "untitle": {
+    "message": "無題"
+  },
+  "addTask": {
+    "message": "タスクを作成する"
+  },
+  "quickAddTask": {
+    "message": "ToDo をすばやく作成する"
+  },
+  "success": {
+    "message": "成功"
+  },
+  "openMSTODO": {
+    "message": "Microsoftで開くToDo"
+  },
+  
+  "popupTitleText": {
+    "message": "タスクタイトル"
+  },
+  "popupDescribeText": {
+    "message": "タスクノート"
+  },
+  "popupDateTimeText": {
+    "message": "私に思い出させる"
+  },
+  "popupTaskListText": {
+    "message": "タスクリスト"
+  },
+  "popupResetTooltip": {
+    "message": "フォームの内容をリセット"
+  },
+  "popupCreatingText": {
+    "message": "作成"
+  },
+  "popupAddTaskBtn": {
+    "message": "タスクを追加"
+  },
+  "popupTitleValidation": {
+    "message": "タスクのタイトルを空にすることはできません"
+  },
+  "popupTaskListValidation": {
+    "message": "タスクリストを選択する必要があります"
+  },
+  "popupImportanceTooltip": {
+    "message": "重要にする"
+  },
+  "popupBookmarkTooltip": {
+    "message": "ブックマークを保存"
+  },
+  "openOptionsPageTooltip": {
+    "message": "プラグイン設定ページを開きます"
+  },
+  "loadingText": {
+    "message": "読み込み中"
+  },
+  "loginText": {
+    "message": "ログイン"
+  },
+  "logoutText": {
+    "message": "サインアウト"
+  },
+  "loginTip": {
+    "message": "サインインしてください"
+  },
+
+  "optionsEnableQuickAdd": {
+    "message": "「ToDo をすばやく作成する」機能を有効にする"
+  },
+  "optionsEnableQuickAddHelp": {
+    "message": "「ToDo をすばやく作成する」は、選択したコンテンツを指定したタスクリストにすばやく追加できる右クリックメニュー項目です。"
+  },
+  "optionsQuickAddTasklist": {
+    "message": "「ToDo をすばやく作成する」デフォルトのタスクリスト"
+  },
+  "optionsQuickAddTasklistHelp": {
+    "message": "「ToDo をすばやく作成する」を使用すると、選択したタスクリストにタスクが追加されます"
+  },
+  "optionsQuickAddTitle": {
+    "message": "「ToDo をすばやく作成する」のデフォルトタイトル"
+  },
+  "optionsQuickAddTitleSelection": {
+    "message": "選択したコンテンツをタスクタイトルとして使用する"
+  },
+  "optionsQuickAddTitleTabTitle": {
+    "message": "現在のページのタイトルをタスクのタイトルとして使用します"
+  },
+  "optionsQuickAddTitleHelp": {
+    "message": "選択したコンテンツがタスクのタイトルとして使用され、130文字を超えるタイトルは...で省略されます"
+  },
+  "optionsEnableAutoReset": {
+    "message": "自動的に空に"
+  },
+  "optionsEnableAutoResetHelp": {
+    "message": "タスクが正常に作成されると、現在のフォームの内容が自動的にクリアされます。"
+  },
+  "optionsReportIssue": {
+    "message": "提案とフィードバック"
+  },
+  "optionsRateExtension": {
+    "message": "評価プラグイン"
+  },
+  "translateTip": {
+    "message": "一部の言語は機械翻訳されている場合があります。エラーがある場合は、作成者に連絡してください。 このソフトウェアはオープンソースソフトウェアです。誰からの貢献も歓迎します。"
+  }
+}
