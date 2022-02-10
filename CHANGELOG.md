@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.2.4...v1.3.0) (2022-02-10)
+
+
+### Features
+
+* 增加了日语、韩语的多语言支持 ([7179e19](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/7179e19b143cb2f1bb2ac0c02f61357a6474ae25))
+
 ### [1.2.4](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.2.3...v1.2.4) (2022-02-09)
 
 
