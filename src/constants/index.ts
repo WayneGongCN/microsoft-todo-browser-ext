@@ -25,7 +25,7 @@ export const ISSUE_URL = `${REPO_URL}/issues/new`;
 export const RATE_URL = `https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/${EXT_ID}/reviews`;
 
 export const REPORT = !IS_DEV;
-export const REPORT_SAMPLE_RATE = 1;
+export const REPORT_SAMPLE_RATE = 0.1;
 
 export const NOTIFICATION_ICON_URL = `chrome-extension://${EXT_ID}/icons/todo-128.png`;
 export const NOTIFICATION_TYPE = 'basic';
