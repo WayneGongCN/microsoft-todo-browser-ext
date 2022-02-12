@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.3.0...v1.3.1) (2022-02-12)
+
+
+### Bug Fixes
+
+* 修复 GTM 默认值 ([e076e57](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/e076e573aca59db5fb1ed8c7605631d7b79ec397))
+
 ## [1.3.0](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.2.4...v1.3.0) (2022-02-10)
 
 
