@@ -11,5 +11,5 @@
     "skipLibCheck": true
   },
   "include": ["types/*", "src/**/*"],
-  "exclude": ["node_modules", "webpack"]
+  "exclude": ["node_modules"]
 }

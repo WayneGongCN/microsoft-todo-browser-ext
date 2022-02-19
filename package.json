@@ -8,6 +8,7 @@
   "scripts": {
     "commit": "cz",
     "dev": "cross-env NODE_ENV=development TARGET=chrome webpack --config webpack/webpack.config.dev.js --watch",
+    "test": "jest",
     "build": "webpack --config webpack/webpack.config.prod.js",
     "build:chrome": "cross-env NODE_ENV=production TARGET=chrome npm run build",
     "build:edge": "cross-env NODE_ENV=production TARGET=edge npm run build",
@@ -19,18 +20,22 @@
   "devDependencies": {
     "@babel/core": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
+    "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.5",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@types/chrome": "0.0.128",
+    "@types/jest": "^27.4.0",
     "@types/material-ui": "^0.21.8",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "@types/react-redux": "^7.1.16",
+    "@types/react-test-renderer": "^17.0.1",
     "@types/redux-logger": "^3.0.8",
     "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
+    "babel-jest": "^27.5.1",
     "chrome-webstore-upload": "^1.0.0",
     "clean-webpack-plugin": "^3.0.0",
     "commitizen": "^4.2.3",
@@ -50,8 +55,12 @@
     "eslint-webpack-plugin": "^2.4.1",
     "html-webpack-plugin": "^5.0.0-beta.5",
     "husky": ">=6",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.5.1",
+    "jest-chrome": "^0.7.2",
     "lint-staged": ">=10",
     "prettier": "2.5.1",
+    "react-test-renderer": "^17.0.2",
     "source-map-loader": "^2.0.1",
     "standard-version": "^9.1.1",
     "style-loader": "^2.0.0",
@@ -93,7 +102,8 @@
           }
         }
       ],
-      "@babel/preset-typescript"
+      "@babel/preset-typescript",
+      "@babel/preset-react"
     ]
   },
   "eslintConfig": {
