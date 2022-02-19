@@ -38,6 +38,7 @@ const authSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      // acquireToken
       .addCase(acquireToken.pending, (state) => {
         state.loading = true;
       })

@@ -106,6 +106,7 @@ interface IBuyMeACoffeeOptions {
   coffee_colour?: string;
 }
 
+
 type Modify<T, R> = Omit<T, keyof R> & R;
 
 type SerializAuthenticationResult = Modify<

@@ -1,22 +1,19 @@
-import { GTM_ENV, GTM_ID, NODE_ENV, REPORT, REPORT_SAMPLE_RATE, SENTRY_DSN, VERSION } from '../constants';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { State, store } from '../redux';
 import { Page } from '../constants/enums';
+import AppError from './error';
 import { logger } from './logger';
+import { NODE_ENV, VERSION } from '../constants';
 
 let Sentry: any = null;
 const reportQueue: any[] = [];
 
-export const report = (e: string | Error) => {
-  if (!REPORT) return;
+export const report = (e: AppError) => {
   if (!Sentry) return reportQueue.push(e);
-
-  if (typeof e === 'string') {
-    Sentry.captureMessage(e);
-  } else if (e) {
-    Sentry.captureException(e);
-  }
+  Sentry.captureException(e);
 };
 
-const initSentry = async (page: Page) => {
+const initSentry = async (page: Page, sentryDsn: string, reportSampleRate: number) => {
   if (page === Page.BACKGROUND) {
     Sentry = await import('@sentry/browser');
   } else if (page === Page.POPUP || page === Page.OPTIONS) {
@@ -27,9 +24,9 @@ const initSentry = async (page: Page) => {
   Sentry.init({
     environment: NODE_ENV,
     release: VERSION,
-    dsn: SENTRY_DSN,
+    dsn: sentryDsn,
     integrations: [new Integrations.BrowserTracing()],
-    tracesSampleRate: REPORT_SAMPLE_RATE,
+    tracesSampleRate: reportSampleRate,
   });
 
   //
@@ -56,8 +53,6 @@ const initGTM = (i: string, env = '', w = window, d = document, s = 'script', l 
 export const now = () => performance.now();
 
 export const timing = function (name: string, value: number, category = 'Default', label = '') {
-  if (!REPORT) return;
-
   if (window.ga) {
     logger.log('timing: ', name, value);
     window.ga('gtm4.send', 'timing', category, name, Math.round(value), label);
@@ -70,9 +65,9 @@ export const timing = function (name: string, value: number, category = 'Default
   }
 };
 
-export const initReport = (page: Page) => {
-  if (!REPORT) return;
+export const initReport = (page: Page, conf: State['conf']['conf']) => {
+  const { sentryDsn, reportSampleRate, gtmID, gtmEvn } = conf
 
-  initSentry(page);
-  if (page !== Page.BACKGROUND) initGTM(GTM_ID, GTM_ENV);
+  initSentry(page, sentryDsn, reportSampleRate);
+  if (page !== Page.BACKGROUND) initGTM(gtmID, gtmEvn);
 };
