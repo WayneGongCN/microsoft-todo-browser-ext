@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ITasklistResult } from '../../types';
-import { bindAsyncActions } from '../helpers';
 import request from '../helpers/request';
 
 /**
@@ -12,7 +11,7 @@ export const fetchTasklist = createAsyncThunk<ITasklistResult>('task/fetTasklist
   request.get<void, ITasklistResult>('me/todo/lists').catch((e) => rejectWithValue(e.serializ()))
 );
 
-export const tasklistSlice = createSlice({
+const tasklistSlice = createSlice({
   name: 'tasklist',
 
   initialState: {
@@ -38,10 +37,5 @@ export const tasklistSlice = createSlice({
       });
   },
 });
-
-export const asyncChunk = {
-  fetchTasklist,
-};
-bindAsyncActions(tasklistSlice, asyncChunk);
 
 export default tasklistSlice;

@@ -1,18 +1,24 @@
 import React, { Suspense } from 'react';
+import { persistor, store } from '../../redux';
 import { render } from 'react-dom';
 import { EThemes } from '../../constants/enums';
-import { loadTheme, storeWrap } from '../../helpers/theme';
 import { Container } from '@material-ui/core';
+import { Provider } from 'react-redux';
+import { loadTheme } from '../../themes';
+import { PersistGate } from 'redux-persist/es/integration/react';
 import './../../styles/style.css';
 
-
 const themeName = EThemes.DEFAULT;
-const Theme = storeWrap(loadTheme(themeName));
+const Theme = loadTheme(themeName);
 
 render(
   <Container disableGutters style={{ width: 350, padding: 10 }}>
     <Suspense fallback={<div>Loading ...</div>}>
-      <Theme />
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <Theme />
+        </PersistGate>
+      </Provider>
     </Suspense>
   </Container>,
   document.getElementById('root')

@@ -11,7 +11,7 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(async (conf) => {
-  await store.dispatch(acquireToken(false));
+  await store.dispatch(acquireToken(true));
   const accessToken = store.getState().auth.authenticationResult?.accessToken;
   if (!accessToken) throw new AppError({ code: ErrorCode.UNKNOW, message: 'accessToken is null' });
 

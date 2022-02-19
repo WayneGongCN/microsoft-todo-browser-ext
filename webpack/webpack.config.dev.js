@@ -1,6 +1,7 @@
 const { merge } = require('webpack-merge');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const baseConfig = require('./webpack.config.base');
+const { resolve, join } = require('path');
 
 module.exports = () => {
   const devConfig = {
@@ -21,7 +22,7 @@ module.exports = () => {
       new ESLintPlugin({
         extensions: ['js', 'jsx'],
         eslintPath: require.resolve('eslint'),
-        context: './src',
+        context: resolve(join(__dirname, '../src')),
         cache: true,
         fix: true,
       }),

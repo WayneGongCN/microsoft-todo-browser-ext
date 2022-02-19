@@ -1,19 +1,22 @@
 import chromeWebstoreUpload from 'chrome-webstore-upload';
 import fs from 'fs';
 import dotenv from 'dotenv';
-import { dirname, join } from 'path';
+import { dirname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const pjson = require('../package.json')
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(__dirname, '../.env.production') });
 
 const options = {
-  extensionId: process.env.EXTENSION_ID,
-  clientId: process.env.CLIENT_ID,
-  refreshToken: process.env.REFRESH_TOKEN,
+  extensionId: process.env.CHROME_STORE_UPLOADER_EXTENSION_ID,
+  clientId: process.env.CHROME_STORE_UPLOADER_CLIENT_ID,
+  refreshToken: process.env.CHROME_STORE_UPLOADER_REFRESH_TOKEN,
 };
 
-const myZipFile = fs.createReadStream('./dist.zip');
+const myZipFile = fs.createReadStream(resolve(join(__dirname, `../dist_${pjson.version}_chrome.zip`)));
 const store = chromeWebstoreUpload(options);
 
 store

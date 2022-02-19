@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { Dispatch, State } from '../../../redux';
-import { backgroundContext } from '../../../helpers/background';
 import { FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, Radio, RadioGroup, Switch, Grid } from '@material-ui/core';
 import TasklistSelect from '../../../components/TasklistSelect';
 import { now, timing } from '../../../helpers/report';
@@ -20,9 +19,9 @@ import {
   LANG_OPTIONS_QUICK_ADD_TITLE_SELECTION,
   LANG_OPTIONS_QUICK_ADD_TITLE_TAB_TITLE,
 } from '../../../constants/lang';
+import optionsSlice from '../../../redux/options';
 
 const OptionsForm: React.FC = () => {
-  const { optionsSlice } = backgroundContext;
   const dispatch = useDispatch<Dispatch>();
   const store = useStore<State>();
 

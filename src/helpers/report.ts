@@ -1,4 +1,4 @@
-import { REPORT, REPORT_SAMPLE_RATE, VERSION } from '../constants';
+import { GTM_ENV, GTM_ID, NODE_ENV, REPORT, REPORT_SAMPLE_RATE, SENTRY_DSN, VERSION } from '../constants';
 import { Page } from '../constants/enums';
 import { logger } from './logger';
 
@@ -25,9 +25,9 @@ const initSentry = async (page: Page) => {
   const Integrations = await import('@sentry/tracing');
 
   Sentry.init({
-    environment: process.env.NODE_ENV,
+    environment: NODE_ENV,
     release: VERSION,
-    dsn: process.env.SENTRY_DSN,
+    dsn: SENTRY_DSN,
     integrations: [new Integrations.BrowserTracing()],
     tracesSampleRate: REPORT_SAMPLE_RATE,
   });
@@ -74,5 +74,5 @@ export const initReport = (page: Page) => {
   if (!REPORT) return;
 
   initSentry(page);
-  if (page !== Page.BACKGROUND) initGTM(process.env.GTM_ID, process.env.GTM_ENV);
+  if (page !== Page.BACKGROUND) initGTM(GTM_ID, GTM_ENV);
 };

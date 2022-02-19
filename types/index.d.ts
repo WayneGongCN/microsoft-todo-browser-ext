@@ -1,5 +1,4 @@
 import { AuthenticationResult } from '@azure/msal-browser';
-import { backgroundContext } from '../src/pages/background';
 import { ETaskContentTypes, ETaskImportance, ETaskStatus, TimeZone } from '../src/constants/enums';
 import { EContentMessage } from '../src/content';
 import { ErrorCode } from '../src/helpers/error';
@@ -11,8 +10,7 @@ declare global {
     __IS_DEV: boolean;
     __IS_PROD: boolean;
     __VERSION: string;
-    __BUILD_TARGET: string;
-    backgroundContext: typeof backgroundContext;
+    __TARGET: string;
   }
 }
 interface ITaskBody {
@@ -109,8 +107,6 @@ interface IBuyMeACoffeeOptions {
 }
 
 type Modify<T, R> = Omit<T, keyof R> & R;
-
-type BackgroundContext = typeof backgroundContext;
 
 type SerializAuthenticationResult = Modify<
   AuthenticationResult,

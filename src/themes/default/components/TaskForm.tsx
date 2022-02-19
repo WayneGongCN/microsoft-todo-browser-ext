@@ -20,7 +20,6 @@ import RotateLeft from '@material-ui/icons/RotateLeft';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Tooltip from '@material-ui/core/Tooltip';
-import { backgroundContext } from '../../../helpers/background';
 import TasklistSelect from '../../../components/TasklistSelect';
 import { now, timing } from '../../../helpers/report';
 import { openUrl } from '../../../helpers';
@@ -39,9 +38,10 @@ import {
   LANG_OPEN_OPTIONS_PAGE_TOOLTIP,
 } from '../../../constants/lang';
 import { OPTIONS_PAGE_URL } from '../../../constants';
+import popupSlice from '../../../redux/popup';
+import { createTask } from '../../../redux/task';
 
 const TaskForm: React.FC = () => {
-  const { taskSlice, popupSlice } = backgroundContext;
   const dispatch = useDispatch<Dispatch>();
   const store = useStore<State>();
 
@@ -81,7 +81,7 @@ const TaskForm: React.FC = () => {
   const submit = useCallback(
     (val, err) => {
       logger.log('submit', val, err);
-      dispatch(taskSlice.createTask(val)).then(() => {
+      dispatch(createTask(val)).then(() => {
         autoResetPopup && handleReset();
       });
     },

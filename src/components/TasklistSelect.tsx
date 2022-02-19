@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Select, SelectProps } from '@material-ui/core';
-import { backgroundContext } from '../helpers/background';
 import { State } from '../redux';
 import MenuItem from '@material-ui/core/MenuItem';
+import { fetchTasklist } from '../redux/tasklist';
 
 export default React.forwardRef<unknown, SelectProps>(function TasklistSelect(props: SelectProps, ref) {
-  const { tasklistSlice } = backgroundContext;
   const dispatch = useDispatch();
   const loadingTasklist = useSelector((state: State) => state.popup.loadingTasklist);
   const account = useSelector((state: State) => state.auth.authenticationResult?.account);
@@ -14,7 +13,7 @@ export default React.forwardRef<unknown, SelectProps>(function TasklistSelect(pr
   // 获取 tasklist
   const tasklists = useSelector((state: State) => state.tasklist.lists);
   useEffect(() => {
-    account && dispatch(tasklistSlice.fetchTasklist());
+    account && dispatch(fetchTasklist());
   }, [account]);
 
   return (

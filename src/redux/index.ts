@@ -14,7 +14,7 @@ import { loggerMiddleWare } from '../helpers/logger';
 const rootReducer = {
   task: taskSlice.reducer,
   tasklist: tasklistSlice.reducer,
-  popup: popupSlice.reducer,
+  popup: persistReducer({ key: 'popup', storage }, popupSlice.reducer),
   auth: persistReducer({ key: 'auth', storage }, authSlice.reducer),
   options: persistReducer({ key: 'options', storage }, optionsSlice.reducer),
 };

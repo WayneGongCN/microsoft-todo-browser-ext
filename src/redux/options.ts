@@ -3,7 +3,7 @@ import { APP_DEFAULT_OPTIONS } from '../constants';
 import { initQuickAdd } from '../helpers/quickAdd';
 import { fetchTasklist } from './tasklist';
 
-export const optionsSlice = createSlice({
+const optionsSlice = createSlice({
   name: 'options',
 
   initialState: {

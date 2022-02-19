@@ -2,14 +2,6 @@ import { IContentMessage } from '../../types';
 import { ErrorCode, NotifyType } from '../constants/enums';
 import AppError from './error';
 
-// TODO: fix type
-// eslint-disable-next-line
-export const bindAsyncActions = (slice: any, asyncActioMap: Record<string, Function>) => {
-  Object.keys(asyncActioMap).forEach((key) => {
-    slice[key] = asyncActioMap[key];
-  });
-};
-
 export const openUrl = (options: chrome.tabs.CreateProperties) =>
   new Promise((resolve, reject) => {
     chrome.tabs.create(options, (tab) => {
