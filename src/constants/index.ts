@@ -1,22 +1,30 @@
 import { IPopupForm } from '../../types';
-import { EQuickTaskTitle, TimeZone } from './enums';
+import { EQuickTaskTitle, ETARGET, TimeZone } from './enums';
 import { version } from '../../package.json';
 import { LNAG_QUICK_ADD_TASK } from './lang';
 
+export const NODE_ENV = process.env.NODE_ENV;
 export const EXT_ID = chrome.runtime.id;
-
-export const IS_DEV = (window.__IS_DEV = process.env.NODE_ENV === 'development');
-export const IS_PROD = (window.__IS_PROD = process.env.NODE_ENV === 'production');
-export const IS_BG_PAGE = location.href.includes('background');
-export const IS_POPUP_PAGE = location.href.includes('popup');
-export const IS_OPTION_PAGE = location.href.includes('option');
+export const IS_DEV = (window.__IS_DEV = NODE_ENV === 'development');
+export const IS_PROD = (window.__IS_PROD = NODE_ENV === 'production');
 
 export const VERSION = (window.__VERSION = version);
-export const BUILD_TARGET = (window.__BUILD_TARGET = process.env.BUILD_TARGET);
+export const TARGET = (window.__BUILD_TARGET = process.env.TARGET) as ETARGET;
+
+export const MSAL_CLIENT_ID_MAP = {
+  [ETARGET.CHROME]: process.env.CHROME_CLIENT_ID,
+  [ETARGET.EDGE]: process.env.EDGE_CLIENT_ID,
+  [ETARGET.FIREFOX]: process.env.FIREFOX_CLIENT_ID,
+}
+export const MSAL_CLIENT_ID = MSAL_CLIENT_ID_MAP[TARGET];
 
 export const API_BASE_URL = 'https://graph.microsoft.com/v1.0';
 export const AUTH_SCOPES = ['profile', 'Tasks.ReadWrite'];
 export const API_TIME_OUT = 1000 * 60;
+
+export const SENTRY_DSN = "https://365de3b2d6514a4caca2e06294ff74d0@o1093323.ingest.sentry.io/6112552";
+export const GTM_ID = "GTM-WVNS69V";
+export const GTM_ENV = ""
 
 export const EXT_URL = `https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/${EXT_ID}`;
 export const OPTIONS_PAGE_URL = `chrome-extension://${EXT_ID}/options.html`;

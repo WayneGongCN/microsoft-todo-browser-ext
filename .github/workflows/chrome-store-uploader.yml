@@ -5,6 +5,8 @@ name: Upload
 
 on:
   push:
+    branches:
+      - "ci/gh-action"
     tags:        
       - v*
   workflow_dispatch:
@@ -26,13 +28,12 @@ jobs:
       - name: Create env file
         run: |
             cat << EOF > .env.production
-            BUILD_TARGET="ChromeStore"
-            EXTENSION_ID="ffpljgmbiankjaokoefefmkoghcgoodn"
-            MSAL_CLIENT_ID="a5491fb2-111a-4c43-976c-280a507814dc"
-            SENTRY_DSN="https://365de3b2d6514a4caca2e06294ff74d0@o1093323.ingest.sentry.io/6112552"
-            GTM_ID="GTM-WVNS69V"
-            CLIENT_ID="846943702071-dg8uf689j8bsn816avetglmtpis4hr3m.apps.googleusercontent.com"
-            REFRESH_TOKEN=${{ secrets.REFRESH_TOKEN }}
+            CHROME_CLIENT_ID="a5491fb2-111a-4c43-976c-280a507814dc"
+            EDGE_CLIENT_ID="ce33022f-91e6-470c-8ccb-fefba8207f1b"
+            FIREFOX_CLIENT_ID="15eec8a0-7d1e-4e93-aa7c-31795b3d6bac"
+            CHROME_STORE_UPLOADER_EXTENSION_ID="ffpljgmbiankjaokoefefmkoghcgoodn"
+            CHROME_STORE_UPLOADER_CLIENT_ID="846943702071-dg8uf689j8bsn816avetglmtpis4hr3m.apps.googleusercontent.com"
+            CHROME_STORE_UPLOADER_REFRESH_TOKEN=${{ secrets.REFRESH_TOKEN }}
             EOF
 
       - name: Install
@@ -41,10 +42,7 @@ jobs:
           cmd: install
 
       - name: Build
-        run: npm run build
-
-      - name: Zip
-        run: npm run zip
+        run: npm run build:chrome
 
       - name: Upload
-        run: npm run upload
+        run: npm run upload:chrome

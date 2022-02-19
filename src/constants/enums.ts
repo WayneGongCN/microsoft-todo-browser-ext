@@ -67,3 +67,10 @@ export enum EQuickTaskTitle {
   SELECTION = 'SELECTION',
   ACTIVE_TAB = 'ACTIVE_TAB',
 }
+
+
+export enum ETARGET {
+  CHROME = "chrome",
+  EDGE = 'edge',
+  FIREFOX = "firefox"
+}

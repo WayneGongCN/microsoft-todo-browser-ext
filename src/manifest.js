@@ -15,15 +15,21 @@ module.exports = {
   permissions: ['identity', 'tabs', 'contextMenus', 'notifications', 'storage'],
   "content_security_policy": "script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; object-src 'self'",
 
-  // 
+  // background
   background: {
     scripts: ['background.js'],
     persistent: false,
   },
+
+  // options
   options_page: 'options.html',
+
+  // popup
   browser_action: {
     default_popup: 'popup.html',
   },
+
+  // content
   content_scripts: [
     {
       matches: ['<all_urls>'],

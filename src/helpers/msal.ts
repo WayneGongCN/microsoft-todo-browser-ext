@@ -3,15 +3,15 @@ import { SerializAuthenticationResult } from '../../types';
 import { logger } from './logger';
 import AppError from './error';
 import { ErrorCode } from '../constants/enums';
+import { MSAL_CLIENT_ID } from '../constants';
 
 const CLOSE_AUTH_POPUP_EVENT = 'The user did not approve access.';
 
 const DEFAULT_MSAL_CONF: Configuration = {
   auth: {
-    clientId: process.env.MSAL_CLIENT_ID,
+    clientId: MSAL_CLIENT_ID,
     authority: 'https://login.microsoftonline.com/consumers',
-    // see: https://developer.chrome.com/docs/extensions/reference/identity/#method-getRedirectURL
-    redirectUri: chrome.identity.getRedirectURL(),
+    redirectUri: chrome.identity.getRedirectURL(),  // see: https://developer.chrome.com/docs/extensions/reference/identity/#method-getRedirectURL
   },
   cache: {
     cacheLocation: 'localStorage',
