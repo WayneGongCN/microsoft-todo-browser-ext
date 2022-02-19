@@ -9,7 +9,7 @@ export const IS_DEV = (window.__IS_DEV = NODE_ENV === 'development');
 export const IS_PROD = (window.__IS_PROD = NODE_ENV === 'production');
 
 export const VERSION = (window.__VERSION = version);
-export const TARGET = (window.__BUILD_TARGET = process.env.TARGET) as ETARGET;
+export const TARGET = (window.__TARGET = process.env.TARGET) as ETARGET;
 
 export const MSAL_CLIENT_ID_MAP = {
   [ETARGET.CHROME]: process.env.CHROME_CLIENT_ID,
@@ -32,7 +32,7 @@ export const REPO_URL = 'https://github.com/WayneGongCN/microsoft-todo-browser-e
 export const ISSUE_URL = `${REPO_URL}/issues/new`;
 export const RATE_URL = `https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/${EXT_ID}/reviews`;
 
-export const REPORT = !IS_DEV;
+export const REPORT = true;
 export const REPORT_SAMPLE_RATE = 0.1;
 
 export const NOTIFICATION_ICON_URL = `chrome-extension://${EXT_ID}/icons/todo-128.png`;
@@ -69,7 +69,7 @@ export const BUY_ME_COFFEE_DEFAULT_OPTIONS = {
 export const QUICK_ADD_MENU_ITEMS = [
   {
     id: 'QUICK_ADD',
-    title: LNAG_QUICK_ADD_TASK,
+    title: 'LNAG_QUICK_ADD_TASK',
     contexts: ['all'],
   },
 ];

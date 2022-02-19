@@ -3,7 +3,7 @@ import { ICreateTaskParams, IPopupForm, ITaskResult } from '../../types';
 import { TIME_ZONE } from '../constants';
 import { ETaskContentTypes, ETaskImportance, NotifyType } from '../constants/enums';
 import { LNAG_ADD_TASK, LNAG_OPEN_MS_TODO, LNAG_SUCCESS } from '../constants/lang';
-import { bindAsyncActions, getActiveTab, openMicrosoftTodo } from '../helpers';
+import {  getActiveTab, openMicrosoftTodo } from '../helpers';
 import Notify from '../helpers/notification';
 import request from '../helpers/request';
 
@@ -60,7 +60,7 @@ export const createTask = createAsyncThunk<ITaskResult, IPopupForm>('task/create
     });
 });
 
-export const taskSlice = createSlice({
+const taskSlice = createSlice({
   name: 'task',
 
   initialState: {
@@ -85,10 +85,5 @@ export const taskSlice = createSlice({
       });
   },
 });
-
-export const asyncChunk = {
-  createTask,
-};
-bindAsyncActions(taskSlice, asyncChunk);
 
 export default taskSlice;

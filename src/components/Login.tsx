@@ -4,15 +4,14 @@ import { State } from '../redux';
 import { LANG_LOADING_TEXT, LANG_LOGIN_TEXT } from '../constants/lang';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { backgroundContext } from '../helpers/background';
+import { login } from '../redux/auth';
 
 const Login: React.FC = () => {
-  const { authSlice } = backgroundContext;
   const dispatch = useDispatch();
   const loading = useSelector((state: State) => state.auth.loading);
-
+  
   const handleLogin = useCallback(() => {
-    dispatch(authSlice.acquireToken(false));
+    dispatch(login())
   }, [dispatch]);
 
   return (

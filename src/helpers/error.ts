@@ -15,7 +15,7 @@ export default class AppError extends Error {
     this.time = Date.now();
     this.code = code;
 
-    logger.warn(`Error code: ${this.code}`, this);
+    logger.warn(`Error code: ${this.code}\n`, this);
     report(this);
   }
 
