@@ -7,10 +7,12 @@
   "license": "MIT",
   "scripts": {
     "commit": "cz",
-    "dev": "cross-env NODE_ENV=development webpack --config webpack/webpack.config.dev.js --watch",
-    "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.prod.js",
-    "zip": "zip -r dist.zip dist/",
-    "upload": "node scripts/upload.mjs",
+    "dev": "cross-env NODE_ENV=development TARGET=chrome webpack --config webpack/webpack.config.dev.js --watch",
+    "build": "webpack --config webpack/webpack.config.prod.js",
+    "build:chrome": "cross-env NODE_ENV=production TARGET=chrome npm run build",
+    "build:edge": "cross-env NODE_ENV=production TARGET=edge npm run build",
+    "build:firefox": "cross-env NODE_ENV=production TARGET=firefox npm run build",
+    "upload:chrome": "node scripts/chrome-store-uploader.mjs",
     "changelog": "conventional-changelog -p angular -o CHANGELOG.md  -i CHANGELOG.md",
     "release": "standard-version"
   },
@@ -58,7 +60,8 @@
     "webpack": "^5.14.0",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.3.1",
-    "webpack-merge": "^5.8.0"
+    "webpack-merge": "^5.8.0",
+    "zip-webpack-plugin": "^4.0.1"
   },
   "dependencies": {
     "@azure/msal-browser": "^2.9.0",
