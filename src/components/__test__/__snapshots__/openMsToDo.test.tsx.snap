@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot test normal: normal 1`] = `
+<button
+  className="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone MuiLink-button css-93ncls-MuiTypography-root-MuiLink-root"
+  id="com-btn-open-ms"
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+>
+  Microsoft To Do
+</button>
+`;

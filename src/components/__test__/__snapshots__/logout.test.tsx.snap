@@ -2,9 +2,9 @@
 
 exports[`Snapshot test loading: loading 1`] = `
 <button
-  className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-fullWidth MuiButtonBase-root Mui-disabled  css-1fu7jd5-MuiButtonBase-root-MuiButton-root"
+  className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButtonBase-root Mui-disabled  css-10vjzfb-MuiButtonBase-root-MuiButton-root"
   disabled={true}
-  id="com-btn-login"
+  id="com-btn-logout"
   onBlur={[Function]}
   onClick={[Function]}
   onContextMenu={[Function]}
@@ -56,9 +56,9 @@ exports[`Snapshot test loading: loading 1`] = `
 
 exports[`Snapshot test normal: normal 1`] = `
 <button
-  className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-fullWidth MuiButtonBase-root  css-1fu7jd5-MuiButtonBase-root-MuiButton-root"
+  className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-fullWidth MuiButtonBase-root  css-10vjzfb-MuiButtonBase-root-MuiButton-root"
   disabled={false}
-  id="com-btn-login"
+  id="com-btn-logout"
   onBlur={[Function]}
   onClick={[Function]}
   onContextMenu={[Function]}
