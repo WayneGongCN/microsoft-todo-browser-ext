@@ -7,7 +7,7 @@ on:
   pull_request:
     
 jobs:
-  Install:
+  UnitTest:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,10 +20,13 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: yarn.lock
 
-      - name: Install
+      - name: Install dependencies
         uses: borales/actions-yarn@v2.3.0
         with:
           cmd: install
 
-      - name: Test
+      - name: Run test
         run: yarn test
+
+      - name: Codecov
+        uses: codecov/codecov-action@v2.1.0
