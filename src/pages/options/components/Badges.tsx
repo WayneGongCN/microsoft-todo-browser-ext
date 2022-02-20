@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import Grid from '@mui/material/Grid';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { HOME_URL } from '../../../constants';
@@ -29,7 +29,7 @@ const Badges: React.FC = () => {
   }, []);
 
   return (
-    <Grid container justifyContent="flex-end" item xs={12} lg={12} spacing={2}>
+    <>
       {badges.map((x) => {
         return (
           <Grid item key={x.name}>
@@ -39,7 +39,7 @@ const Badges: React.FC = () => {
           </Grid>
         );
       })}
-    </Grid>
+    </>
   );
 };
 
