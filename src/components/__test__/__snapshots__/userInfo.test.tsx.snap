@@ -2,19 +2,19 @@
 
 exports[`Snapshot test normal render: normal 1`] = `
 <div
-  className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 MuiGrid-align-items-xs-center"
+  className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-7ldjcq-MuiGrid-root"
 >
   <div
-    className="MuiGrid-root MuiGrid-item"
+    className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
     <div
-      className="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault"
+      className="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault css-2s90m6-MuiAvatar-root"
     >
       wa
     </div>
   </div>
   <div
-    className="MuiGrid-root MuiGrid-item"
+    className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
     wayne.gong.cn@hotmail.com
   </div>
