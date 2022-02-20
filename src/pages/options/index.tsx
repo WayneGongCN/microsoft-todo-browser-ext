@@ -9,20 +9,30 @@ import { fetchConf } from '../../redux/conf';
 import { initReport } from '../../helpers/report';
 import { Page } from '../../constants/enums';
 import '../../styles/style.css';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { initPageTitle } from '../../helpers/pageTitle';
+
+const theme = createTheme();
 
 render(
-  <Suspense fallback={<Loading />}>
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <App />
-      </PersistGate>
-    </Provider>
-  </Suspense>,
+  <ThemeProvider theme={theme}>
+    <Suspense fallback={<Loading />}>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <App />
+        </PersistGate>
+      </Provider>
+    </Suspense>
+  </ThemeProvider>,
+
   document.getElementById('root')
 );
 
-store.dispatch(fetchConf()).then((res) => {
-  const { payload } = res;
-  initReport(Page.OPTIONS, payload as State['conf']['conf']);
-});
-
+const init = () => {
+  initPageTitle();
+  store.dispatch(fetchConf()).then((res) => {
+    const { payload } = res;
+    initReport(Page.OPTIONS, payload as State['conf']['conf']);
+  });
+};
+init();

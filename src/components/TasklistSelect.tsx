@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Select, SelectProps } from '@material-ui/core';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { State } from '../redux';
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from '@mui/material/MenuItem';
 import { fetchTasklist } from '../redux/tasklist';
 
-export default React.forwardRef<unknown, SelectProps>(function TasklistSelect(props: SelectProps, ref) {
+const TasklistSelect = ({ ref, ...props }: TextFieldProps) => {
+  console.log('TasklistSelect props: ', props);
   const dispatch = useDispatch();
   const loadingTasklist = useSelector((state: State) => state.popup.loadingTasklist);
   const account = useSelector((state: State) => state.auth.authenticationResult?.account);
@@ -18,13 +19,15 @@ export default React.forwardRef<unknown, SelectProps>(function TasklistSelect(pr
 
   return (
     <>
-      <Select disabled={loadingTasklist || !account} ref={ref} {...props} >
+      <TextField select disabled={loadingTasklist || !account} {...props}>
         {tasklists.map((x, idx) => (
           <MenuItem id={`com-task-list-${idx}`} key={x.id} value={x.id}>
             {x.displayName}
           </MenuItem>
         ))}
-      </Select>
+      </TextField>
     </>
   );
-});
+};
+
+export default TasklistSelect;

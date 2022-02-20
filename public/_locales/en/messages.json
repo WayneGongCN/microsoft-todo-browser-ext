@@ -21,6 +21,9 @@
     "message": "Open in Microsoft To Do"
   },
 
+  "optionPage": {
+    "message": "Options"
+  },
 
   "popupTitleText": {
     "message": "Title"

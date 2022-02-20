@@ -20,6 +20,10 @@
   "openMSTODO": {
     "message": "Microsoftで開くToDo"
   },
+
+  "optionPage": {
+    "message": "設定"
+  },
   
   "popupTitleText": {
     "message": "タスクタイトル"

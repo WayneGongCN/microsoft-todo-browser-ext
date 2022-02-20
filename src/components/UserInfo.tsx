@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Avatar from '@material-ui/core/Avatar';
+import Avatar from '@mui/material/Avatar';
 import { State } from '../redux';
-import { Container, Grid } from '@material-ui/core';
+import Grid from '@mui/material/Grid';
 
 const UserInfo: React.FC = () => {
   const account = useSelector((state: State) => state.auth.authenticationResult?.account);

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { Container, Grid } from '@material-ui/core';
-import Divider from '@material-ui/core/Divider';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
 import { useSelector } from 'react-redux';
 import Login from '../../components/Login';
 import Logout from '../../components/Logout';
@@ -22,11 +23,14 @@ export const App = () => {
 
   return (
     <Container disableGutters maxWidth="sm">
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         <Grid container item justifyContent="flex-end" alignItems="center">
           <OpenMSTodo />
         </Grid>
-        <Divider style={{ width: '100%' }} />
+
+        <Grid item xs={12}>
+          <Divider variant="fullWidth" />
+        </Grid>
 
         <Grid container item justifyContent="space-between">
           <Grid item>{account && <UserInfo />}</Grid>
@@ -34,16 +38,25 @@ export const App = () => {
         </Grid>
 
         <OptionsForm />
-        <Divider style={{ width: '100%' }} />
 
-        {/* Btns */}
-        <Grid container justifyContent="flex-end" item xs={12} lg={12} spacing={2}>
-          <FooterBtns />
-
-          <TranslateTip />
+        <Grid item xs={12}>
+          <Divider variant="fullWidth" />
         </Grid>
 
-        <Badges />
+        {/* Footer */}
+        <Grid container item xs={12} spacing={2}>
+          <Grid container item justifyContent="flex-end" xs={12} spacing={1}>
+            <FooterBtns />
+          </Grid>
+
+          <Grid container item justifyContent="flex-end" spacing={1}>
+            <TranslateTip />
+          </Grid>
+
+          <Grid container item justifyContent="flex-end" spacing={1}>
+            <Badges />
+          </Grid>
+        </Grid>
       </Grid>
     </Container>
   );

@@ -2,8 +2,8 @@ import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../redux';
 import { LANG_LOADING_TEXT, LANG_LOGIN_TEXT } from '../constants/lang';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import { login } from '../redux/auth';
 
 const Login: React.FC = () => {
