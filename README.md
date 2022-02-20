@@ -1,10 +1,11 @@
 # Microsoft To Do 浏览器扩展
 
-<a href="https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/ffpljgmbiankjaokoefefmkoghcgoodn" target="_blank">![](https://img.shields.io/chrome-web-store/v/ffpljgmbiankjaokoefefmkoghcgoodn?style=social)</a>
-<a href="https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/ffpljgmbiankjaokoefefmkoghcgoodn" target="_blank">![](https://img.shields.io/chrome-web-store/users/ffpljgmbiankjaokoefefmkoghcgoodn?style=social)</a>
-<a href="https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/ffpljgmbiankjaokoefefmkoghcgoodn/reviews" target="_blank">![](https://img.shields.io/chrome-web-store/stars/ffpljgmbiankjaokoefefmkoghcgoodn?style=social)</a>
-<a href="https://github.com/WayneGongCN/microsoft-todo-browser-ext" target="_blank">![](https://img.shields.io/github/stars/waynegongcn/microsoft-todo-browser-ext?style=social)</a>
-<a href="https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues" target="_blank">![](https://img.shields.io/github/issues/waynegongcn/microsoft-todo-browser-ext?style=social)</a>
+[![https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/ffpljgmbiankjaokoefefmkoghcgoodn](https://img.shields.io/chrome-web-store/v/ffpljgmbiankjaokoefefmkoghcgoodn)]()
+[![users](https://img.shields.io/chrome-web-store/users/ffpljgmbiankjaokoefefmkoghcgoodn)](https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/ffpljgmbiankjaokoefefmkoghcgoodn)
+[![rate](https://img.shields.io/chrome-web-store/stars/ffpljgmbiankjaokoefefmkoghcgoodn)](https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/ffpljgmbiankjaokoefefmkoghcgoodn/reviews)
+
+[![codecov](https://codecov.io/gh/WayneGongCN/microsoft-todo-browser-ext/branch/main/graph/badge.svg?token=OICY8Y0JVP)](https://codecov.io/gh/WayneGongCN/microsoft-todo-browser-ext)
+[![cpload chrome store](https://github.com/WayneGongCN/microsoft-todo-browser-ext/actions/workflows/chrome-store-uploader.yml/badge.svg)](https://github.com/WayneGongCN/microsoft-todo-browser-ext/actions/workflows/chrome-store-uploader.yml)
 
 
 [Microsoft To Do 浏览器扩展](https://mstodo-ext.waynegong.cn/)（[Chrome](https://chrome.google.com/webstore/detail/microsoft-to-do-chrome-ex/ffpljgmbiankjaokoefefmkoghcgoodn)、~~Firefox~~）
