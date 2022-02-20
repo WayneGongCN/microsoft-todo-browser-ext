@@ -4,6 +4,11 @@
 name: Unit test
 
 on:
+  push:
+    branches:
+      - "main"
+      - "chore(release):*"
+
   pull_request:
     
 jobs:
