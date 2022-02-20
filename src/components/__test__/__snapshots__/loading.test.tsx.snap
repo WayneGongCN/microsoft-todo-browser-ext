@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot test normal render: normal 1`] = `
+<div
+  className="MuiContainer-root MuiContainer-maxWidthLg css-1oqqzyl-MuiContainer-root"
+>
+  Loadong ...
+</div>
+`;

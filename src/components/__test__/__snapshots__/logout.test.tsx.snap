@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot test loading: loading 1`] = `
+<button
+  className="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled MuiButton-fullWidth Mui-disabled"
+  disabled={true}
+  id="com-btn-logout"
+  onBlur={[Function]}
+  onClick={[Function]}
+  onDragLeave={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  onKeyUp={[Function]}
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  onTouchEnd={[Function]}
+  onTouchMove={[Function]}
+  onTouchStart={[Function]}
+  tabIndex={-1}
+  type="button"
+>
+  <span
+    className="MuiButton-label"
+  >
+    undefined...
+    <span
+      className="MuiButton-endIcon MuiButton-iconSizeMedium"
+    >
+      <div
+        className="MuiCircularProgress-root MuiCircularProgress-colorPrimary MuiCircularProgress-indeterminate"
+        role="progressbar"
+        style={
+          Object {
+            "height": 20,
+            "width": 20,
+          }
+        }
+      >
+        <svg
+          className="MuiCircularProgress-svg"
+          viewBox="22 22 44 44"
+        >
+          <circle
+            className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate"
+            cx={44}
+            cy={44}
+            fill="none"
+            r={20.2}
+            strokeWidth={3.6}
+            style={Object {}}
+          />
+        </svg>
+      </div>
+    </span>
+  </span>
+</button>
+`;
+
+exports[`Snapshot test normal: normal 1`] = `
+<button
+  className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-fullWidth"
+  disabled={false}
+  id="com-btn-logout"
+  onBlur={[Function]}
+  onClick={[Function]}
+  onDragLeave={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  onKeyUp={[Function]}
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  onTouchEnd={[Function]}
+  onTouchMove={[Function]}
+  onTouchStart={[Function]}
+  tabIndex={0}
+  type="button"
+>
+  <span
+    className="MuiButton-label"
+  />
+</button>
+`;

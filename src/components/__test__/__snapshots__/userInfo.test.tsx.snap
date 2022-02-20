@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot test normal render: normal 1`] = `
+<div
+  className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 MuiGrid-align-items-xs-center"
+>
+  <div
+    className="MuiGrid-root MuiGrid-item"
+  >
+    <div
+      className="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault"
+    >
+      wa
+    </div>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item"
+  >
+    wayne.gong.cn@hotmail.com
+  </div>
+</div>
+`;

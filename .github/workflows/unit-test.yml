@@ -1,0 +1,32 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Unit test
+
+on:
+  push:
+  pull_request:
+    
+jobs:
+  Install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Inital Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: yarn test
