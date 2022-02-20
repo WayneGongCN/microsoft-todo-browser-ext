@@ -21,6 +21,10 @@
     "message": "Microsoft에서 열기"
   },
   
+  "optionPage": {
+    "message": "설정"
+  },
+
   "popupTitleText": {
     "message": "작업 제목"
   },

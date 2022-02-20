@@ -1,23 +1,8 @@
-import { store, persistor } from '../../redux';
-import authSlice, { asyncChunk as authSliceAsyncChunk } from '../../redux/auth';
-import popupSlice from '../../redux/popup';
-import taskSlice, { asyncChunk as taskSlickAsyncChunk } from '../../redux/task';
-import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from '../../redux/tasklist';
-import optionsSlice from '../../redux/options';
-import Notify from '../../helpers/notification';
 import { Page } from '../../constants/enums';
 import { initReport } from '../../helpers/report';
+import { State, store } from '../../redux';
+import { fetchConf } from '../../redux/conf';
 
-initReport(Page.BACKGROUND);
-
-export const backgroundContext = {
-  Notify,
-  store,
-  persistor,
-  authSlice: authSlice as typeof authSlice & typeof authSliceAsyncChunk,
-  taskSlice: taskSlice as typeof taskSlice & typeof taskSlickAsyncChunk,
-  tasklistSlice: tasklistSlice as typeof tasklistSlice & typeof tasklistAsyncChunk,
-  popupSlice: popupSlice,
-  optionsSlice: optionsSlice,
-};
-window.backgroundContext = backgroundContext;
+store.dispatch(fetchConf()).then((res) => {
+  initReport(Page.BACKGROUND, res.payload as State['conf']['conf']);
+});

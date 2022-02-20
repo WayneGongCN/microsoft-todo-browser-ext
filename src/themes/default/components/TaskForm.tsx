@@ -4,23 +4,21 @@ import { Dispatch, State } from '../../../redux';
 import { Controller, useForm } from 'react-hook-form';
 import { logger } from '../../../helpers/logger';
 
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import BookmarksOutlined from '@material-ui/icons/BookmarksOutlined';
-import Star from '@material-ui/icons/Star';
-import StarOutline from '@material-ui/icons/StarOutline';
-import Bookmarks from '@material-ui/icons/Bookmarks';
-import RotateLeft from '@material-ui/icons/RotateLeft';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Tooltip from '@material-ui/core/Tooltip';
-import { backgroundContext } from '../../../helpers/background';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import BookmarksOutlined from '@mui/icons-material/BookmarksOutlined';
+import Star from '@mui/icons-material/Star';
+import StarOutline from '@mui/icons-material/StarOutline';
+import Bookmarks from '@mui/icons-material/Bookmarks';
+import RotateLeft from '@mui/icons-material/RotateLeft';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import FormHelperText from '@mui/material/FormHelperText';
+import Tooltip from '@mui/material/Tooltip';
 import TasklistSelect from '../../../components/TasklistSelect';
 import { now, timing } from '../../../helpers/report';
 import { openUrl } from '../../../helpers';
@@ -39,9 +37,10 @@ import {
   LANG_OPEN_OPTIONS_PAGE_TOOLTIP,
 } from '../../../constants/lang';
 import { OPTIONS_PAGE_URL } from '../../../constants';
+import popupSlice from '../../../redux/popup';
+import { createTask } from '../../../redux/task';
 
 const TaskForm: React.FC = () => {
-  const { taskSlice, popupSlice } = backgroundContext;
   const dispatch = useDispatch<Dispatch>();
   const store = useStore<State>();
 
@@ -81,7 +80,7 @@ const TaskForm: React.FC = () => {
   const submit = useCallback(
     (val, err) => {
       logger.log('submit', val, err);
-      dispatch(taskSlice.createTask(val)).then(() => {
+      dispatch(createTask(val)).then(() => {
         autoResetPopup && handleReset();
       });
     },
@@ -146,14 +145,13 @@ const TaskForm: React.FC = () => {
       <Grid container item direction="row" alignItems="center" justifyContent="space-between" xs={12}>
         <Grid item xs={7} style={{ marginTop: '8px' }}>
           <FormControl error={Boolean(errors.tasklistId)} fullWidth required>
-            <InputLabel id="popup-select-tasklist">{LANG_POPUP_TASKLIST}</InputLabel>
             <Controller
               control={control}
               name="tasklistId"
               rules={{ required: true }}
               render={({ field }) => (
                 <>
-                  <TasklistSelect labelId="popup-select-tasklist" {...field} />
+                  <TasklistSelect label={LANG_POPUP_TASKLIST} {...field} />
                   {Boolean(errors.tasklistId) && <FormHelperText>{LANG_POPUP_TASKLIST_VALIDATION}</FormHelperText>}
                 </>
               )}
@@ -212,7 +210,7 @@ const TaskForm: React.FC = () => {
       <Grid container item direction="row" alignItems="center" xs={12}>
         <Grid item xs>
           <Tooltip title={LANG_POPUP_RESET}>
-            <IconButton id="popup-btn-reset" size="small" color="secondary" onClick={handleReset}>
+            <IconButton id="popup-btn-reset" size="small" onClick={handleReset}>
               <RotateLeft />
             </IconButton>
           </Tooltip>

@@ -1,9 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { APP_DEFAULT_OPTIONS } from '../constants';
+import { EQuickTaskTitle } from '../constants/enums';
 import { initQuickAdd } from '../helpers/quickAdd';
 import { fetchTasklist } from './tasklist';
 
-export const optionsSlice = createSlice({
+
+const APP_DEFAULT_OPTIONS = {
+  autoResetPopup: true,
+  enableNotifacation: true,
+  quickAddTaskTasklistId: '',
+  enableQuickAdd: true,
+  quickTaskTitleType: EQuickTaskTitle.SELECTION,
+};
+
+const optionsSlice = createSlice({
   name: 'options',
 
   initialState: {

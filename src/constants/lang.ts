@@ -1,5 +1,7 @@
 import { getI18nText } from '../helpers';
 
+export const LANG_EXT_NAME = getI18nText('extensionName');
+
 export const LNAG_UNTITLE = getI18nText('untitle');
 export const LNAG_SUCCESS = getI18nText('success');
 export const LNAG_ADD_TASK = getI18nText('addTask');

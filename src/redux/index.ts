@@ -10,11 +10,13 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from 'redux-persist/lib/storage';
 import { onPresistReady } from '../helpers/persist';
 import { loggerMiddleWare } from '../helpers/logger';
+import confSlice, { fetchConf } from './conf';
 
 const rootReducer = {
+  conf: confSlice.reducer,
   task: taskSlice.reducer,
   tasklist: tasklistSlice.reducer,
-  popup: popupSlice.reducer,
+  popup: persistReducer({ key: 'popup', storage }, popupSlice.reducer),
   auth: persistReducer({ key: 'auth', storage }, authSlice.reducer),
   options: persistReducer({ key: 'options', storage }, optionsSlice.reducer),
 };

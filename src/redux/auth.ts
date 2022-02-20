@@ -1,12 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { State } from '.';
-import { msalAcquireTokenSilent, msalAcquireTokenRedirect, msalGetAllAccounts, logoutRedirect } from '../helpers/msal';
+import { msalAcquireToken, msalLogin, msalLogout } from '../helpers/msal';
 import { AUTH_SCOPES } from '../constants';
-import { bindAsyncActions } from '../helpers';
 import { SerializAuthenticationResult } from '../../types';
 import { ErrorCode } from '../constants/enums';
-import { logger } from '../helpers/logger';
-import { now, timing } from '../helpers/report';
+import AppError from '../helpers/error';
 
 const SLICE_NAME = 'auth';
 const initialState = {
@@ -15,61 +13,24 @@ const initialState = {
   error: null as null | { code: ErrorCode; message: string },
 };
 
-/**
- * 获取 Token
- * - 如果有 Token 且没有过期，则直接返回 Token
- * - 如果有 Token 但已经过期，则调用 acquireTokenSilent 刷新 Token，刷新失败则调用 acquireTokenRedirect 重新登陆
- * - 如果没有 Token 则调用 acquireTokenRedirect 重新登陆
- */
+export const login = createAsyncThunk<SerializAuthenticationResult, void, { state: State }>(`${SLICE_NAME}/login`, () => {
+  return msalLogin();
+});
+
 export const acquireToken = createAsyncThunk<SerializAuthenticationResult, boolean, { state: State }>(
   `${SLICE_NAME}/acquireToken`,
-  (silent = false, { getState }) => {
-    const { auth } = getState();
-    const { authenticationResult } = auth;
-    const curTime = Date.now();
-    const isExpires = curTime > (authenticationResult?.expiresOn || 0);
-
-    if (!isExpires) {
-      return Promise.resolve(authenticationResult);
-    } else {
-      const startTime = now();
-      const accounts = msalGetAllAccounts();
-
-      const fallback = () => {
-        return msalAcquireTokenRedirect({ scopes: AUTH_SCOPES }).catch((e) => {
-          logger.warn('msalAcquireTokenRedirect fail');
-          throw e;
-        });
-      };
-
-      let promise = null;
-      if (accounts.length) {
-        promise = msalAcquireTokenSilent({ scopes: AUTH_SCOPES, account: accounts[0] }).catch((e) => {
-          if (silent) {
-            logger.warn('msalAcquireTokenSilent fail silent is true.');
-            throw e;
-          } else {
-            logger.warn('msalAcquireTokenSilent fail try msalAcquireTokenRedirect.');
-            return fallback();
-          }
-        });
-      } else {
-        promise = fallback();
-      }
-
-      return promise.then((res) => {
-        timing('acquireToken', now() - startTime);
-        return res;
-      });
-    }
+  (silen = true, { getState }) => {
+    const account = getState().auth.authenticationResult?.account;
+    if (account) return msalAcquireToken({ scopes: AUTH_SCOPES, account }, silen);
+    else throw new AppError({ code: ErrorCode.ACQUIRE_TOKEN, message: 'acquireToken action not found account' });
   }
 );
 
-export const logout = createAsyncThunk<void, void, { state: State }>(`${SLICE_NAME}/logout`, (_) => {
-  return logoutRedirect();
+export const logout = createAsyncThunk<void, void, { state: State }>(`${SLICE_NAME}/logout`, () => {
+  return msalLogout();
 });
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
   name: SLICE_NAME,
   initialState,
 
@@ -77,6 +38,7 @@ export const authSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      // acquireToken
       .addCase(acquireToken.pending, (state) => {
         state.loading = true;
       })
@@ -88,6 +50,19 @@ export const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(acquireToken.rejected, (state) => {
+        state.loading = false;
+      })
+
+      // login
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(login.fulfilled, (state, { payload }) => {
+        state.authenticationResult = payload;
+        state.loading = false;
+      })
+      .addCase(login.rejected, (state) => {
+        state.authenticationResult = null;
         state.loading = false;
       })
 
@@ -105,11 +80,5 @@ export const authSlice = createSlice({
       });
   },
 });
-
-export const asyncChunk = {
-  acquireToken,
-  logout,
-};
-bindAsyncActions(authSlice, asyncChunk);
 
 export default authSlice;

@@ -1,14 +1,7 @@
 import { IContentMessage } from '../../types';
+import { DEFAULT_LANG, LANG } from '../constants';
 import { ErrorCode, NotifyType } from '../constants/enums';
 import AppError from './error';
-
-// TODO: fix type
-// eslint-disable-next-line
-export const bindAsyncActions = (slice: any, asyncActioMap: Record<string, Function>) => {
-  Object.keys(asyncActioMap).forEach((key) => {
-    slice[key] = asyncActioMap[key];
-  });
-};
 
 export const openUrl = (options: chrome.tabs.CreateProperties) =>
   new Promise((resolve, reject) => {
@@ -21,7 +14,6 @@ export const openUrl = (options: chrome.tabs.CreateProperties) =>
 
 export const openMicrosoftTodo = (type?: NotifyType, id?: string) => {
   const prefix = 'https://to-do.live.com';
-
   let url = '';
   if (type === NotifyType.TASK) {
     url = `${prefix}/tasks/id/${id}/details`;
@@ -30,7 +22,6 @@ export const openMicrosoftTodo = (type?: NotifyType, id?: string) => {
   } else {
     url = `${prefix}/tasks/inbox`;
   }
-
   return openUrl({ url });
 };
 
@@ -61,3 +52,5 @@ export const sendMessageToActiveTab = (msg: IContentMessage): Promise<chrome.tab
 };
 
 export const getI18nText = (name: string): string => chrome.i18n.getMessage(name);
+
+export const getI18nConf = (conf: Record<string, string>) => conf[LANG] || conf[DEFAULT_LANG] || (typeof conf === 'string' ? conf : '');

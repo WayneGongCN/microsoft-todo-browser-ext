@@ -20,6 +20,10 @@
   "openMSTODO": {
     "message": "在微软 To Do 中打开"
   },
+
+  "optionPage": {
+    "message": "选项"
+  },
   
   "popupTitleText": {
     "message": "任务标题"
@@ -55,7 +59,7 @@
     "message": "保存书签"
   },
   "openOptionsPageTooltip": {
-    "message": "打开插件配置页"
+    "message": "打开选项页"
   },
   "loadingText": {
     "message": "加载中"

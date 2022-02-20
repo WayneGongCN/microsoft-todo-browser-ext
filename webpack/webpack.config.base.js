@@ -60,13 +60,13 @@ module.exports = {
       filename: 'popup.html',
       template: join(__dirname, '../public/template.html'),
       chunks: ['popup'],
-      title: `Popup ${manifest.name}`,
+      title: `Popup`,
     }),
     new HtmlWebpackPlugin({
       filename: 'options.html',
       template: join(__dirname, '../public/template.html'),
       chunks: ['options'],
-      title: `Options ${manifest.name}`,
+      title: `Options`,
     }),
 
     /**

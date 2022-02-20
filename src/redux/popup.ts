@@ -3,7 +3,7 @@ import { DEFAULT_FORM_VALS } from '../constants';
 import { createTask } from './task';
 import { fetchTasklist } from './tasklist';
 
-export const popupSlice = createSlice({
+const popupSlice = createSlice({
   name: 'popup',
 
   initialState: {

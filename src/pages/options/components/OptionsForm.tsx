@@ -2,8 +2,14 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { Dispatch, State } from '../../../redux';
-import { backgroundContext } from '../../../helpers/background';
-import { FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, Radio, RadioGroup, Switch, Grid } from '@material-ui/core';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormLabel from '@mui/material/FormLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import Switch from '@mui/material/Switch';
+import Grid from '@mui/material/Grid';
 import TasklistSelect from '../../../components/TasklistSelect';
 import { now, timing } from '../../../helpers/report';
 import { EQuickTaskTitle } from '../../../constants/enums';
@@ -20,9 +26,9 @@ import {
   LANG_OPTIONS_QUICK_ADD_TITLE_SELECTION,
   LANG_OPTIONS_QUICK_ADD_TITLE_TAB_TITLE,
 } from '../../../constants/lang';
+import optionsSlice from '../../../redux/options';
 
 const OptionsForm: React.FC = () => {
-  const { optionsSlice } = backgroundContext;
   const dispatch = useDispatch<Dispatch>();
   const store = useStore<State>();
 
@@ -48,17 +54,17 @@ const OptionsForm: React.FC = () => {
 
   // render
   const enableQuickAdd = useSelector((state: State) => state.options.form.enableQuickAdd);
-  const quickAddTasOptionskRender = useCallback(() => {
+  const quickAddTaskOptions = useCallback(() => {
     return enableQuickAdd ? (
       <>
         {/* quickAddTaskTasklist */}
         <Grid item xs={12} lg={12}>
           <FormControl fullWidth>
-            <InputLabel id="options-quck-add-task-list">{account ? LANG_OPTIONS_QUICK_ADD_TASKLIST : LANG_LOGIN_TIP}</InputLabel>
             <Controller
               name="quickAddTaskTasklistId"
               control={control}
-              render={({ field }) => <TasklistSelect labelId="options-quck-add-task-list" {...field} />}
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              render={({ field: { ref, ...field } }) => <TasklistSelect label={account ? LANG_OPTIONS_QUICK_ADD_TASKLIST : LANG_LOGIN_TIP} {...field} />}
             />
             <FormHelperText>{LANG_OPTIONS_QUICK_ADD_TASKLIST_HELP}</FormHelperText>
           </FormControl>
@@ -110,7 +116,7 @@ const OptionsForm: React.FC = () => {
           />
           <FormHelperText>{LANG_OPTIONS_ENABLE_QUICK_ADD_HELP}</FormHelperText>
         </Grid>
-        {quickAddTasOptionskRender()}
+        {quickAddTaskOptions()}
       </Grid>
 
       {/* Create task */}
