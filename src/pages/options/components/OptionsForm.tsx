@@ -47,7 +47,7 @@ const OptionsForm: React.FC = () => {
 
   // render
   const enableQuickAdd = useSelector((state: State) => state.options.form.enableQuickAdd);
-  const quickAddTasOptionskRender = useCallback(() => {
+  const quickAddTaskOptions = useCallback(() => {
     return enableQuickAdd ? (
       <>
         {/* quickAddTaskTasklist */}
@@ -109,7 +109,7 @@ const OptionsForm: React.FC = () => {
           />
           <FormHelperText>{LANG_OPTIONS_ENABLE_QUICK_ADD_HELP}</FormHelperText>
         </Grid>
-        {quickAddTasOptionskRender()}
+        {quickAddTaskOptions()}
       </Grid>
 
       {/* Create task */}

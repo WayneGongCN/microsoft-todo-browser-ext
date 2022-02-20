@@ -12,7 +12,6 @@ import { now, timing, initReport } from "../helpers/report";
   return lazy(() =>
     import(`../themes/${theme}/`).then(async (res) => {
       timing('theme loaded', now() - startTime);
-      initReport(Page.POPUP);
       return res;
     })
   );
