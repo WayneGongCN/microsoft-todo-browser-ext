@@ -55,14 +55,15 @@ const createMenu = () => {
 };
 
 export const initQuickAdd = () => {
-  const state = store.getState();
-  const { options } = state;
-  const { enableQuickAdd } = options.form;
+  return
+  // const state = store.getState();
+  // const { options } = state;
+  // const { enableQuickAdd } = options.form;
 
-  chrome.contextMenus.removeAll(() => {
-    if (!enableQuickAdd) return;
+  // chrome.contextMenus.removeAll(() => {
+  //   if (!enableQuickAdd) return;
 
-    createMenu();
-    initEvent();
-  });
+  //   createMenu();
+  //   initEvent();
+  // });
 };

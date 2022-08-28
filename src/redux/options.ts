@@ -8,7 +8,7 @@ const APP_DEFAULT_OPTIONS = {
   autoResetPopup: true,
   enableNotifacation: true,
   quickAddTaskTasklistId: '',
-  enableQuickAdd: true,
+  enableQuickAdd: false,
   quickTaskTitleType: EQuickTaskTitle.SELECTION,
 };
 
@@ -23,7 +23,7 @@ const optionsSlice = createSlice({
   reducers: {
     updateForm: (state, { payload }) => {
       if (payload.enableQuickAdd !== state.form.enableQuickAdd) setTimeout(initQuickAdd);
-      state.form = { ...state.form, ...payload };
+      state.form = { ...state.form, ...payload, enableQuickAdd: false };
     },
 
     /**

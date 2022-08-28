@@ -4,14 +4,15 @@ import { createLogger } from 'redux-logger';
 import taskSlice from './task';
 import tasklistSlice from './tasklist';
 import popupSlice from './popup';
-import { IS_DEV, IS_PROD } from '../constants';
 import optionsSlice from './options';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 import { onPresistReady } from '../helpers/persist';
-import { loggerMiddleWare } from '../helpers/logger';
-import confSlice, { fetchConf } from './conf';
+import confSlice from './conf';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import createChromeStorage from 'redux-persist-chrome-storage'
 
+const storage = createChromeStorage(chrome, 'sync');
 const rootReducer = {
   conf: confSlice.reducer,
   task: taskSlice.reducer,
@@ -22,7 +23,7 @@ const rootReducer = {
 };
 
 export const store = configureStore({
-  devTools: IS_DEV,
+  devTools: true,
   reducer: rootReducer,
 
   middleware: (getDefaultMiddleware) => {
@@ -30,7 +31,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat([IS_DEV && createLogger({ collapsed: true, duration: true }), IS_PROD && loggerMiddleWare].filter(Boolean));
+    }).concat(createLogger({ collapsed: true, duration: true }));
   },
 });
 

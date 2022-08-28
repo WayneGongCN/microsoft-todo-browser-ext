@@ -7028,6 +7028,11 @@ redux-logger@^3.0.6:
   dependencies:
     deep-diff "^0.3.5"
 
+redux-persist-chrome-storage@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/redux-persist-chrome-storage/-/redux-persist-chrome-storage-1.0.6.tgz#d3ab6fbdf4e5b39c66d6d4ad82362d98ebc0f2d0"
+  integrity sha512-boyw1pRlmErP5zNmzaT9l9hRVmQ1QgOhSGkJZOzchdlLN4tAx8Iiaf2Kjo44mgtnEyB9+Uc2R7I4Y8S9Vje6ww==
+
 redux-persist@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-6.0.0.tgz#b4d2972f9859597c130d40d4b146fecdab51b3a8"

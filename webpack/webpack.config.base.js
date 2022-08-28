@@ -20,6 +20,7 @@ module.exports = {
   },
 
   output: {
+    publicPath: '',
     path: resolve(join(__dirname, `../dist_${process.env.TARGET}`)),
     filename: '[name].js',
   },

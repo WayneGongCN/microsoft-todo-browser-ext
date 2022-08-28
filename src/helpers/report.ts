@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { State, store } from '../redux';
+import { State } from '../redux';
 import { Page } from '../constants/enums';
 import AppError from './error';
 import { logger } from './logger';
-import { NODE_ENV, VERSION } from '../constants';
+import { NODE_ENV } from '../constants';
 
 let Sentry: any = null;
 const reportQueue: any[] = [];
@@ -23,7 +23,6 @@ const initSentry = async (page: Page, sentryDsn: string, reportSampleRate: numbe
 
   Sentry.init({
     environment: NODE_ENV,
-    release: VERSION,
     dsn: sentryDsn,
     integrations: [new Integrations.BrowserTracing()],
     tracesSampleRate: reportSampleRate,
@@ -66,8 +65,8 @@ export const timing = function (name: string, value: number, category = 'Default
 };
 
 export const initReport = (page: Page, conf: State['conf']['conf']) => {
-  const { sentryDsn, reportSampleRate, gtmID, gtmEvn } = conf
+  // const { sentryDsn, reportSampleRate, gtmID, gtmEvn } = conf
 
-  initSentry(page, sentryDsn, reportSampleRate);
-  if (page !== Page.BACKGROUND) initGTM(gtmID, gtmEvn);
+  // initSentry(page, sentryDsn, reportSampleRate);
+  // if (page !== Page.BACKGROUND) initGTM(gtmID, gtmEvn);
 };
