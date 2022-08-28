@@ -35,8 +35,7 @@ const serializeAuthenticationResult = (res: AuthenticationResult): SerializAuthe
  */
 const clearAccount = () => {
   logger.warn('clear account');
-  window?.localStorage.clear();
-  window?.sessionStorage.clear();
+  chrome.storage.sync.clear();
 };
 
 async function getLoginUrl(request?: RedirectRequest): Promise<string> {

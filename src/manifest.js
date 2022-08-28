@@ -3,7 +3,7 @@ const packageJson = require('../package.json');
 
 module.exports = {
   // version
-  manifest_version: 2,
+  manifest_version: 3,
   version: packageJson.version,
 
   // 基本信息
@@ -13,19 +13,16 @@ module.exports = {
 
   // 权限
   permissions: ['identity', 'tabs', 'contextMenus', 'notifications', 'storage'],
-  "content_security_policy": "script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; object-src 'self'",
 
   // background
   background: {
-    scripts: ['background.js'],
-    persistent: false,
+    service_worker: 'background.js'
   },
 
   // options
   options_page: 'options.html',
 
-  // popup
-  browser_action: {
+  action: {
     default_popup: 'popup.html',
   },
 
@@ -37,7 +34,6 @@ module.exports = {
     },
   ],
 
-  // 图片资源
   icons:
     process.env.NODE_ENV === 'development'
       ? { 128: './icons/todo-dev-128.png' }
