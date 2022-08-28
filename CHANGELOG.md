@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.3.2...v1.3.3) (2022-08-28)
+
+
+### Bug Fixes
+
+* disable quick add task feature ([a17ee24](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/a17ee2412b42a1e28a571b673b1a16720a7ca91b))
+
 ### [1.3.2](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.3.1...v1.3.2) (2022-02-12)
 
 ### [1.3.1](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.3.0...v1.3.1) (2022-02-12)
