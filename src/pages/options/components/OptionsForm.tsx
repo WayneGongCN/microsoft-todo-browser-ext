@@ -110,6 +110,7 @@ const OptionsForm: React.FC = () => {
             render={({ field }) => (
               <FormControlLabel
                 label={LANG_OPTIONS_ENABLE_QUICK_ADD}
+                disabled
                 control={<Switch color="primary" id={`options-quick-add-${field.value}`} {...field} checked={field.value} />}
               />
             )}
