@@ -1,13 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { DEFAULT_FORM_VALS } from '../constants';
-import { createTask } from './task';
-import { fetchTasklist } from './tasklist';
+import { DEFAULT_FORM_POPUP } from '../constants';
+import { createTaskAction } from './task';
+import { fetchTasklistAction } from './tasklist';
+
+
 
 const popupSlice = createSlice({
   name: 'popup',
 
   initialState: {
-    form: { ...DEFAULT_FORM_VALS },
+    form: { ...DEFAULT_FORM_POPUP },
     creating: false,
     loadingTasklist: false,
     error: null,
@@ -22,36 +24,36 @@ const popupSlice = createSlice({
      * 重置表单，tasklist 保持上次选中的内容
      */
     resetForm: (state) => {
-      state.form = { ...DEFAULT_FORM_VALS, tasklistId: state.form.tasklistId };
+      state.form = { ...DEFAULT_FORM_POPUP, tasklistId: state.form.tasklistId };
     },
   },
 
   extraReducers: (builder) => {
     builder
       // createTask
-      .addCase(createTask.pending, (state) => {
+      .addCase(createTaskAction.pending, (state) => {
         state.creating = true;
       })
-      .addCase(createTask.fulfilled, (state) => {
+      .addCase(createTaskAction.fulfilled, (state) => {
         state.creating = false;
-        state.form = { ...DEFAULT_FORM_VALS, tasklistId: state.form.tasklistId };
+        state.form = { ...DEFAULT_FORM_POPUP, tasklistId: state.form.tasklistId };
       })
-      .addCase(createTask.rejected, (state) => {
+      .addCase(createTaskAction.rejected, (state) => {
         state.creating = false;
       })
 
       // fetchTasklist
-      .addCase(fetchTasklist.pending, (state) => {
+      .addCase(fetchTasklistAction.pending, (state) => {
         state.loadingTasklist = true;
       })
-      .addCase(fetchTasklist.fulfilled, (state, { payload }) => {
+      .addCase(fetchTasklistAction.fulfilled, (state, { payload }) => {
         state.loadingTasklist = false;
         if (!state.form.tasklistId) {
           const firstTasklist = payload.value[0];
           state.form.tasklistId = firstTasklist.id;
         }
       })
-      .addCase(fetchTasklist.rejected, (state) => {
+      .addCase(fetchTasklistAction.rejected, (state) => {
         state.loadingTasklist = false;
       });
   },

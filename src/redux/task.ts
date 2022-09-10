@@ -1,13 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ICreateTaskParams, IPopupForm, ITaskResult } from '../../types';
-import { TIME_ZONE } from '../constants';
-import { ETaskContentTypes, ETaskImportance, NotifyType } from '../constants/enums';
+import { CreateTaskParams, createTaskRequest, CreateTaskResult, ETaskContentTypes, ETaskImportance } from '../api/createTask';
+import { PopupForm, TIME_ZONE } from '../constants';
+import { NotifyType } from '../constants/enums';
 import { LNAG_ADD_TASK, LNAG_OPEN_MS_TODO, LNAG_SUCCESS } from '../constants/lang';
-import {  getActiveTab, openMicrosoftTodo } from '../helpers';
+import { getActiveTab, openMicrosoftTodo } from '../helpers';
 import Notify from '../helpers/notification';
-import request from '../helpers/request';
 
-export const mapToTaskParams = async (popupForm: IPopupForm, tab?: chrome.tabs.Tab): Promise<ICreateTaskParams> => {
+
+
+export const mapToTaskParams = async (popupForm: PopupForm, tab?: chrome.tabs.Tab): Promise<CreateTaskParams> => {
   const { title, describe, bookmark, importance, dateTime } = popupForm;
 
   let bookmarkContent = '';
@@ -17,7 +18,7 @@ export const mapToTaskParams = async (popupForm: IPopupForm, tab?: chrome.tabs.T
   }
 
   const content = `${describe}\n${bookmarkContent}`;
-  const result: ICreateTaskParams = {
+  const result: CreateTaskParams = {
     title,
     body: {
       content,
@@ -35,36 +36,36 @@ export const mapToTaskParams = async (popupForm: IPopupForm, tab?: chrome.tabs.T
   return result;
 };
 
+
+
 /**
- * 创建任务
- *
  * https://github.com/microsoftgraph/microsoft-graph-docs/blob/main/api-reference/v1.0/api/todotasklist-post-tasks.md
  */
-export const createTask = createAsyncThunk<ITaskResult, IPopupForm>('task/createTask', async (params, { rejectWithValue }) => {
+export const createTaskAction = createAsyncThunk<CreateTaskResult, PopupForm>('task/createTask', async (params, { rejectWithValue }) => {
   const { tasklistId } = params;
   const data = await mapToTaskParams(params);
-  return request
-    .post<void, ITaskResult, ICreateTaskParams>(`me/todo/lists/${tasklistId}/tasks`, data)
-    .then((res) => {
-      new Notify({
-        title: `${LNAG_ADD_TASK}${LNAG_SUCCESS}`,
-        message: LNAG_OPEN_MS_TODO,
-      })
-        .onClick(() => openMicrosoftTodo(NotifyType.TASK, res.id))
-        .show();
-      return res;
+  return createTaskRequest(tasklistId, data).then((res) => {
+    new Notify({
+      title: `${LNAG_ADD_TASK}${LNAG_SUCCESS}`,
+      message: LNAG_OPEN_MS_TODO,
     })
+      .onClick(() => openMicrosoftTodo(NotifyType.TASK, res.id))
+      .show();
+    return res;
+  })
     .catch((e) => {
       rejectWithValue(e?.serializ());
       return Promise.reject(e);
     });
 });
 
+
+
 const taskSlice = createSlice({
   name: 'task',
 
   initialState: {
-    tasks: {} as Record<string, ITaskResult[]>,
+    tasks: {} as Record<string, CreateTaskResult[]>,
     creating: false,
     error: null,
   },
@@ -74,16 +75,17 @@ const taskSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // createTask
-      .addCase(createTask.pending, (state) => {
+      .addCase(createTaskAction.pending, (state) => {
         state.creating = true;
       })
-      .addCase(createTask.fulfilled, (state) => {
+      .addCase(createTaskAction.fulfilled, (state) => {
         state.creating = false;
       })
-      .addCase(createTask.rejected, (state) => {
+      .addCase(createTaskAction.rejected, (state) => {
         state.creating = false;
       });
   },
 });
+
 
 export default taskSlice;

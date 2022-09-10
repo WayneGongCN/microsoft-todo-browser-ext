@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { State } from '.';
-import { HOME_URL } from '../constants';
+import { getConfRequest } from '../api/getConf';
+
+
 
 const SLICE_NAME = 'conf';
 const APP_DEFAULT_CONF = {
@@ -11,17 +12,23 @@ const APP_DEFAULT_CONF = {
   gtmEvn: '',
 };
 
-export const fetchConf = createAsyncThunk<typeof APP_DEFAULT_CONF, void, { state: State }>(`${SLICE_NAME}/fetchConf`, () => {
-  return axios.request({ baseURL: HOME_URL, url: '/api/v1/conf.json' }).then((res) => res.data);
+
+
+export const fetchConfAction = createAsyncThunk<typeof APP_DEFAULT_CONF, void, { state: State }>(`${SLICE_NAME}/fetchConf`, () => {
+  return getConfRequest()
 });
+
+
 
 const confSlice = createSlice({
   name: SLICE_NAME,
+
 
   initialState: {
     conf: APP_DEFAULT_CONF,
     loading: false,
   },
+
 
   reducers: {
     updateConf: (state, { payload }) => {
@@ -29,16 +36,17 @@ const confSlice = createSlice({
     },
   },
 
+
   extraReducers: (builder) => {
     builder
-      .addCase(fetchConf.pending, (state) => {
+      .addCase(fetchConfAction.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchConf.fulfilled, (state, { payload }) => {
+      .addCase(fetchConfAction.fulfilled, (state, { payload }) => {
         state.conf = payload;
         state.loading = false;
       })
-      .addCase(fetchConf.rejected, (state) => {
+      .addCase(fetchConfAction.rejected, (state) => {
         state.loading = false;
       });
   },

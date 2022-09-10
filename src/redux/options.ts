@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { EQuickTaskTitle } from '../constants/enums';
 import { initQuickAdd } from '../helpers/quickAdd';
-import { fetchTasklist } from './tasklist';
+import { fetchTasklistAction } from './tasklist';
+
 
 
 const APP_DEFAULT_OPTIONS = {
@@ -11,6 +12,8 @@ const APP_DEFAULT_OPTIONS = {
   enableQuickAdd: false,
   quickTaskTitleType: EQuickTaskTitle.SELECTION,
 };
+
+
 
 const optionsSlice = createSlice({
   name: 'options',
@@ -35,7 +38,7 @@ const optionsSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    builder.addCase(fetchTasklist.fulfilled, (state, { payload }) => {
+    builder.addCase(fetchTasklistAction.fulfilled, (state, { payload }) => {
       if (!state.form.quickAddTaskTasklistId && Array.isArray(payload.value) && payload.value.length) {
         const firstTasklist = payload.value[0];
         state.form.quickAddTaskTasklistId = firstTasklist.id;

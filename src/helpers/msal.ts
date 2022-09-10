@@ -11,6 +11,8 @@ import { ErrorCode } from '../constants/enums';
 import AppError from './error';
 import { logger } from './logger';
 
+
+
 const DEFAULT_MSAL_CONF: Configuration = {
   auth: {
     clientId: MSAL_CLIENT_ID,
@@ -24,11 +26,15 @@ const DEFAULT_MSAL_CONF: Configuration = {
 };
 const msalInstance = new PublicClientApplication(DEFAULT_MSAL_CONF);
 
+
+
 const serializeAuthenticationResult = (res: AuthenticationResult): SerializAuthenticationResult => ({
   ...res,
   expiresOn: new Date(res.expiresOn).getTime(),
   extExpiresOn: new Date(res.extExpiresOn).getTime(),
 });
+
+
 
 /**
  * 清空登录态
@@ -38,6 +44,10 @@ const clearAccount = () => {
   chrome.storage.sync.clear();
 };
 
+
+/**
+ * 
+ */
 async function getLoginUrl(request?: RedirectRequest): Promise<string> {
   return new Promise((resolve, reject) => {
     msalInstance
@@ -54,6 +64,7 @@ async function getLoginUrl(request?: RedirectRequest): Promise<string> {
       });
   });
 }
+
 
 /**
  * Generates an acquire token url
@@ -75,35 +86,7 @@ async function getAcquireTokenUrl(request: RedirectRequest): Promise<string> {
   });
 }
 
-/**
- * Generates a login url
- */
-async function launchWebAuthFlow(url: string, type: string): Promise<SerializAuthenticationResult | void> {
-  return new Promise((resolve, reject) => {
-    chrome.identity.launchWebAuthFlow(
-      {
-        url,
-        interactive: true,
-      },
-      (responseUrl) => {
-        if (chrome.runtime.lastError) {
-          clearAccount();
-          reject(new AppError({ code: ErrorCode.LAUNCH_WEB_AUTH_FLOW, message: `type: ${type} ${chrome.runtime.lastError.message}` }));
-        }
 
-        if (responseUrl && responseUrl.includes('#')) {
-          msalInstance
-            .handleRedirectPromise(`#${responseUrl.split('#')[1]}`)
-            .then((res) => resolve(serializeAuthenticationResult(res)))
-            .catch((e) => reject(new AppError({ code: ErrorCode.HANDLE_REDIRECT_PROMISE, message: `type: ${type} ${e}` })));
-        } else {
-          // Logout calls
-          resolve();
-        }
-      }
-    );
-  });
-}
 
 /**
  * Generates a logout url
@@ -113,8 +96,6 @@ async function getLogoutUrl(request?: RedirectRequest): Promise<string> {
     msalInstance
       .logoutRedirect({
         ...request,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         onRedirectNavigate: (url) => {
           resolve(url);
           return false;
@@ -126,25 +107,75 @@ async function getLogoutUrl(request?: RedirectRequest): Promise<string> {
   });
 }
 
-export const msalGetAllAccounts = () => msalInstance.getAllAccounts();
 
+/**
+ * Generates a login url
+ */
+async function launchWebAuthFlow(url: string): Promise<SerializAuthenticationResult | void> {
+  return new Promise((resolve, reject) => {
+    chrome.identity.launchWebAuthFlow(
+      {
+        url,
+        interactive: true,
+      },
+      (responseUrl) => {
+        if (chrome.runtime.lastError) {
+          clearAccount();
+          reject(new AppError({ code: ErrorCode.LAUNCH_WEB_AUTH_FLOW, message: chrome.runtime.lastError.message }));
+        }
+
+        if (responseUrl && responseUrl.includes('#')) {
+          msalInstance
+            .handleRedirectPromise(`#${responseUrl.split('#')[1]}`)
+            .then((res) => resolve(serializeAuthenticationResult(res)))
+            .catch((e) => reject(new AppError({ code: ErrorCode.HANDLE_REDIRECT_PROMISE, message: e?.message })));
+        } else {
+          // Logout calls
+          resolve();
+        }
+      }
+    );
+  });
+}
+
+
+
+/**
+ * 
+ */
 export const msalLogin = async () => {
   const loginUrl = await getLoginUrl();
-  return launchWebAuthFlow(loginUrl, 'login') as Promise<SerializAuthenticationResult>;
+  return launchWebAuthFlow(loginUrl) as Promise<SerializAuthenticationResult>;
 };
 
-export const msalAcquireToken = (request: RedirectRequest, silen: boolean) => {
+
+
+/**
+ * 
+ */
+export const msalGetAllAccounts = () => msalInstance.getAllAccounts();
+
+
+
+/**
+ * 
+ */
+export const msalAcquireToken = (request: RedirectRequest) => {
   return msalInstance
     .acquireTokenSilent(request)
     .then((res) => serializeAuthenticationResult(res))
     .catch(async (error) => {
-      if (silen) throw new AppError({ code: ErrorCode.ACQUIRE_TOKEN_SILENT, message: `acquireTokenSilent: silen ${silen}\n error: ${error}` });
+      logger.warn(`acquireTokenSilent error: ${error}, fallback acquireTokenRedirect`)
       const acquireTokenUrl = await getAcquireTokenUrl(request);
-      return launchWebAuthFlow(acquireTokenUrl, 'acquireToke') as Promise<SerializAuthenticationResult>;
+      return launchWebAuthFlow(acquireTokenUrl) as Promise<SerializAuthenticationResult>;
     });
 };
 
+
+/**
+ * 
+ */
 export const msalLogout = async () => {
   const logoutUrl = await getLogoutUrl();
-  return launchWebAuthFlow(logoutUrl, 'logout') as Promise<void>;
+  return launchWebAuthFlow(logoutUrl) as Promise<void>;
 };

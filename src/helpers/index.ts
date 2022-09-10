@@ -1,6 +1,7 @@
-import { IContentMessage } from '../../types';
 import { DEFAULT_LANG, LANG } from '../constants';
 import { ErrorCode, NotifyType } from '../constants/enums';
+import { store } from '../redux';
+import { acquireTokenAction, loginAction } from '../redux/auth';
 import AppError from './error';
 
 export const openUrl = (options: chrome.tabs.CreateProperties) =>
@@ -39,6 +40,20 @@ export const getActiveTab = (): Promise<chrome.tabs.Tab> =>
     });
   });
 
+
+
+
+/**
+ * 
+ */
+export interface IContentMessage {
+  type: EContentMessage;
+  payload?: any;
+}
+export enum EContentMessage {
+  CURSOR_LOADING,
+  CURSOR_RESET,
+}
 export const sendMessageToActiveTab = (msg: IContentMessage): Promise<chrome.tabs.Tab> => {
   return getActiveTab().then((tab) => {
     return new Promise((resolve, reject) => {
@@ -51,6 +66,14 @@ export const sendMessageToActiveTab = (msg: IContentMessage): Promise<chrome.tab
   });
 };
 
-export const getI18nText = (name: string): string => chrome.i18n.getMessage(name);
 
 export const getI18nConf = (conf: Record<string, string>) => conf[LANG] || conf[DEFAULT_LANG] || (typeof conf === 'string' ? conf : '');
+
+
+/**
+ * 
+ */
+export const makeAuthHeader = async () => {
+  const { accessToken } = await store.dispatch(acquireTokenAction()).unwrap()
+  return { Authorization: `Bearer ${accessToken}` }
+}

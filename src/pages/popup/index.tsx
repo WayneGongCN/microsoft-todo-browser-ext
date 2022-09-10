@@ -6,7 +6,7 @@ import Container from '@mui/material/Container';
 import { Provider } from 'react-redux';
 import { loadTheme } from '../../themes';
 import { PersistGate } from 'redux-persist/es/integration/react';
-import { fetchConf } from '../../redux/conf';
+import { fetchConfAction } from '../../redux/conf';
 import { initReport } from '../../helpers/report';
 import { initPageTitle } from '../../helpers/pageTitle';
 import './../../styles/style.css';
@@ -29,7 +29,7 @@ render(
 
 const init = () => {
   initPageTitle();
-  store.dispatch(fetchConf()).then((res) => {
+  store.dispatch(fetchConfAction()).then((res) => {
     const { payload } = res;
     initReport(Page.POPUP, payload as State['conf']['conf']);
   });

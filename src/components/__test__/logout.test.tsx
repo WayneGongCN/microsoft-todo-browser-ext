@@ -2,7 +2,7 @@
 import React from 'react';
 import snapshotRender from 'react-test-renderer';
 import { useSelector } from 'react-redux';
-import { logout } from '../../redux/auth';
+import { logoutAction } from '../../redux/auth';
 import { cleanup, fireEvent, screen, render as domRender } from '@testing-library/react';
 import Logout from '../Logout';
 
@@ -12,6 +12,8 @@ jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
   useDispatch: () => jest.fn(),
 }));
+
+
 
 describe('Snapshot test', () => {
   test('normal', () => {
@@ -29,9 +31,12 @@ describe('Snapshot test', () => {
   });
 });
 
+
+
 jest.mock('../../redux/auth', () => ({ logout: jest.fn() }));
 describe('Event test', () => {
   afterEach(cleanup);
+
 
   test('Click button', () => {
     // @ts-ignore
@@ -42,8 +47,9 @@ describe('Event test', () => {
     fireEvent.click(button);
 
     // @ts-ignore
-    expect(logout.mock.calls.length).toEqual(1);
+    expect(logoutAction.mock.calls.length).toEqual(1);
   });
+
 
   test('Click button on loading', () => {
     // @ts-ignore
@@ -54,6 +60,6 @@ describe('Event test', () => {
     fireEvent.click(button);
 
     // @ts-ignore
-    expect(logout.mock.calls.length).toEqual(0);
+    expect(logoutAction.mock.calls.length).toEqual(0);
   });
 });

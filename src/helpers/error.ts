@@ -1,7 +1,15 @@
-import { SerializError } from '../../types';
 import { ErrorCode } from '../constants/enums';
 import { logger } from './logger';
 import { report } from './report';
+
+
+export interface SerializError {
+  code: ErrorCode;
+  message: string;
+  stack: string;
+  time: number;
+}
+
 
 export default class AppError extends Error {
   code: ErrorCode;
