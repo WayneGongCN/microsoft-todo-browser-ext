@@ -2,31 +2,22 @@
 const packageJson = require('../package.json');
 
 module.exports = {
-  // version
   manifest_version: 3,
   version: packageJson.version,
-
-  // 基本信息
   name: '__MSG_extensionName__',
   description: '__MSG_extensionDescription__',
   default_locale: 'en',
 
-  // 权限
-  permissions: ['identity', 'tabs', 'contextMenus', 'notifications', 'storage'],
+  permissions: ['identity', 'tabs', 'notifications', 'storage'],
 
-  // background
+  options_page: 'options.html',
+  action: {
+    default_popup: 'popup.html',
+  },
   background: {
     service_worker: 'background.js'
   },
 
-  // options
-  options_page: 'options.html',
-
-  action: {
-    default_popup: 'popup.html',
-  },
-
-  // content
   content_scripts: [
     {
       matches: ['<all_urls>'],
