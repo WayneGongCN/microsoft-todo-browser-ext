@@ -4,14 +4,14 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../redux';
-import { logout } from '../redux/auth';
+import { logoutAction } from '../redux/auth';
 
 const Logout: React.FC = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state: State) => state.auth.loading);
 
   const handleLogout = useCallback(() => {
-    dispatch(logout());
+    dispatch(logoutAction());
   }, []);
 
   return (

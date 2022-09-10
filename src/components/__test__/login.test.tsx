@@ -3,7 +3,7 @@ import React from 'react';
 import snapshotRender from 'react-test-renderer';
 import Login from '../Login';
 import { useSelector } from 'react-redux';
-import { login } from '../../redux/auth';
+import { loginAction } from '../../redux/auth';
 import { cleanup, fireEvent, screen, render as domRender } from '@testing-library/react';
 
 
@@ -42,7 +42,7 @@ describe('Event test', () => {
     fireEvent.click(button);
 
     // @ts-ignore
-    expect(login.mock.calls.length).toEqual(1);
+    expect(loginAction.mock.calls.length).toEqual(1);
   });
 
   test('Click button on loading', () => {
@@ -54,6 +54,6 @@ describe('Event test', () => {
     fireEvent.click(button);
 
     // @ts-ignore
-    expect(login.mock.calls.length).toEqual(0);
+    expect(loginAction.mock.calls.length).toEqual(0);
   });
 });

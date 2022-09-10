@@ -1,7 +1,8 @@
-import { IPopupForm } from '../../types';
-import { ETARGET, TimeZone } from './enums';
+import { ETARGET } from './enums';
 import { repository } from '../../package.json';
 import { LNAG_QUICK_ADD_TASK } from './lang';
+import { TimeZone } from '../api/createTask';
+
 
 export const NODE_ENV = process.env.NODE_ENV;
 export const EXT_ID = chrome.runtime.id;
@@ -15,22 +16,26 @@ export const MSAL_CLIENT_ID_MAP = {
   [ETARGET.FIREFOX]: process.env.FIREFOX_CLIENT_ID,
 };
 export const MSAL_CLIENT_ID = MSAL_CLIENT_ID_MAP[ETARGET.CHROME];
+export const AUTH_SCOPES = ['profile', 'Tasks.ReadWrite'];
+
 
 export const HOME_URL = 'https://ms-todo.com'
-export const API_BASE_URL = 'https://graph.microsoft.com/v1.0';
-export const AUTH_SCOPES = ['profile', 'Tasks.ReadWrite'];
-export const API_TIME_OUT = 1000 * 60;
-
 export const REPOSITORY = repository;
 export const OPTIONS_PAGE_URL = `chrome-extension://${EXT_ID}/options.html`;
 export const ISSUE_URL = `${REPOSITORY}/issues/new`;
 export const RATE_URL = `https://chrome.google.com/webstore/detail/microsoft-to-do-browser-e/${EXT_ID}/reviews`;
 
+
+export const API_BASE_URL = 'https://graph.microsoft.com/v1.0';
+export const API_TIME_OUT = 1000 * 60;
+
+
 export const NOTIFICATION_ICON_URL = `chrome-extension://${EXT_ID}/icons/todo-128.png`;
 export const NOTIFICATION_TYPE = 'basic';
 export const TIME_ZONE = new Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZone;
 
-export const DEFAULT_FORM_VALS: IPopupForm = {
+
+export const DEFAULT_FORM_POPUP = {
   title: '',
   describe: '',
   tasklistId: '',
@@ -38,9 +43,10 @@ export const DEFAULT_FORM_VALS: IPopupForm = {
   bookmark: true,
   dateTime: '',
 };
+export type PopupForm = typeof DEFAULT_FORM_POPUP
 
 
-export const QUICK_ADD_MENU_ITEMS = [
+export const CONTENT_MENU_ITEMS = [
   {
     id: 'QUICK_ADD',
     title: LNAG_QUICK_ADD_TASK,

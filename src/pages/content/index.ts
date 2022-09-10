@@ -1,6 +1,6 @@
-import { IContentMessage } from '../../../types';
 import { EXT_ID } from '../../constants';
-import { EContentMessage, ErrorCode } from '../../constants/enums';
+import {  ErrorCode } from '../../constants/enums';
+import { EContentMessage, IContentMessage } from '../../helpers';
 import AppError from '../../helpers/error';
 import '../../styles/content.css';
 

@@ -1,20 +1,9 @@
 import Grid from '@mui/material/Grid';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { HOME_URL } from '../../../constants';
+import { BadgeConf, getBadgesRequest } from '../../../api/getBadges';
 import { getI18nConf } from '../../../helpers';
 
-interface BadgeConf {
-  name: string;
-  img: Record<string, string>;
-  url: Record<string, string>;
-}
 
-/**
- *
- * @returns
- */
-export const fetchBadges = () => axios.request<BadgeConf[]>({ baseURL: HOME_URL, url: '/api/v1/badges.json' });
 
 /**
  *
@@ -23,10 +12,9 @@ export const fetchBadges = () => axios.request<BadgeConf[]>({ baseURL: HOME_URL,
 const Badges: React.FC = () => {
   const [badges, setBadges] = useState<BadgeConf[]>([]);
   useEffect(() => {
-    fetchBadges().then((res) => {
-      setBadges(res.data);
-    });
+    getBadgesRequest().then(setBadges);
   }, []);
+
 
   return (
     <>

@@ -1,12 +1,13 @@
 import { store } from '../redux';
-import { createTask } from '../redux/task';
-import { fetchTasklist } from '../redux/tasklist';
+import { createTaskAction } from '../redux/task';
+import { fetchTasklistAction } from '../redux/tasklist';
 import { LNAG_UNTITLE } from '../constants/lang';
-import { sendMessageToActiveTab } from '.';
-import { EContentMessage, EQuickTaskTitle, ErrorCode } from '../constants/enums';
-import { QUICK_ADD_MENU_ITEMS } from '../constants';
+import { EContentMessage, sendMessageToActiveTab } from '.';
+import {  EQuickTaskTitle, ErrorCode } from '../constants/enums';
+import { CONTENT_MENU_ITEMS } from '../constants';
 import optionsSlice from '../redux/options';
 import AppError from './error';
+
 
 let eventInit = false;
 const initEvent = () => {
@@ -26,7 +27,7 @@ const initEvent = () => {
 
     let { quickAddTaskTasklistId } = options.form;
     if (!quickAddTaskTasklistId) {
-      await store.dispatch(fetchTasklist());
+      await store.dispatch(fetchTasklistAction());
       quickAddTaskTasklistId = store.getState().tasklist.lists[0]?.id;
       store.dispatch(optionsSlice.actions.updateForm({ quickAddTaskTasklistId }));
     }
@@ -34,25 +35,29 @@ const initEvent = () => {
     sendMessageToActiveTab({ type: EContentMessage.CURSOR_LOADING });
     store
       .dispatch(
-        createTask({
+        createTaskAction({
           title: taskTitle,
           describe: selectionText || '',
           bookmark: true,
           tasklistId: quickAddTaskTasklistId,
+          importance: false,
+          dateTime: ''
         })
       )
       .finally(() => sendMessageToActiveTab({ type: EContentMessage.CURSOR_RESET }));
   });
 };
 
+
 const createMenu = () => {
-  QUICK_ADD_MENU_ITEMS.forEach((item) => {
+  CONTENT_MENU_ITEMS.forEach((item) => {
     chrome.contextMenus.create(item, () => {
       const lastError = chrome.runtime.lastError;
       if (lastError) throw new AppError({ code: ErrorCode.CREATE_MENU, message: lastError.message });
     });
   });
 };
+
 
 export const initQuickAdd = () => {
   return

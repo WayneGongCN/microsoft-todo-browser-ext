@@ -38,7 +38,7 @@ import {
 } from '../../../constants/lang';
 import { OPTIONS_PAGE_URL } from '../../../constants';
 import popupSlice from '../../../redux/popup';
-import { createTask } from '../../../redux/task';
+import { createTaskAction } from '../../../redux/task';
 
 const TaskForm: React.FC = () => {
   const dispatch = useDispatch<Dispatch>();
@@ -80,7 +80,7 @@ const TaskForm: React.FC = () => {
   const submit = useCallback(
     (val, err) => {
       logger.log('submit', val, err);
-      dispatch(createTask(val)).then(() => {
+      dispatch(createTaskAction(val)).then(() => {
         autoResetPopup && handleReset();
       });
     },

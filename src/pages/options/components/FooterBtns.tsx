@@ -1,22 +1,8 @@
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import { HOME_URL } from '../../../constants';
+import { ButtonConf, getButtonsRequest } from '../../../api/getButtons';
 import { getI18nConf, openUrl } from '../../../helpers';
-
-interface ButtonConf {
-  name: string;
-  text: Record<string, string>;
-  url: Record<string, string>;
-  props: any;
-}
-
-/**
- *
- * @returns
- */
-const fetchBtnConf = () => axios.request({ baseURL: HOME_URL, url: '/api/v1/optionFooterButtons.json' });
 
 /**
  *
@@ -25,9 +11,7 @@ const fetchBtnConf = () => axios.request({ baseURL: HOME_URL, url: '/api/v1/opti
 const FooterBtns: React.FC = () => {
   const [btns, setBtns] = useState<ButtonConf[]>([]);
   useEffect(() => {
-    fetchBtnConf().then((res) => {
-      setBtns(res.data);
-    });
+    getButtonsRequest().then(setBtns);
   }, []);
 
   const handleBtnClick = useCallback((btn) => {
