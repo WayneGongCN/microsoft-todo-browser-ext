@@ -8,12 +8,8 @@ const callbackMap: Record<string, (params: unknown) => void> = {
   [MessageType.GET_SELECTION_TEXT]: () => window.getSelection().toString(),
 };
 
-<<<<<<< Updated upstream
-chrome.runtime.onMessage.addListener((message: IContentMessage, sender, sendResponse) => {
-=======
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
->>>>>>> Stashed changes
   const { id } = sender;
   if (id !== EXT_ID) return;
 
