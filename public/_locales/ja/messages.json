@@ -20,11 +20,9 @@
   "openMSTODO": {
     "message": "Microsoftで開くToDo"
   },
-
   "optionPage": {
     "message": "設定"
   },
-  
   "popupTitleText": {
     "message": "タスクタイトル"
   },
@@ -73,44 +71,46 @@
   "loginTip": {
     "message": "サインインしてください"
   },
-
-  "optionsEnableQuickAdd": {
-    "message": "「ToDo をすばやく作成する」機能を有効にする"
+  "optionsEnableKeepLastTasklist": {
+    "message": "前回使用したタスクリストを覚えておいてください"
   },
-  "optionsEnableQuickAddHelp": {
-    "message": "「ToDo をすばやく作成する」は、選択したコンテンツを指定したタスクリストにすばやく追加できる右クリックメニュー項目です。"
+  "optionsEnableKeepLastTasklistHelp": {
+    "message": "開いた後、プラグインはデフォルトで最後のタスクが追加されたときに使用されるタスクリストを選択します"
   },
-  "optionsQuickAddTasklist": {
-    "message": "「ToDo をすばやく作成する」デフォルトのタスクリスト"
+  "optionsDefaultTasklist": {
+    "message": "デフォルトのタスクリスト"
   },
-  "optionsQuickAddTasklistHelp": {
-    "message": "「ToDo をすばやく作成する」を使用すると、選択したタスクリストにタスクが追加されます"
+  "optionsDefaultTasklistHelp": {
+    "message": "プラグインは常にデフォルトのタスクリスト設定を選択します"
   },
-  "optionsQuickAddTitle": {
-    "message": "「ToDo をすばやく作成する」のデフォルトタイトル"
+  "optionsEnableAutoFill": {
+    "message": "自動充填を開きます"
   },
-  "optionsQuickAddTitleSelection": {
-    "message": "選択したコンテンツをタスクタイトルとして使用する"
+  "optionsEnableForceFill": {
+    "message": "強制充填"
   },
-  "optionsQuickAddTitleTabTitle": {
-    "message": "現在のページのタイトルをタスクのタイトルとして使用します"
+  "optionsEnableForceFillHelp": {
+    "message": "耐久性のある充填がオンになった後、準備されていないタスク（番号 *番号の提出ボタン）がある場合でも、現在のフォームのコンテンツがカバーされます"
   },
-  "optionsQuickAddTitleHelp": {
-    "message": "選択したコンテンツがタスクのタイトルとして使用され、130文字を超えるタイトルは...で省略されます"
+  "optionsEnableAutoFillHelp": {
+    "message": "自動充填をオンにした後、プラグインは現在の選択されたコンテンツをフォームに自動的に埋めます"
+  },
+  "optionsAutoFillMode": {
+    "message": "塗りつぶしモード"
+  },
+  "optionsAutoFillModeHelp": {
+    "message": "塗りつぶしモードは、方法に従って埋めるプラグインを指定できます"
+  },
+  "optionsAutoFillTitle": {
+    "message": "選択したコンテンツを「タイトル」に記入してください"
+  },
+  "optionsAutoFillDesc": {
+    "message": "選択したコンテンツを「説明」に記入します"
   },
   "optionsEnableAutoReset": {
     "message": "自動的に空に"
   },
   "optionsEnableAutoResetHelp": {
     "message": "タスクが正常に作成されると、現在のフォームの内容が自動的にクリアされます。"
-  },
-  "optionsReportIssue": {
-    "message": "提案とフィードバック"
-  },
-  "optionsRateExtension": {
-    "message": "評価プラグイン"
-  },
-  "translateTip": {
-    "message": "一部の言語は機械翻訳されている場合があります。エラーがある場合は、作成者に連絡してください。 このソフトウェアはオープンソースソフトウェアです。誰からの貢献も歓迎します。"
   }
 }

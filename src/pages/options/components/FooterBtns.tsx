@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ButtonConf, getButtonsRequest } from '../../../api/getButtons';
+import { OptionPageFooterButton, getButtonsRequest } from '../../../api/getButtons';
 import { getI18nConf, openUrl } from '../../../helpers';
 
 /**
@@ -9,23 +9,26 @@ import { getI18nConf, openUrl } from '../../../helpers';
  * @returns
  */
 const FooterBtns: React.FC = () => {
-  const [btns, setBtns] = useState<ButtonConf[]>([]);
+  const [btns, setBtns] = useState<OptionPageFooterButton[]>([]);
   useEffect(() => {
     getButtonsRequest().then(setBtns);
   }, []);
 
-  const handleBtnClick = useCallback((btn) => {
-    const url = getI18nConf(btn.url);
+
+  const handleBtnClick = useCallback((btn: OptionPageFooterButton) => {
+    const url = getI18nConf(btn.link);
     url && openUrl({ url });
   }, []);
+
 
   return (
     <>
       {btns.map((x) => {
+        const { name, content, props } = x
         return (
-          <Grid item key={x.name}>
-            <Button id={`options-btn-${x.name}`} onClick={() => handleBtnClick(x)} {...x.props}>
-              {getI18nConf(x.text)}
+          <Grid item key={name}>
+            <Button onClick={() => handleBtnClick(x)} {...props}>
+              {getI18nConf(content)}
             </Button>
           </Grid>
         );

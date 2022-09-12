@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { persistReducer } from 'redux-persist';
 import { State } from '.';
 import { getConfRequest } from '../api/getConf';
+import { getPersistConf } from '../helpers';
 
 
 
@@ -52,5 +54,8 @@ const confSlice = createSlice({
   },
 });
 
+
+const persistConfig = getPersistConf({ key: 'conf' })
+export const persistConfReducer = persistReducer(persistConfig, confSlice.reducer)
 
 export default confSlice;

@@ -8,6 +8,8 @@ import { AuthenticationResult, Configuration, PublicClientApplication, RedirectR
 import { SerializAuthenticationResult } from '../../types';
 import { MSAL_CLIENT_ID } from '../constants';
 import { ErrorCode } from '../constants/enums';
+import { store } from '../redux';
+import { acquireTokenAction } from '../redux/auth';
 import AppError from './error';
 import { logger } from './logger';
 
@@ -179,3 +181,13 @@ export const msalLogout = async () => {
   const logoutUrl = await getLogoutUrl();
   return launchWebAuthFlow(logoutUrl) as Promise<void>;
 };
+
+
+
+/**
+ * 
+ */
+ export const makeAuthHeader = async () => {
+  const { accessToken } = await store.dispatch(acquireTokenAction()).unwrap()
+  return { Authorization: `Bearer ${accessToken}` }
+}

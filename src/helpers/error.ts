@@ -18,8 +18,8 @@ export default class AppError extends Error {
   /**
    * 优先使用传入的 error message
    */
-  constructor({ code, message }: { code: ErrorCode; message?: string }) {
-    super(message || 'UNKNOW');
+  constructor({ code, message }: { code: ErrorCode; message?: string }, public e?: Error) {
+    super(message || e?.message || 'UNKNOW');
     this.time = Date.now();
     this.code = code;
 
@@ -30,8 +30,8 @@ export default class AppError extends Error {
   serializ(): SerializError {
     return {
       code: this.code,
-      message: this.message,
-      stack: this.stack,
+      message: this.message || this.e?.message || 'UNKNOW',
+      stack: this.e?.stack || this.stack,
       time: this.time,
     };
   }

@@ -54,7 +54,7 @@ export const createTaskAction = createAsyncThunk<CreateTaskResult, PopupForm>('t
     return res;
   })
     .catch((e) => {
-      rejectWithValue(e?.serializ());
+      rejectWithValue(e);
       return Promise.reject(e);
     });
 });
@@ -65,8 +65,7 @@ const taskSlice = createSlice({
   name: 'task',
 
   initialState: {
-    tasks: {} as Record<string, CreateTaskResult[]>,
-    creating: false,
+    loading: false,
     error: null,
   },
 
@@ -76,13 +75,13 @@ const taskSlice = createSlice({
     builder
       // createTask
       .addCase(createTaskAction.pending, (state) => {
-        state.creating = true;
+        state.loading = true;
       })
       .addCase(createTaskAction.fulfilled, (state) => {
-        state.creating = false;
+        state.loading = false;
       })
       .addCase(createTaskAction.rejected, (state) => {
-        state.creating = false;
+        state.loading = false;
       });
   },
 });

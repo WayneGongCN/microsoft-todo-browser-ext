@@ -1,10 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { State } from '.';
 import { msalAcquireToken, msalLogin, msalLogout } from '../helpers/msal';
 import { AUTH_SCOPES } from '../constants';
 import { SerializAuthenticationResult } from '../../types';
 import { ErrorCode } from '../constants/enums';
 import { logger } from '../helpers/logger';
+import { persistReducer } from 'redux-persist';
+import { getPersistConf } from '../helpers';
+import { State } from '.';
 
 
 
@@ -35,7 +37,7 @@ export const acquireTokenAction = createAsyncThunk<SerializAuthenticationResult,
     let account = getState().auth.authenticationResult?.account;
     if (!account) {
       logger.warn('Not found account, fallback to login')
-      account =  await (await dispatch(loginAction()).unwrap()).account;
+      account = await (await dispatch(loginAction()).unwrap()).account;
     }
 
     return msalAcquireToken({ scopes: AUTH_SCOPES, account });
@@ -114,5 +116,12 @@ const authSlice = createSlice({
       });
   },
 });
+
+
+
+
+const persistConfig = getPersistConf({ key: 'auth', whitelist: ['authenticationResult'] })
+export const persistAuthReducer = persistReducer(persistConfig, authSlice.reducer)
+
 
 export default authSlice;

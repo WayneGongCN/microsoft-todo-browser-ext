@@ -11,8 +11,6 @@ export interface BadgeConf {
 /**
  * 
  */
-export const getBadgesRequest = async () => {
-  return request
-    .request<BadgeConf[]>({ baseURL: HOME_URL, url: '/api/v1/badges.json' })
-    .then((res) => res.data);
+export const getBadgesRequest = async (): Promise<BadgeConf[]> => {
+  return request(`${HOME_URL}/api/v1/badges.json`)
 }

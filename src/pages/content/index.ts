@@ -1,25 +1,27 @@
 import { EXT_ID } from '../../constants';
-import {  ErrorCode } from '../../constants/enums';
-import { EContentMessage, IContentMessage } from '../../helpers';
+import { ErrorCode } from '../../constants/enums';
+import { MessageType } from '../../helpers';
 import AppError from '../../helpers/error';
-import '../../styles/content.css';
 
-const CURSOR_LOADING_CLASS = 'cursor--loading';
 
 const callbackMap: Record<string, (params: unknown) => void> = {
-  [EContentMessage.CURSOR_LOADING]: () => document.body.classList.add(CURSOR_LOADING_CLASS),
-  [EContentMessage.CURSOR_RESET]: () => document.body.classList.remove(CURSOR_LOADING_CLASS),
+  [MessageType.GET_SELECTION_TEXT]: () => window.getSelection().toString(),
 };
 
+<<<<<<< Updated upstream
 chrome.runtime.onMessage.addListener((message: IContentMessage, sender, sendResponse) => {
+=======
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+>>>>>>> Stashed changes
   const { id } = sender;
   if (id !== EXT_ID) return;
 
   const { type, payload } = message;
   try {
-    sendResponse({ type, payload: callbackMap[type](payload) });
+    sendResponse({ payload: callbackMap[type](payload) });
   } catch (e) {
     const error = new AppError({ code: ErrorCode.UNKNOW, message: e?.message });
-    sendResponse({ type, error });
+    sendResponse({ error });
   }
 });

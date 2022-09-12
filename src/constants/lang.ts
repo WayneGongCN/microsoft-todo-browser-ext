@@ -30,20 +30,22 @@ export const LANG_OPEN_OPTIONS_PAGE_TOOLTIP = chrome.i18n.getMessage('openOption
 /**
  * Options
  */
-export const LANG_OPTIONS_ENABLE_QUICK_ADD = chrome.i18n.getMessage('optionsEnableQuickAdd');
-export const LANG_OPTIONS_ENABLE_QUICK_ADD_HELP = chrome.i18n.getMessage('optionsEnableQuickAddHelp');
+export const LANG_OPTIONS_ENABLE_KEEPLAST_TASKLIST = chrome.i18n.getMessage('optionsEnableKeepLastTasklist')
+export const LANG_OPTIONS_ENABLE_KEEPLAST_TASKLIST_HELP = chrome.i18n.getMessage('optionsEnableKeepLastTasklistHelp')
 
-export const LANG_OPTIONS_QUICK_ADD_TASKLIST = chrome.i18n.getMessage('optionsQuickAddTasklist');
-export const LANG_OPTIONS_QUICK_ADD_TASKLIST_HELP = chrome.i18n.getMessage('optionsQuickAddTasklistHelp');
+export const LANG_OPTIONS_DEFAULT_TASKLIST = chrome.i18n.getMessage('optionsDefaultTasklist')
+export const LANG_OPTIONS_DEFAULT_TASKLIST_HELP = chrome.i18n.getMessage('optionsDefaultTasklistHelp')
 
-export const LANG_OPTIONS_QUICK_ADD_TITLE = chrome.i18n.getMessage('optionsQuickAddTitle');
-export const LANG_OPTIONS_QUICK_ADD_TITLE_SELECTION = chrome.i18n.getMessage('optionsQuickAddTitleSelection');
-export const LANG_OPTIONS_QUICK_ADD_TITLE_TAB_TITLE = chrome.i18n.getMessage('optionsQuickAddTitleTabTitle');
-export const LANG_OPTIONS_QUICK_ADD_TITLE_HELP = chrome.i18n.getMessage('optionsQuickAddTitleHelp');
+export const LANG_OPTIONS_ENABLE_AUTO_PADDING = chrome.i18n.getMessage('optionsEnableAutoFill')
+export const LANG_OPTIONS_ENABLE_FORCE_PADDING = chrome.i18n.getMessage('optionsEnableForceFill')
+export const LANG_OPTIONS_ENABLE_FORCE_PADDING_HELP = chrome.i18n.getMessage('optionsEnableForceFillHelp')
+export const LANG_OPTIONS_ENABLE_AUTO_PADDING_HELP = chrome.i18n.getMessage('optionsEnableAutoFillHelp')
+
+export const LANG_OPTIONS_AUTO_PADDING_MODE = chrome.i18n.getMessage('optionsAutoFillMode')
+export const LANG_OPTIONS_AUTO_PADDING_TITLE = chrome.i18n.getMessage('optionsAutoFillTitle')
+export const LANG_OPTIONS_AUTO_PADDING_DESC = chrome.i18n.getMessage('optionsAutoFillDesc')
+export const LANG_OPTIONS_AUTO_PADDING_MODE_HELP = chrome.i18n.getMessage('optionsAutoFillModeHelp')
+
 
 export const LANG_OPTIONS_ENABLE_AUTO_RESET = chrome.i18n.getMessage('optionsEnableAutoReset');
 export const LANG_OPTIONS_ENABLE_AUTO_RESET_HELP = chrome.i18n.getMessage('optionsEnableAutoResetHelp');
-
-export const LANG_TRANSLATE_TIP = chrome.i18n.getMessage('translateTip');
-export const LANG_OPTIONS_ISSUE = chrome.i18n.getMessage('optionsReportIssue');
-export const LANG_OPTIONS_RATE = chrome.i18n.getMessage('optionsRateExtension');

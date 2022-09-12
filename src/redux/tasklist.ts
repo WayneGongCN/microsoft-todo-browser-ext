@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { persistReducer } from 'redux-persist';
 import { getTodolistsRequest, ITodolistsResult } from '../api/getTodolists';
+import { getPersistConf } from '../helpers';
 
-/**
- * 获取 Tasklist 列表
- */
+
+
 export const fetchTasklistAction = createAsyncThunk<ITodolistsResult>('task/fetTasklist', (_, { rejectWithValue }) => {
   return getTodolistsRequest().catch((e) => rejectWithValue(e.serializ()))
 });
@@ -22,9 +23,11 @@ const tasklistSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      // getTasklist
+      /**
+       * getTasklist
+       */
       .addCase(fetchTasklistAction.pending, (state) => {
-        state.loading = true;
+        state.loading = !state.lists.length;
       })
       .addCase(fetchTasklistAction.fulfilled, (state, { payload }) => {
         state.lists = payload.value;
@@ -36,5 +39,10 @@ const tasklistSlice = createSlice({
       });
   },
 });
+
+
+
+const persistConfig = getPersistConf({ key: 'tasklist', whitelist: ['lists'] })
+export const persistTasklistReducer = persistReducer(persistConfig, tasklistSlice.reducer)
 
 export default tasklistSlice;

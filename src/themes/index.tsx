@@ -1,6 +1,7 @@
 import { lazy } from "react";
-import { EThemes, Page } from "../constants/enums";
-import { now, timing, initReport } from "../helpers/report";
+import { EThemes } from "../constants/enums";
+import { now, timing } from "../helpers/report";
+
 
 /**
  * 异步加载 Theme

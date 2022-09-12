@@ -1,14 +1,10 @@
-import axios from 'axios';
-import { API_BASE_URL, API_TIME_OUT } from '../constants';
+const request = <T>(url: string, options: RequestInit = {}): Promise<T> => {
+  options.headers = { 'content-type': 'application/json', ...(options.headers || null) }
 
+  return fetch(url, options).then(res => {
+    if (res.ok) return res.json()
+    throw res
+  })
+}
 
-/**
- * 
- */
-const request = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: API_TIME_OUT,
-});
-
-
-export default request;
+export default request
