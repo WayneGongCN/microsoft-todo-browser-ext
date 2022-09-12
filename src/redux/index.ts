@@ -1,34 +1,39 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authSlice from './auth';
+import { persistAuthReducer } from './auth';
 import { createLogger } from 'redux-logger';
 import taskSlice from './task';
+<<<<<<< Updated upstream
 import tasklistSlice from './tasklist';
 import popupSlice from './popup';
 import optionsSlice from './options';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import { onPresistReady } from '../helpers/persist';
 import confSlice from './conf';
+=======
+import { persistTasklistReducer } from './tasklist';
+import { persistPopupReducer } from './popup';
+import { persistOptionsReducer } from './options';
+import { persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import { persistConfReducer } from './conf';
+import { storage } from '../helpers';
+import { ENABLE_DEBUG, EXT_VER_NUM } from '../constants';
+>>>>>>> Stashed changes
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import createChromeStorage from 'redux-persist-chrome-storage'
 
 
-
-const storage = createChromeStorage(chrome, 'sync');
 const rootReducer = {
-  conf: confSlice.reducer,
   task: taskSlice.reducer,
-  tasklist: tasklistSlice.reducer,
-  popup: persistReducer({ key: 'popup', storage }, popupSlice.reducer),
-  auth: persistReducer({ key: 'auth', storage }, authSlice.reducer),
-  options: persistReducer({ key: 'options', storage }, optionsSlice.reducer),
+  conf: persistConfReducer,
+  options: persistOptionsReducer,
+  tasklist: persistTasklistReducer,
+  popup: persistPopupReducer,
+  auth: persistAuthReducer,
 };
 
 
 
 export const store = configureStore({
-  devTools: true,
+  devTools: ENABLE_DEBUG,
   reducer: rootReducer,
 
   middleware: (getDefaultMiddleware) => {

@@ -1,142 +1,196 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { Dispatch, State } from '../../../redux';
-import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
-import FormLabel from '@mui/material/FormLabel';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Grid';
+import { TextField, MenuItem, FormControl } from '@mui/material';
 import TasklistSelect from '../../../components/TasklistSelect';
 import { now, timing } from '../../../helpers/report';
-import { EQuickTaskTitle } from '../../../constants/enums';
+import optionsSlice, { FillMode } from '../../../redux/options';
 import {
   LANG_LOGIN_TIP,
+  LANG_OPTIONS_AUTO_PADDING_DESC,
+  LANG_OPTIONS_AUTO_PADDING_MODE,
+  LANG_OPTIONS_AUTO_PADDING_MODE_HELP,
+  LANG_OPTIONS_AUTO_PADDING_TITLE,
+  LANG_OPTIONS_DEFAULT_TASKLIST,
+  LANG_OPTIONS_DEFAULT_TASKLIST_HELP,
+  LANG_OPTIONS_ENABLE_AUTO_PADDING,
+  LANG_OPTIONS_ENABLE_AUTO_PADDING_HELP,
   LANG_OPTIONS_ENABLE_AUTO_RESET,
   LANG_OPTIONS_ENABLE_AUTO_RESET_HELP,
-  LANG_OPTIONS_ENABLE_QUICK_ADD,
-  LANG_OPTIONS_ENABLE_QUICK_ADD_HELP,
-  LANG_OPTIONS_QUICK_ADD_TASKLIST,
-  LANG_OPTIONS_QUICK_ADD_TASKLIST_HELP,
-  LANG_OPTIONS_QUICK_ADD_TITLE,
-  LANG_OPTIONS_QUICK_ADD_TITLE_HELP,
-  LANG_OPTIONS_QUICK_ADD_TITLE_SELECTION,
-  LANG_OPTIONS_QUICK_ADD_TITLE_TAB_TITLE,
+  LANG_OPTIONS_ENABLE_FORCE_PADDING,
+  LANG_OPTIONS_ENABLE_FORCE_PADDING_HELP,
+  LANG_OPTIONS_ENABLE_KEEPLAST_TASKLIST,
+  LANG_OPTIONS_ENABLE_KEEPLAST_TASKLIST_HELP,
 } from '../../../constants/lang';
-import optionsSlice from '../../../redux/options';
+
+
+const PADDING_TYPE_MAP = {
+  [FillMode.TITLE]: LANG_OPTIONS_AUTO_PADDING_TITLE,
+  [FillMode.DESC]: LANG_OPTIONS_AUTO_PADDING_DESC,
+}
+
+
+const mapState = (state: State) => {
+  const { enableAutoFill, enableKeepLastTasklist } = state.options.form;
+  const account = state.auth.authenticationResult?.account;
+
+  return {
+    account,
+    enableAutoFill,
+    enableKeepLastTasklist
+  }
+}
+
 
 const OptionsForm: React.FC = () => {
   const dispatch = useDispatch<Dispatch>();
   const store = useStore<State>();
+  const { enableAutoFill, enableKeepLastTasklist, account } = useSelector(mapState);
 
-  // form
   const defaultValues = useMemo(() => store.getState().options.form, []);
-  const { watch, control, setValue } = useForm({ defaultValues });
+  const { watch, control } = useForm({ defaultValues });
 
-  // redux
   useEffect(() => {
     watch((val) => dispatch(optionsSlice.actions.updateForm(val)));
   }, []);
-
-  // tasklist
-  const account = useSelector((state: State) => state.auth.authenticationResult?.account);
-  const tasklistId = useSelector((state: State) => state.options.form.quickAddTaskTasklistId);
-  useEffect(() => {
-    setValue('quickAddTaskTasklistId', tasklistId);
-  }, [tasklistId]);
 
   useEffect(() => {
     timing('options form rendered', now());
   }, []);
 
-  // render
-  const enableQuickAdd = useSelector((state: State) => state.options.form.enableQuickAdd);
-  const quickAddTaskOptions = useCallback(() => {
-    return enableQuickAdd ? (
-      <>
-        {/* quickAddTaskTasklist */}
-        <Grid item xs={12} lg={12}>
-          <FormControl fullWidth>
-            <Controller
-              name="quickAddTaskTasklistId"
-              control={control}
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              render={({ field: { ref, ...field } }) => <TasklistSelect label={account ? LANG_OPTIONS_QUICK_ADD_TASKLIST : LANG_LOGIN_TIP} {...field} />}
-            />
-            <FormHelperText>{LANG_OPTIONS_QUICK_ADD_TASKLIST_HELP}</FormHelperText>
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} lg={12}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">{LANG_OPTIONS_QUICK_ADD_TITLE}</FormLabel>
-            <Controller
-              name="quickTaskTitleType"
-              control={control}
-              render={({ field }) => (
-                <RadioGroup {...field}>
-                  <FormControlLabel
-                    label={LANG_OPTIONS_QUICK_ADD_TITLE_SELECTION}
-                    value={EQuickTaskTitle.SELECTION}
-                    control={<Radio color="primary" id={`options-quick-add-title-${field.value}`} />}
-                  />
-                  <FormControlLabel
-                    label={LANG_OPTIONS_QUICK_ADD_TITLE_TAB_TITLE}
-                    value={EQuickTaskTitle.ACTIVE_TAB}
-                    control={<Radio color="primary" id={`options-quick-add-title-${field.value}`} />}
-                  />
-                </RadioGroup>
-              )}
-            />
-            <FormHelperText>{LANG_OPTIONS_QUICK_ADD_TITLE_HELP}</FormHelperText>
-          </FormControl>
-        </Grid>
-      </>
-    ) : null;
-  }, [enableQuickAdd]);
-
   return (
-    <Grid container item spacing={4}>
-      {/* Quick add task */}
+    <Grid container item spacing={5}>
+      {/* Tasklist options */}
       <Grid container item xs={12} lg={12} spacing={3}>
-        {/* enableQuickAdd */}
         <Grid item xs={12} lg={12}>
           <Controller
-            name="enableQuickAdd"
+            name="enableKeepLastTasklist"
             control={control}
             render={({ field }) => (
               <FormControlLabel
-                label={LANG_OPTIONS_ENABLE_QUICK_ADD}
-                disabled
-                control={<Switch color="primary" id={`options-quick-add-${field.value}`} {...field} checked={field.value} />}
+                labelPlacement='start'
+                label={LANG_OPTIONS_ENABLE_KEEPLAST_TASKLIST}
+                control={<Switch color="primary" {...field} checked={field.value} />}
               />
             )}
           />
-          <FormHelperText>{LANG_OPTIONS_ENABLE_QUICK_ADD_HELP}</FormHelperText>
+          <FormHelperText variant="outlined">{LANG_OPTIONS_ENABLE_KEEPLAST_TASKLIST_HELP}</FormHelperText>
         </Grid>
-        {quickAddTaskOptions()}
+        {
+          !enableKeepLastTasklist && (
+            <Grid item xs={12} lg={12}>
+              <FormControl >
+                <Controller
+                  name="defaultTasklistId"
+                  control={control}
+                  render={({ field }) => <TasklistSelect size='small' defaultIdx={0} style={{ marginLeft: '1em', width: '20em' }} label={account ? LANG_OPTIONS_DEFAULT_TASKLIST : LANG_LOGIN_TIP} {...field} />}
+                />
+                <FormHelperText>{LANG_OPTIONS_DEFAULT_TASKLIST_HELP}</FormHelperText>
+              </FormControl>
+            </Grid>
+          )
+        }
       </Grid>
 
-      {/* Create task */}
-      <Grid container item xs={12} lg={12}>
+      {/* Auto fill options */}
+      <Grid container item xs={12} lg={12} spacing={3}>
         <Grid item xs={12} lg={12}>
           <Controller
-            name="autoResetPopup"
+            name="enableAutoFill"
             control={control}
             render={({ field }) => (
               <FormControlLabel
-                label={LANG_OPTIONS_ENABLE_AUTO_RESET}
-                control={<Switch color="primary" id={`options-auto-reset-${field.value}`} {...field} checked={field.value} />}
+                labelPlacement='start'
+                label={LANG_OPTIONS_ENABLE_AUTO_PADDING}
+                control={<Switch color="primary" {...field} checked={field.value} />}
               />
             )}
           />
-          <FormHelperText>{LANG_OPTIONS_ENABLE_AUTO_RESET_HELP}</FormHelperText>
+          <FormHelperText variant="outlined">{LANG_OPTIONS_ENABLE_AUTO_PADDING_HELP}</FormHelperText>
         </Grid>
+
+
+        {
+          enableAutoFill && (
+            <>
+              <Grid item xs={12} lg={12}>
+                <Controller
+                  name="enableForceFill"
+                  control={control}
+                  render={({ field }) => (
+                    <FormControlLabel
+                      labelPlacement='start'
+                      label={LANG_OPTIONS_ENABLE_FORCE_PADDING}
+                      control={<Switch color="primary" {...field} checked={field.value} />}
+                    />
+                  )}
+                />
+                <FormHelperText variant="outlined">{LANG_OPTIONS_ENABLE_FORCE_PADDING_HELP}</FormHelperText>
+              </Grid>
+
+              <Grid item xs={12} lg={12}>
+                <FormControl>
+                  <Controller
+                    name="fillMode"
+                    control={control}
+                    render={({ field }) => <TextField label={LANG_OPTIONS_AUTO_PADDING_MODE} size='small' select {...field} style={{ marginLeft: '1em', width: '20em' }}>
+                      {
+                        Object.keys(PADDING_TYPE_MAP).map((value: keyof typeof PADDING_TYPE_MAP) => (
+                          <MenuItem key={value} value={value}>
+                            {PADDING_TYPE_MAP[value]}
+                          </MenuItem>
+                        ))
+                      }
+                    </TextField>}
+                  />
+                  <FormHelperText>{LANG_OPTIONS_AUTO_PADDING_MODE_HELP}</FormHelperText>
+                </FormControl>
+              </Grid>
+            </>
+          )
+        }
       </Grid>
-    </Grid>
+
+      {/* Flag options */}
+      <Grid container item xs={12} lg={12} spacing={3}>
+        <Grid item xs={12} lg={12}>
+          <Controller
+            name="enableResetPopupForm"
+            control={control}
+            render={({ field }) => (
+              <FormControlLabel
+                labelPlacement='start'
+                label={LANG_OPTIONS_ENABLE_AUTO_RESET}
+                control={<Switch color="primary" {...field} checked={field.value} />}
+              />
+            )}
+          />
+          <FormHelperText variant="outlined">{LANG_OPTIONS_ENABLE_AUTO_RESET_HELP}</FormHelperText>
+        </Grid>
+
+
+        {/* <Grid item xs={12} lg={12} >
+          <Controller
+            name="enableNotifacation"
+            control={control}
+            render={({ field }) => (
+              <FormControlLabel
+                labelPlacement='start'
+                label={LANG_OPTIONS_ENABLE_AUTO_RESET}
+                control={<Switch color="primary" {...field} checked={field.value} />}
+              />
+            )}
+          />
+          <FormHelperText variant="outlined">{LANG_OPTIONS_ENABLE_AUTO_RESET_HELP}</FormHelperText>
+        </Grid> */}
+
+      </Grid>
+    </Grid >
   );
 };
 

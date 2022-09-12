@@ -20,11 +20,9 @@
   "openMSTODO": {
     "message": "Open in Microsoft To Do"
   },
-
   "optionPage": {
     "message": "Options"
   },
-
   "popupTitleText": {
     "message": "Title"
   },
@@ -73,45 +71,46 @@
   "loginTip": {
     "message": "Please login"
   },
-
-
-  "optionsEnableQuickAdd": {
-    "message": "Enable \"Quick add task\" feature"
+  "optionsEnableKeepLastTasklist": {
+    "message": "Remember the task list used last time"
   },
-  "optionsEnableQuickAddHelp": {
-    "message": "\"Quick add task\" is a right-click menu item that can quickly add the selected content to the specified task list"
+  "optionsEnableKeepLastTasklistHelp": {
+    "message": "After opening, the extension will select the task list used when the last task is added by default"
   },
-  "optionsQuickAddTasklist": {
-    "message": "\"Quick add task\" default task list"
+  "optionsDefaultTasklist": {
+    "message": "Default task list"
   },
-  "optionsQuickAddTasklistHelp": {
-    "message": "When using \"Quick add task\", the task will be added to the selected task list"
+  "optionsDefaultTasklistHelp": {
+    "message": "The extension will always select the default task list setting"
   },
-  "optionsQuickAddTitle": {
-    "message": "\"Quick add task\" default title"
+  "optionsEnableAutoFill": {
+    "message": "Open automatic fill"
   },
-  "optionsQuickAddTitleSelection": {
-    "message": "Use selected content as task title"
+  "optionsEnableForceFill": {
+    "message": "Compulsory fill"
   },
-  "optionsQuickAddTitleTabTitle": {
-    "message": "Use the title of the current page as the task title"
+  "optionsEnableForceFillHelp": {
+    "message": "After the compulsory fill is turned on, even if there is an unprepared task (the submitted button with the number *), the content of the current form will be covered"
   },
-  "optionsQuickAddTitleHelp": {
-    "message": "When using \"Quick add task\", the selected content will be used as the task title, the title longer than 130 characters will be omitted with ..."
+  "optionsEnableAutoFillHelp": {
+    "message": "After turning on the automatic fill, the extension will automatically fill the current selected content to the form"
+  },
+  "optionsAutoFillMode": {
+    "message": "Fill mode"
+  },
+  "optionsAutoFillModeHelp": {
+    "message": "The fill mode can specify the extension to be filled in accordance with the way"
+  },
+  "optionsAutoFillTitle": {
+    "message": "Fill in the selected content to 'title'"
+  },
+  "optionsAutoFillDesc": {
+    "message": "Fill in the selected content to 'Description'"
   },
   "optionsEnableAutoReset": {
     "message": "Automatically reset task form"
   },
   "optionsEnableAutoResetHelp": {
     "message": "After the task is successfully created, the content of the current form is automatically reset, which is suitable for scenarios where multiple tasks are created continuously"
-  },
-  "optionsReportIssue": {
-    "message": "Report issue"
-  },
-  "optionsRateExtension": {
-    "message": "Rate the extension"
-  },
-  "translateTip": {
-    "message": "Some languages may be machine translated, if there are errors, please contact the author. This software is open source software, we welcome contributions from anyone!"
   }
 }

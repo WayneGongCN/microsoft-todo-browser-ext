@@ -1,8 +1,8 @@
-import { AxiosResponse } from "axios";
+import { API_BASE_URL } from "../constants";
 import { ErrorCode } from "../constants/enums";
-import { makeAuthHeader } from "../helpers";
 import AppError from "../helpers/error";
-import request from "../helpers/request"
+import { makeAuthHeader } from "../helpers/msal";
+import request from "../helpers/request";
 
 
 export enum ETaskContentTypes {
@@ -89,12 +89,16 @@ export interface CreateTaskParams {
  */
 export const createTaskRequest = async (tasklistId: string, task: CreateTaskParams) => {
   const authHeader = await makeAuthHeader()
-  const endPoint = `me/todo/lists/${tasklistId}/tasks`
 
-  return request.post<CreateTaskResult, AxiosResponse<CreateTaskResult>, CreateTaskParams>(endPoint, task, { headers: authHeader })
-    .then(res => res.data)
-    .catch(e => {
-      throw new AppError({ code: ErrorCode.REQUEST_CREATE_TASK, message: e?.message })
+  return request<CreateTaskResult>(`${API_BASE_URL}/me/todo/lists/${tasklistId}/tasks`, {
+    method: 'POST',
+    headers: authHeader,
+    body: JSON.stringify(task)
+  })
+    .catch( async e => {
+      const { status } = e
+      const body = await e.text()
+      throw new AppError({ code: ErrorCode.REQUEST_CREATE_TASK, message: `Request status ${status} ${body}` })
     })
 }
 

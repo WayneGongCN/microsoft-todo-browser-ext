@@ -1,7 +1,8 @@
+import { API_BASE_URL } from "../constants";
 import { ErrorCode } from "../constants/enums";
-import { makeAuthHeader } from "../helpers";
 import AppError from "../helpers/error";
-import request from "../helpers/request"
+import { makeAuthHeader } from "../helpers/msal";
+import request from "../helpers/request";
 
 
 
@@ -23,10 +24,10 @@ export interface ITodolistsResult {
  */
 export const getTodolistsRequest = async () => {
   const authHeader = await makeAuthHeader()
-  const endPoint = 'me/todo/lists'
-  return request.get<ITodolistsResult>(endPoint, { headers: authHeader })
-    .then(res => res.data)
-    .catch(e => {
-      throw new AppError({ code: ErrorCode.REQUEST_TODOLISTS, message: e?.message })
+  return request<ITodolistsResult>(`${API_BASE_URL}/me/todo/lists`, { headers: authHeader })
+    .catch(async e => {
+      const { status } = e
+      const body = await e.text()
+      throw new AppError({ code: ErrorCode.REQUEST_TODOLISTS, message: `Request status ${status} ${body}` })
     })
 }

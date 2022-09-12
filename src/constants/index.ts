@@ -2,10 +2,13 @@ import { ETARGET } from './enums';
 import { repository } from '../../package.json';
 import { LNAG_QUICK_ADD_TASK } from './lang';
 import { TimeZone } from '../api/createTask';
-
+import { version } from '../../package.json'
 
 export const NODE_ENV = process.env.NODE_ENV;
+export const ENABLE_DEBUG = NODE_ENV === 'development'
 export const EXT_ID = chrome.runtime.id;
+export const EXT_VER = version
+export const EXT_VER_NUM = EXT_VER.split('.').reverse().reduce((r, s, idx) => r += Number(s) * Math.pow(10, idx), 0)
 export const LANG = chrome.i18n.getUILanguage();
 export const DEFAULT_LANG = 'en';
 

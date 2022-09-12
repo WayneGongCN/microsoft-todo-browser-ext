@@ -2,10 +2,10 @@ import { HOME_URL } from "../constants";
 import request from "../helpers/request";
 
 
-export interface ButtonConf {
+export interface OptionPageFooterButton {
   name: string;
-  text: Record<string, string>;
-  url: Record<string, string>;
+  content: Record<string, string>;
+  link: string | Record<string, string>;
   props: any;
 }
 
@@ -13,8 +13,6 @@ export interface ButtonConf {
 /**
  * 
  */
-export const getButtonsRequest = async () => {
-  return request
-    .request<ButtonConf[]>({ baseURL: HOME_URL, url: '/api/v1/optionFooterButtons.json' })
-    .then((res) => res.data);
+export const getButtonsRequest = async (): Promise<OptionPageFooterButton[]> => {
+  return request(`${HOME_URL}/api/v1/optionPageFooterButtons.json`)
 }

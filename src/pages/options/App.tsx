@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import Login from '../../components/Login';
 import Logout from '../../components/Logout';
 import OpenMSTodo from '../../components/OpenMSToDo';
-import TranslateTip from '../../components/TranslateTip';
+import FooterTips from './components/FooterTips';
 import UserInfo from '../../components/UserInfo';
 import { timing, now } from '../../helpers/report';
 import { State } from '../../redux';
@@ -14,12 +14,15 @@ import OptionsForm from './components/OptionsForm';
 import Badges from './components/Badges';
 import FooterBtns from './components/FooterBtns';
 
+
+
 export const App = () => {
   const account = useSelector((state: State) => state.auth.authenticationResult?.account);
 
   useEffect(() => {
     timing('options rendered', now());
   }, []);
+
 
   return (
     <Container disableGutters maxWidth="sm">
@@ -50,7 +53,7 @@ export const App = () => {
           </Grid>
 
           <Grid container item justifyContent="flex-end" spacing={1}>
-            <TranslateTip />
+            <FooterTips />
           </Grid>
 
           <Grid container item justifyContent="flex-end" spacing={1}>

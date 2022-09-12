@@ -20,11 +20,9 @@
   "openMSTODO": {
     "message": "在微软 To Do 中打开"
   },
-
   "optionPage": {
     "message": "选项"
   },
-  
   "popupTitleText": {
     "message": "任务标题"
   },
@@ -73,44 +71,46 @@
   "loginTip": {
     "message": "请登录"
   },
-
-  "optionsEnableQuickAdd": {
-    "message": "开启 \"快速创建 To Do\" 功能"
+  "optionsEnableKeepLastTasklist": {
+    "message": "记住上次使用的任务列表"
   },
-  "optionsEnableQuickAddHelp": {
-    "message": "\"快速创建 To Do\" 是一个右键菜单项，可将选中内容快速添加到指定任务列表"
+  "optionsEnableKeepLastTasklistHelp": {
+    "message": "开启后,插件将默认选中上次添加任务时使用的任务列表"
   },
-  "optionsQuickAddTasklist": {
-    "message": "\"快速创建 To Do\" 默认任务列表"
+  "optionsDefaultTasklist": {
+    "message": "默认任务列表"
   },
-  "optionsQuickAddTasklistHelp": {
-    "message": "使用 \"快速创建 To Do\" 时，将任务添加到上面选择的任务列表中"
+  "optionsDefaultTasklistHelp": {
+    "message": "插件将始终选中设定的默认任务列表"
   },
-  "optionsQuickAddTitle": {
-    "message": "\"快速创建 To Do\" 默认标题"
+  "optionsEnableAutoFill": {
+    "message": "开启自动填充"
   },
-  "optionsQuickAddTitleSelection": {
-    "message": "使用选中的内容作为任务标题"
+  "optionsEnableForceFill": {
+    "message": "强制填充"
   },
-  "optionsQuickAddTitleTabTitle": {
-    "message": "使用选当前页面的标题作为任务标题"
+  "optionsEnableForceFillHelp": {
+    "message": "开启强制填充后,即使存在未提交的任务(提交按钮带 * 号),也将覆盖当前表单内容"
   },
-  "optionsQuickAddTitleHelp": {
-    "message": "将选中的内容作为任务标题，标题超过 130 个字符将会以 ... 省略"
+  "optionsEnableAutoFillHelp": {
+    "message": "开启自动填充后,插件会将当前选中的内容自动填充到表单"
+  },
+  "optionsAutoFillMode": {
+    "message": "填充模式"
+  },
+  "optionsAutoFillModeHelp": {
+    "message": "填充模式可以指定插件按照哪种方式进行填充"
+  },
+  "optionsAutoFillTitle": {
+    "message": "将选中内容填充到＂标题＂"
+  },
+  "optionsAutoFillDesc": {
+    "message": "将选中内容填充到＂描述＂"
   },
   "optionsEnableAutoReset": {
     "message": "自动清空"
   },
   "optionsEnableAutoResetHelp": {
     "message": "创建任务成功后自动清空当前表单内容"
-  },
-  "optionsReportIssue": {
-    "message": "提议与反馈"
-  },
-  "optionsRateExtension": {
-    "message": "为插件评分"
-  },
-  "translateTip": {
-    "message": "部分语言可能为机器翻译，如果存在错误，请与作者联系。本软件是开源软件，我们欢迎任何人贡献！"
   }
 }

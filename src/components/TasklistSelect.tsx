@@ -6,21 +6,42 @@ import MenuItem from '@mui/material/MenuItem';
 import { fetchTasklistAction } from '../redux/tasklist';
 
 
+interface TasklistSelectProps {
+  defaultIdx?: number;
+}
 
-const TasklistSelect = (props: TextFieldProps, ref: React.Ref<HTMLDivElement>) => {
+const mapState = (state: State) => {
+  const { auth, tasklist } = state
+  return {
+    loadingTasklist: tasklist.loading,
+    account: auth.authenticationResult?.account,
+    tasklists: tasklist.lists
+  }
+}
+
+
+const TasklistSelect = ({ defaultIdx = null, ...props }: TextFieldProps & TasklistSelectProps, ref: React.Ref<HTMLDivElement>) => {
   const dispatch = useDispatch();
-  const loadingTasklist = useSelector((state: State) => state.popup.loadingTasklist);
-  const account = useSelector((state: State) => state.auth.authenticationResult?.account);
+  const { loadingTasklist, account, tasklists } = useSelector(mapState);
 
-  // 获取 tasklist
-  const tasklists = useSelector((state: State) => state.tasklist.lists);
+
+  const updateTasklist = () => dispatch(fetchTasklistAction())
   useEffect(() => {
-    account && dispatch(fetchTasklistAction());
-  }, [account]);
+    if (!tasklists.length && account) updateTasklist()
+  }, [tasklists, account]);
+
+
+  useEffect(() => {
+    if (defaultIdx !== null && !props.value && tasklists.length) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      props.onChange(tasklists[defaultIdx]?.id || '')
+    }
+  }, [tasklists, props])
 
   return (
     <>
-      <TextField ref={ref} select disabled={loadingTasklist || !account} {...props}>
+      <TextField ref={ref} select disabled={loadingTasklist || !account} {...props} style={{ minWidth: '10em', ...props.style }}>
         {tasklists.map((x, idx) => (
           <MenuItem id={`com-task-list-${idx}`} key={x.id} value={x.id}>
             {x.displayName}
@@ -30,5 +51,6 @@ const TasklistSelect = (props: TextFieldProps, ref: React.Ref<HTMLDivElement>) =
     </>
   );
 };
+
 
 export default forwardRef(TasklistSelect);
