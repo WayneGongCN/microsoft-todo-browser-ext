@@ -43,7 +43,7 @@ const serializeAuthenticationResult = (res: AuthenticationResult): SerializAuthe
  */
 const clearAccount = () => {
   logger.warn('clear account');
-  chrome.storage.sync.clear();
+  sessionStorage?.clear();
 };
 
 
