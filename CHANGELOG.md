@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.3.2...v1.4.0) (2022-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* Deprecated the old version 'Quick add task' feature, because MSAL.js lib  not work
+in service worker(for chrome extension V3 Manifest.json migrate)
+
+### Features
+
+* support 'Auto fill' feature ([#84](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/84)) ([3593463](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/35934634eda87bcaeeb9c2ae88532386710f8c35)), closes [#71](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/71) [#78](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/78) [#77](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/77)
+
 ### [1.3.3](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.3.2...v1.3.3) (2022-08-28)
 
 
