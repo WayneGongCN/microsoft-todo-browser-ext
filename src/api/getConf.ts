@@ -1,18 +1,17 @@
 import { HOME_URL } from "../constants";
+import { logger } from "../helpers/logger";
 import request from "../helpers/request";
 
 
-interface AppConf {
-  sentryDsn: string;
-  reportSampleRate: 0.1;
-  gtmID: string;
-  gtmEvn: string;
+export enum ConfKey {
+  UNINSTALL_URL = 'uninstallUrl'
 }
+export type Conf = { type: ConfKey, value: string }
 
 
 /**
  * 
  */
 export const getConfRequest = async () => {
-  return request<AppConf>(`${HOME_URL}/api/v1/conf.json`)
+  return request<Conf[]>(`${HOME_URL}/api/v1/conf.json`)
 }

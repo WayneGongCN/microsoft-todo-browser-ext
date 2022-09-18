@@ -22,7 +22,7 @@ export const MSAL_CLIENT_ID = MSAL_CLIENT_ID_MAP[ETARGET.CHROME];
 export const AUTH_SCOPES = ['profile', 'Tasks.ReadWrite'];
 
 
-export const HOME_URL = 'https://ms-todo.com'
+export const HOME_URL = process.env.HOME_URL
 export const REPOSITORY = repository;
 export const OPTIONS_PAGE_URL = `chrome-extension://${EXT_ID}/options.html`;
 export const ISSUE_URL = `${REPOSITORY}/issues/new`;
