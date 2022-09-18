@@ -1,22 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import { State } from '.';
-import { getConfRequest } from '../api/getConf';
+import { Conf, getConfRequest } from '../api/getConf';
 import { getPersistConf } from '../helpers';
 
 
-
 const SLICE_NAME = 'conf';
-const APP_DEFAULT_CONF = {
-  sentryDsn: 'https://365de3b2d6514a4caca2e06294ff74d0@o1093323.ingest.sentry.io/6112552',
-  reportSampleRate: 0.1,
-  gtmID: 'GTM-WVNS69V',
-  gtmEvn: '',
-};
+const APP_DEFAULT_CONF: Conf[] = [];
 
 
-
-export const fetchConfAction = createAsyncThunk<typeof APP_DEFAULT_CONF, void, { state: State }>(`${SLICE_NAME}/fetchConf`, () => {
+export const fetchConfAction = createAsyncThunk<Conf[], void, { state: State }>(`${SLICE_NAME}/fetchConf`, () => {
   return getConfRequest()
 });
 
