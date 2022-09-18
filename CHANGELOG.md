@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.4.0...v1.4.1) (2022-09-18)
+
+
+### Features
+
+* support uninstallUrl ([#88](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues/88)) ([75d2724](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/75d27249260e6f58cbbf1cf1b065c0cc69d3509a))
+
+
+### Bug Fixes
+
+* **msal:** fixed that you can't sign in again after canceling during the sign-in process ([6343205](https://github.com/WayneGongCN/microsoft-todo-browser-ext/commit/63432058f4266a887b717c50526279af476b5355))
+
 ## [1.4.0](https://github.com/WayneGongCN/microsoft-todo-browser-ext/compare/v1.3.2...v1.4.0) (2022-09-12)
 
 
