@@ -75,7 +75,7 @@ WXT / Vite、React、TypeScript strict、CSS Modules、原生 fetch。`src/core`
 
 CI 执行类型检查、ESLint、格式检查、协议与业务测试、MV3 构建及独立 Chromium 扩展测试。自动化测试只使用合成账号和模拟服务，真实微软联调必须另外执行。
 
-Chrome Web Store workflow 使用官方 v2 API，支持分别查询状态、上传、提交审核、发布已审核版本。默认只查询，不会因普通 push 或 tag 自动发布。沿用仓库现有 `REFRESH_TOKEN` secret；如 Google OAuth 客户端需要 secret，可配置 `CWS_CLIENT_SECRET`。凭据不会写入仓库、构建包或日志。
+Chrome Web Store workflow 使用官方 v2 API，支持分别查询状态、上传、提交审核、发布已审核版本。默认只查询，不会因普通 push 或 tag 自动发布。使用仓库 `REFRESH_TOKEN` secret；更换 Google OAuth 客户端时设置仓库变量 `CWS_CLIENT_ID`，必要时设置 `CWS_CLIENT_SECRET` secret。变量为空时沿用原客户端 ID。凭据不会写入仓库、构建包或日志。
 
 审核提交采用 staged publish；审核通过后可发布。任何阶段都必须根据平台响应核对状态，不能把上传成功视作已发布。
 

@@ -12,7 +12,7 @@ async function accessToken() {
   if (!refreshToken) throw new Error('CWS_REFRESH_TOKEN is required.');
   const body = new URLSearchParams({
     client_id:
-      process.env.CWS_CLIENT_ID ?? '846943702071-dg8uf689j8bsn816avetglmtpis4hr3m.apps.googleusercontent.com',
+      process.env.CWS_CLIENT_ID || '846943702071-dg8uf689j8bsn816avetglmtpis4hr3m.apps.googleusercontent.com',
     refresh_token: refreshToken,
     grant_type: 'refresh_token',
   });
