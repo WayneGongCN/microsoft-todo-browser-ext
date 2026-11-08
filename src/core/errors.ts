@@ -8,6 +8,7 @@ export type ErrorCode =
   | 'rate_limited'
   | 'not_found'
   | 'invalid'
+  | 'capture_too_large'
   | 'unknown'
   | 'storage'
   | 'conflict'

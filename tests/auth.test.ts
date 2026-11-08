@@ -140,6 +140,15 @@ describe('Microsoft PKCE session', () => {
     expect(vi.mocked(fetch).mock.calls.some(([url]) => String(url).endsWith('/token'))).toBe(false);
   });
 
+  it('clears the pending authorization when sign-in is cancelled', async () => {
+    vi.mocked(chrome.identity.launchWebAuthFlow).mockRejectedValueOnce(new Error('Cancelled'));
+    const auth = await import('../src/core/auth');
+    await expect(auth.login()).rejects.toMatchObject({ code: 'auth_cancelled' });
+    expect(storage['v2:authorization']).toBeUndefined();
+    expect(storage['v2:auth']).toBeUndefined();
+    expect(vi.mocked(fetch).mock.calls.some(([url]) => String(url).endsWith('/token'))).toBe(false);
+  });
+
   it('rejects an incorrect nonce', async () => {
     wrongNonce = true;
     const auth = await import('../src/core/auth');

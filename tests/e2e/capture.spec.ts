@@ -197,6 +197,66 @@ test('asks before replacing an unfinished draft with a different capture', async
   await expect(second.getByLabel('任务', { exact: true })).toHaveValue('新的网页');
 });
 
+for (const existingDraft of [false, true]) {
+  test(`keeps ${existingDraft ? 'an existing' : 'a new'} draft editable after an overlong selection`, async ({
+    context,
+    worker,
+  }) => {
+    await routeLists(context);
+    if (existingDraft) {
+      const first = await openCaptured(context, worker, '继续编辑的草稿');
+      await expect(first.getByRole('status').last()).toContainText('草稿已保存在本机');
+      await first.close();
+    }
+    const id = randomUUID();
+    await worker.evaluate(async (id) => {
+      await chrome.storage.session.set({
+        [`v2:capture:${id}`]: { title: '过长的选区', note: '选'.repeat(20_001) },
+      });
+    }, id);
+    const page = await context.newPage();
+    await page.goto(`${extensionUrl}/capture.html?capture=${id}`);
+    await expect(page.getByRole('alert')).toContainText('本次未导入');
+    await expect(page.getByLabel('任务', { exact: true })).toHaveValue(existingDraft ? '继续编辑的草稿' : '');
+    await expect(page.locator('[name=note]')).toHaveValue(existingDraft ? '保留选中文字' : '');
+    await expect(page.locator('#target-list')).toHaveValue('list-1');
+    await page.getByLabel('任务', { exact: true }).fill('仍然可以编辑');
+    await expect(page.getByRole('status').last()).toContainText('草稿已保存在本机');
+    await expect(page.getByRole('alert')).toHaveCount(0);
+  });
+}
+
+test('allows keyboard task creation when the popup cannot read the active page', async ({
+  context,
+  worker,
+}) => {
+  await routeLists(context);
+  let posted: Record<string, unknown> | undefined;
+  await context.route('**/lists/list-1/tasks', async (route) => {
+    posted = route.request().postDataJSON();
+    await route.fulfill({ json: { id: 'keyboard-task' } });
+  });
+  await expect(worker.evaluate(() => chrome.runtime.id)).resolves.toBe(extensionId);
+  const page = await context.newPage();
+  await page.goto(`${extensionUrl}/popup.html`);
+  await expect(page.getByText('无法读取此页面，仍可手动输入任务。')).toBeVisible();
+  await expect(page.locator('#target-list')).toHaveValue('list-1');
+  expect(
+    await page.locator('main').evaluate((element) => element.getBoundingClientRect().height),
+  ).toBeLessThanOrEqual(600);
+  const title = page.getByLabel('任务', { exact: true });
+  await title.fill('中文 <b> & emoji 😀');
+  await title.press('Tab');
+  await expect(page.locator('#target-list')).toBeFocused();
+  expect(
+    await page.locator('#target-list').evaluate((element) => getComputedStyle(element).outlineWidth),
+  ).not.toBe('0px');
+  await title.press('Control+Enter');
+  await expect(page.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
+  expect(posted?.title).toBe('中文 <b> & emoji 😀');
+  expect(posted?.linkedResources).toBeUndefined();
+});
+
 test('supports English and dark mode and fits a narrow editor', async ({ context, worker }) => {
   await routeLists(context);
   const page = await openCaptured(context, worker);

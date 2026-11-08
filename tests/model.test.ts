@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { makeCapture } from '../src/core/capture';
 import { safeSource, taskInput } from '../src/core/model';
 
@@ -53,5 +53,25 @@ describe('capture and task fields', () => {
         reminder: '2020-01-01T00:00',
       }),
     ).toThrow('invalid');
+  });
+
+  it('handles UTC date rollover and rejects a missing local hour at DST transition', () => {
+    vi.stubEnv('TZ', 'America/New_York');
+    try {
+      const fields = {
+        title: 'Remember',
+        note: '',
+        listId: 'list',
+        important: false,
+        reminder: '2026-01-01T23:30',
+      };
+      expect(taskInput(fields, 0).reminderDateTime).toEqual({
+        dateTime: '2026-01-02T04:30:00.000',
+        timeZone: 'UTC',
+      });
+      expect(() => taskInput({ ...fields, reminder: '2026-03-08T02:30' }, 0)).toThrow('invalid');
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 });

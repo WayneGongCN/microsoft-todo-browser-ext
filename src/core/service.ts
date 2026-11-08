@@ -1,7 +1,14 @@
 import * as auth from './auth';
 import * as graph from './graph';
 import { AppError, publicError } from './errors';
-import { DEFAULT_PREFERENCES, emptyDraft, hasContent, parseFields, taskInput } from './model';
+import {
+  DEFAULT_PREFERENCES,
+  emptyDraft,
+  hasContent,
+  MAX_NOTE_LENGTH,
+  parseFields,
+  taskInput,
+} from './model';
 import type { Capture, Draft, Preferences, Receipt } from './model';
 import type { Request, Snapshot } from './protocol';
 import { read, remove, Transactions, write } from './storage';
@@ -187,6 +194,14 @@ async function submit(accountId: string, draftId: string, revision: number): Pro
 
 /** 验证收集内容的大小及来源，新页面文字始终视为普通文本，喵~ */
 function parseCapture(value: unknown): Capture {
+  if (
+    value &&
+    typeof value === 'object' &&
+    'note' in value &&
+    typeof value.note === 'string' &&
+    value.note.length > MAX_NOTE_LENGTH
+  )
+    throw new AppError('capture_too_large');
   const fields = parseFields({
     title: '',
     note: '',

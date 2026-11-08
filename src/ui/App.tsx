@@ -3,7 +3,7 @@ import type { FormEvent } from 'react';
 import { captureActivePage } from '../core/capture';
 import { AppError } from '../core/errors';
 import type { ErrorCode } from '../core/errors';
-import { hasContent } from '../core/model';
+import { hasContent, MAX_NOTE_LENGTH } from '../core/model';
 import type { Draft, Fields, Preferences, Receipt } from '../core/model';
 import type { TodoList } from '../core/graph';
 import { send } from '../core/protocol';
@@ -31,6 +31,7 @@ export function App({ mode }: { mode: Mode }) {
   const [expanded, setExpanded] = useState(mode === 'capture');
   const [settings, setSettings] = useState(mode === 'options');
   const [accountChanged, setAccountChanged] = useState(false);
+  const [pageUnavailable, setPageUnavailable] = useState(false);
   const draftRef = useRef<Draft | undefined>(undefined);
   const accountRef = useRef('guest');
   const fieldsRef = useRef(form);
@@ -295,13 +296,23 @@ export function App({ mode }: { mode: Mode }) {
     const captureId = new URL(location.href).searchParams.get('capture') ?? undefined;
     void (async () => {
       const capture = mode === 'popup' ? await captureActivePage().catch(() => undefined) : undefined;
-      const snapshot = await send<Snapshot>({
-        type: 'bootstrap',
-        ...(captureId ? { captureId } : { capture }),
-      });
+      if (mounted) setPageUnavailable(mode === 'popup' && !capture);
+      let snapshot: Snapshot;
+      let captureFailure: AppError | undefined;
+      try {
+        snapshot = await send<Snapshot>({
+          type: 'bootstrap',
+          ...(captureId ? { captureId } : { capture }),
+        });
+      } catch (problem) {
+        if (!(problem instanceof AppError) || problem.code !== 'capture_too_large') throw problem;
+        snapshot = await send<Snapshot>({ type: 'bootstrap' });
+        captureFailure = problem;
+      }
       if (!mounted) return;
       apply(snapshot);
       await loadLists(snapshot);
+      if (mounted && captureFailure) setError(captureFailure);
     })().catch((problem: unknown) => {
       if (mounted) setError(problem instanceof AppError ? problem : new AppError('network'));
     });
@@ -428,6 +439,11 @@ export function App({ mode }: { mode: Mode }) {
             </button>
           )}
         </section>
+      )}
+      {pageUnavailable && !settings && (
+        <p className={styles.notice} role="status">
+          {text.notAvailable}
+        </p>
       )}
       {settings ? (
         <section className={styles.settings}>
@@ -701,7 +717,7 @@ export function App({ mode }: { mode: Mode }) {
                   name="note"
                   value={form.note}
                   placeholder={text.notePlaceholder}
-                  maxLength={20_000}
+                  maxLength={MAX_NOTE_LENGTH}
                   rows={2}
                   disabled={locked}
                   onChange={(event) => edit({ note: event.target.value })}

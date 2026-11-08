@@ -79,6 +79,8 @@ const en = {
     rate_limited: 'Microsoft is receiving too many requests. Wait before trying again.',
     not_found: 'That list is no longer available. Refresh and choose another list.',
     invalid: 'Check the title, list, and reminder time.',
+    capture_too_large:
+      'The selected text exceeds 20,000 characters and was not imported. Select less text or enter a task manually.',
     unknown: 'The task result could not be confirmed. Check Microsoft To Do first.',
     storage: 'The draft could not be saved on this device. Keep this window open and try saving again.',
     conflict: 'This draft changed in another window. Copy any unsaved text, then reload.',
@@ -161,6 +163,7 @@ const zh: typeof en = {
     rate_limited: '请求过于频繁，请稍后重试。',
     not_found: '原清单已不可用，请刷新后重新选择。',
     invalid: '请检查任务标题、目标清单和提醒时间。',
+    capture_too_large: '选中文字超过 20,000 字符，本次未导入。请缩短选区后重试，或手动编辑任务。',
     unknown: '创建结果暂时无法确认，请先到 Microsoft To Do 查看。',
     storage: '无法在本机保存草稿，请保留此窗口并重新保存。',
     conflict: '另一窗口修改了草稿。请先复制未保存内容，再重新载入。',

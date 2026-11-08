@@ -184,6 +184,28 @@ describe('background task and draft lifecycle', () => {
     expect(mocks.lists).toHaveBeenCalledTimes(1);
   });
 
+  it('refreshes the list cache after five minutes', async () => {
+    const { service, command } = await prepared();
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 301_000);
+    try {
+      mocks.lists.mockResolvedValueOnce([{ id: 'new-list', displayName: 'New list' }]);
+      const lists = await service.handle({ type: 'lists', accountId: command.accountId });
+      expect(lists).toEqual([{ id: 'new-list', displayName: 'New list' }]);
+      expect(mocks.lists).toHaveBeenCalledTimes(2);
+    } finally {
+      clock.mockRestore();
+    }
+  });
+
+  it('requires another list when the draft target was deleted', async () => {
+    const { service, command, draft } = await prepared();
+    mocks.lists.mockResolvedValueOnce([{ id: 'new-list', displayName: 'New list' }]);
+    await service.handle({ type: 'lists', accountId: command.accountId, force: true });
+    await expect(service.handle(command)).rejects.toMatchObject({ code: 'not_found' });
+    expect(data[`v2:draft:${command.accountId}`]).toEqual(draft);
+    expect(mocks.create).not.toHaveBeenCalled();
+  });
+
   it('lets the user resolve an ambiguous result without sending another task', async () => {
     const { service, command } = await prepared();
     mocks.create.mockRejectedValueOnce(new Failure('unknown'));

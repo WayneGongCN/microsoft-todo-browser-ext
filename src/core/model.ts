@@ -18,6 +18,7 @@ export interface Fields {
   reminder: string;
   source?: Source;
 }
+export const MAX_NOTE_LENGTH = 20_000;
 export interface Draft extends Fields {
   id: string;
   revision: number;
@@ -68,7 +69,7 @@ export function parseFields(value: unknown): Fields {
   const input = value as Record<string, unknown>;
   for (const [name, maximum] of [
     ['title', 255],
-    ['note', 20_000],
+    ['note', MAX_NOTE_LENGTH],
     ['listId', 1024],
     ['reminder', 32],
   ] as const) {
