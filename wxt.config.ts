@@ -8,7 +8,7 @@ export default defineConfig({
   manifest: ({ mode }) => ({
     name: mode === 'production' ? '__MSG_extensionName__' : '__MSG_extensionName__ · Dev',
     description: '__MSG_extensionDescription__',
-    minimum_chrome_version: '120',
+    minimum_chrome_version: '123',
     default_locale: 'en',
     permissions: ['identity', 'storage', 'activeTab', 'scripting', 'contextMenus'],
     host_permissions: ['https://login.microsoftonline.com/*', 'https://graph.microsoft.com/*'],

@@ -15,7 +15,7 @@
 
 ## 本地开发和验收
 
-需要 Node.js 22.12+，推荐当前 Node 22 LTS 补丁版和 npm。
+需要 Chrome 123+、Node.js 22.12+，推荐当前 Node 22 LTS 补丁版和 npm。
 
 ```sh
 npm ci
