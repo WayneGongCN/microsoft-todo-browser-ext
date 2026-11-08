@@ -25,6 +25,7 @@ jobs:
       - name: Run requested store operation
         env:
           CWS_REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          CWS_CLIENT_ID: ${{ vars.CWS_CLIENT_ID }}
           CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
           STORE_ACTION: ${{ inputs.action }}
         run: node scripts/store.mjs "$STORE_ACTION" .output/release/microsoft-todo-capture-2.0.0-chrome.zip
