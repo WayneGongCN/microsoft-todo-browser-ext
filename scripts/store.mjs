@@ -68,6 +68,10 @@ async function main() {
   if (action === 'release') {
     if (before.submittedItemRevisionStatus?.state !== 'STAGED')
       throw new Error('The current submission is not approved and staged.');
+    const pkg = JSON.parse(await readFile('package.json', 'utf8'));
+    const channels = before.submittedItemRevisionStatus.distributionChannels;
+    if (!channels?.length || channels.some((channel) => channel.crxVersion !== pkg.version))
+      throw new Error('The approved version does not match this release.');
   } else {
     const path = process.argv[3];
     if (!path?.endsWith('.zip')) throw new Error('A validated release ZIP is required.');

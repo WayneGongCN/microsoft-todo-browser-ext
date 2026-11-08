@@ -439,7 +439,7 @@ export function App({ mode }: { mode: Mode }) {
             </div>
           </div>
           <button
-            disabled={busy || locked}
+            disabled={busy || receipt?.status === 'sending'}
             onClick={() => {
               void (state.account ? signOut() : signIn());
             }}
@@ -554,7 +554,9 @@ export function App({ mode }: { mode: Mode }) {
               <div className={styles.actions}>
                 <button
                   disabled={locked}
-                  onClick={() => setState({ ...state, candidate: undefined, guestDraft: undefined })}
+                  onClick={() => {
+                    void action('acknowledge');
+                  }}
                 >
                   {text.keep}
                 </button>
@@ -621,7 +623,7 @@ export function App({ mode }: { mode: Mode }) {
                 placeholder={text.placeholder}
                 value={form.title}
                 maxLength={255}
-                required
+                required={Boolean(state.account)}
                 disabled={locked}
                 onChange={(event) => edit({ title: event.target.value })}
                 autoFocus

@@ -218,3 +218,18 @@ it('restores the full guest draft only after the user chooses it', async () => {
   });
   expect(data['v2:draft:guest']).toBeUndefined();
 });
+
+it('recovers an unrecorded server success as unknown after local storage fails', async () => {
+  const { service, command, draft } = await prepared();
+  vi.mocked(chrome.storage.local.set).mockImplementation(async (values) => {
+    const receipt = (values as Record<string, unknown>)[`v2:receipt:${command.accountId}`] as
+      Receipt | undefined;
+    if (receipt?.status === 'succeeded') throw new Error('Simulated full storage');
+    Object.assign(data, structuredClone(values));
+  });
+  await expect(service.handle(command)).rejects.toMatchObject({ code: 'storage' });
+  const next = (await service.handle({ type: 'bootstrap' })) as Snapshot;
+  expect(next.receipt?.status).toBe('unknown');
+  expect(next.draft).toEqual(draft);
+  expect(mocks.create).toHaveBeenCalledTimes(1);
+});

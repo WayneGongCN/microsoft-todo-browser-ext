@@ -47,7 +47,7 @@ async function checkedDraft(accountId: string, draftId: string, revision: number
 /** 后台重启后的在途记录只能标记结果待确认，不能假定失败并重新提交，喵~ */
 async function latestReceipt(accountId: string): Promise<Receipt | undefined> {
   const receipt = await read<Receipt>(`v2:receipt:${accountId}`);
-  if (receipt?.status === 'sending' && receipt.workerId !== workerId) {
+  if (receipt?.status === 'sending' && !active.has(receipt.id)) {
     receipt.status = 'unknown';
     await write({ [`v2:receipt:${accountId}`]: receipt, [`v2:operation:${receipt.id}`]: receipt });
   }
@@ -87,6 +87,7 @@ async function snapshot(capture?: Capture): Promise<Snapshot> {
     preferences: prefs,
     lists: cache?.lists ?? [],
     receipt: await latestReceipt(accountId),
+    guestDraft: account ? await read<Draft>(`v2:pending-guest:${accountId}`) : undefined,
     ...(candidate ? { candidate } : {}),
   };
 }
@@ -115,7 +116,7 @@ async function submit(accountId: string, draftId: string, revision: number): Pro
   const existing = await read<Receipt>(`v2:operation:${operationId}`);
   if (existing) {
     if (existing.accountId !== accountId) throw new AppError('invalid');
-    if (existing.status === 'sending' && existing.workerId !== workerId) {
+    if (existing.status === 'sending' && !active.has(operationId)) {
       existing.status = 'unknown';
       await write({ [`v2:operation:${operationId}`]: existing, [`v2:receipt:${accountId}`]: existing });
     }
@@ -269,16 +270,23 @@ export async function handle(request: Request): Promise<unknown> {
         await write({ [`v2:draft:${account.id}`]: guest });
         await remove(['v2:draft:guest']);
       }
-      const result = await snapshot();
-      if (guest && hasContent(guest) && current && hasContent(current)) result.guestDraft = guest;
-      return result;
+      if (guest && hasContent(guest) && current && hasContent(current)) {
+        await write({ [`v2:pending-guest:${account.id}`]: guest });
+        await remove(['v2:draft:guest']);
+      }
+      return snapshot();
     });
   }
   if (request.type === 'logout') {
     return transactions.run(async () => {
       const key = await identity();
       await auth.logout();
-      await remove([`v2:draft:${key}`, `v2:lists:${key}`, `v2:list-preferences:${key}`]);
+      await remove([
+        `v2:draft:${key}`,
+        `v2:pending-guest:${key}`,
+        `v2:lists:${key}`,
+        `v2:list-preferences:${key}`,
+      ]);
       return snapshot();
     });
   }
@@ -308,7 +316,7 @@ export async function handle(request: Request): Promise<unknown> {
     const current = await checkedDraft(key, request.draftId, request.revision);
     if (request.type === 'acknowledge') {
       await editable(key, current.id);
-      await remove([`v2:receipt:${key}`]);
+      await remove([`v2:receipt:${key}`, `v2:pending-guest:${key}`]);
       return snapshot();
     }
     if (request.type === 'confirm_absent' || request.type === 'confirm_present') {
@@ -337,7 +345,7 @@ export async function handle(request: Request): Promise<unknown> {
       return snapshot();
     }
     if (request.type === 'restore_guest') {
-      const guest = await read<Draft>('v2:draft:guest');
+      const guest = await read<Draft>(`v2:pending-guest:${key}`);
       if (!guest || !hasContent(guest)) throw new AppError('invalid');
       const next: Draft = {
         ...parseFields(guest),
@@ -347,7 +355,7 @@ export async function handle(request: Request): Promise<unknown> {
         updatedAt: Date.now(),
       };
       await write({ [`v2:draft:${key}`]: next });
-      await remove(['v2:draft:guest']);
+      await remove([`v2:pending-guest:${key}`]);
       return next;
     }
     const fields =

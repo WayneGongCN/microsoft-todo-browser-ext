@@ -91,6 +91,8 @@ test('creates a task with source, notes, importance and an explicit reminder', a
   const page = await openCaptured(context, worker);
   await page.getByLabel('标为重要').check();
   await page.locator('[name=reminder]').fill('2035-03-01T09:00');
+  await expect(page.getByRole('status').last()).toContainText('草稿已保存在本机');
+  await page.locator('[name=reminder]').blur();
   await page.screenshot({ path: 'test-results/capture-light.png', fullPage: true });
   await page.getByRole('button', { name: '＋ 添加任务' }).click();
   await expect(page.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
@@ -275,3 +277,56 @@ test('recovers a stopped service worker without replaying a pending creation', a
   await expect(page.getByLabel('任务', { exact: true })).toHaveValue('阅读这篇文章');
   expect(attempts).toBe(1);
 });
+
+base(
+  'requires a new session after browser restart and keeps account drafts isolated',
+  async ({ playwright }) => {
+    const { mkdir, mkdtemp, rm } = await import('node:fs/promises');
+    await mkdir('work', { recursive: true });
+    const profile = await mkdtemp(resolve('work', 'restart-profile-'));
+    const path = resolve('.output/chrome-mv3-acceptance');
+    const options = {
+      channel: 'chromium',
+      headless: true,
+      locale: 'zh-CN',
+      viewport: { width: 390, height: 680 },
+      args: [`--disable-extensions-except=${path}`, `--load-extension=${path}`],
+    };
+    let context = await playwright.chromium.launchPersistentContext(profile, options);
+    try {
+      let worker = context.serviceWorkers()[0] ?? (await context.waitForEvent('serviceworker'));
+      await worker.evaluate(async (account) => {
+        await chrome.storage.session.set({
+          'v2:auth': { account, accessToken: 'synthetic-test-token', expiresAt: Date.now() + 3_600_000 },
+        });
+        await chrome.storage.local.set({
+          'v2:preferences': { language: 'zh_CN', theme: 'light', attachSource: true },
+        });
+      }, account);
+      await routeLists(context);
+      const first = await openCaptured(context, worker, '重启后保留的任务');
+      await expect(first.getByRole('status').last()).toContainText('草稿已保存在本机');
+      await context.close();
+      context = await playwright.chromium.launchPersistentContext(profile, options);
+      worker = context.serviceWorkers()[0] ?? (await context.waitForEvent('serviceworker'));
+      const guest = await context.newPage();
+      await guest.goto(`${extensionUrl}/capture.html`);
+      await expect(guest.getByLabel('任务', { exact: true })).toHaveValue('');
+      await expect(guest.locator('#target-list')).toBeDisabled();
+      expect(
+        await worker.evaluate(async () => (await chrome.storage.session.get('v2:auth'))['v2:auth']),
+      ).toBeUndefined();
+      await worker.evaluate(async (account) => {
+        await chrome.storage.session.set({
+          'v2:auth': { account, accessToken: 'synthetic-test-token', expiresAt: Date.now() + 3_600_000 },
+        });
+      }, account);
+      await routeLists(context);
+      await guest.reload();
+      await expect(guest.getByLabel('任务', { exact: true })).toHaveValue('重启后保留的任务');
+    } finally {
+      await context.close();
+      await rm(profile, { recursive: true, force: true });
+    }
+  },
+);
