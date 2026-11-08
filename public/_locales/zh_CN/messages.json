@@ -1,116 +1,17 @@
 {
   "extensionName": {
-    "message": "Microsoft To Do 浏览器扩展 - 微软待办 todo list 清单"
+    "message": "Microsoft To Do 快速收集"
   },
   "extensionDescription": {
-    "message": "开源、免费的 Microsoft To Do 浏览器扩展，让你从工作到娱乐都保持专注。"
+    "message": "将网页、选中文字和链接快速保存到 Microsoft To Do。"
   },
-  "untitle": {
-    "message": "无标题"
+  "menu_page": {
+    "message": "将此网页保存到 To Do"
   },
-  "addTask": {
-    "message": "创建任务"
+  "menu_selection": {
+    "message": "将选中文字保存到 To Do"
   },
-  "quickAddTask": {
-    "message": "快速创建 To Do"
-  },
-  "success": {
-    "message": "成功"
-  },
-  "openMSTODO": {
-    "message": "在微软 To Do 中打开"
-  },
-  "optionPage": {
-    "message": "选项"
-  },
-  "popupTitleText": {
-    "message": "任务标题"
-  },
-  "popupDescribeText": {
-    "message": "任务备注"
-  },
-  "popupDateTimeText": {
-    "message": "提醒我"
-  },
-  "popupTaskListText": {
-    "message": "任务列表"
-  },
-  "popupResetTooltip": {
-    "message": "重置表单内容"
-  },
-  "popupCreatingText": {
-    "message": "正在创建"
-  },
-  "popupAddTaskBtn": {
-    "message": "添加任务"
-  },
-  "popupTitleValidation": {
-    "message": "任务标题不能为空"
-  },
-  "popupTaskListValidation": {
-    "message": "必须选择一个任务列表"
-  },
-  "popupImportanceTooltip": {
-    "message": "设为重要"
-  },
-  "popupBookmarkTooltip": {
-    "message": "保存书签"
-  },
-  "openOptionsPageTooltip": {
-    "message": "打开选项页"
-  },
-  "loadingText": {
-    "message": "加载中"
-  },
-  "loginText": {
-    "message": "登录"
-  },
-  "logoutText": {
-    "message": "登出"
-  },
-  "loginTip": {
-    "message": "请登录"
-  },
-  "optionsEnableKeepLastTasklist": {
-    "message": "记住上次使用的任务列表"
-  },
-  "optionsEnableKeepLastTasklistHelp": {
-    "message": "开启后,插件将默认选中上次添加任务时使用的任务列表"
-  },
-  "optionsDefaultTasklist": {
-    "message": "默认任务列表"
-  },
-  "optionsDefaultTasklistHelp": {
-    "message": "插件将始终选中设定的默认任务列表"
-  },
-  "optionsEnableAutoFill": {
-    "message": "开启自动填充"
-  },
-  "optionsEnableForceFill": {
-    "message": "强制填充"
-  },
-  "optionsEnableForceFillHelp": {
-    "message": "开启强制填充后,即使存在未提交的任务(提交按钮带 * 号),也将覆盖当前表单内容"
-  },
-  "optionsEnableAutoFillHelp": {
-    "message": "开启自动填充后,插件会将当前选中的内容自动填充到表单"
-  },
-  "optionsAutoFillMode": {
-    "message": "填充模式"
-  },
-  "optionsAutoFillModeHelp": {
-    "message": "填充模式可以指定插件按照哪种方式进行填充"
-  },
-  "optionsAutoFillTitle": {
-    "message": "将选中内容填充到＂标题＂"
-  },
-  "optionsAutoFillDesc": {
-    "message": "将选中内容填充到＂描述＂"
-  },
-  "optionsEnableAutoReset": {
-    "message": "自动清空"
-  },
-  "optionsEnableAutoResetHelp": {
-    "message": "创建任务成功后自动清空当前表单内容"
+  "menu_link": {
+    "message": "将此链接保存到 To Do"
   }
 }

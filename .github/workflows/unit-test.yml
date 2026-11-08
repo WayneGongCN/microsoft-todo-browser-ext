@@ -1,37 +1,26 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: unit test
-
+name: CI
 on:
   push:
-    branches:
-      - "main"
-      - "chore(release):*"
-
+    branches: [main]
   pull_request:
-    
+permissions:
+  contents: read
 jobs:
-  UnitTest:
+  verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Inital Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: '14'
-          cache: 'yarn'
-          cache-dependency-path: yarn.lock
-
-      - name: Install dependencies
-        uses: borales/actions-yarn@v2.3.0
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build:acceptance
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - run: npm run package
+      - uses: actions/upload-artifact@v7
         with:
-          cmd: install
-
-      - name: Run test
-        run: yarn test
-
-      - name: Codecov
-        uses: codecov/codecov-action@v2.1.0
+          name: microsoft-todo-capture
+          path: .output/release/

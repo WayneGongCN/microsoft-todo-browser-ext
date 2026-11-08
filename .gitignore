@@ -9,3 +9,9 @@ dist*/
 .DS_Store
 coverage/
 .env*
+!.env.example
+.output/
+.wxt/
+work/
+test-results/
+playwright-report/
