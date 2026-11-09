@@ -49,7 +49,13 @@ beforeEach(async () => {
   mocks.lists
     .mockReset()
     .mockResolvedValue([{ id: 'list-1', displayName: 'Tasks', wellknownListName: 'defaultList' }]);
-  vi.stubGlobal('chrome', { storage: { local: storage(), session: storage(), sync: storage() } });
+  vi.stubGlobal('chrome', {
+    storage: { local: storage(), session: storage(), sync: storage() },
+    tabs: {
+      get: async () => ({ title: 'A different page', url: 'https://example.com/other' }),
+    },
+    scripting: { executeScript: async () => [{ result: '' }] },
+  });
 });
 
 /** 准备一个由真实保存命令持久化的草稿，喵~ */
@@ -84,11 +90,7 @@ describe('background task and draft lifecycle', () => {
     const { service, draft } = await prepared();
     const result = (await service.handle({
       type: 'bootstrap',
-      capture: {
-        title: 'A different page',
-        note: '',
-        source: { url: 'https://example.com/other', title: 'Other' },
-      },
+      tabId: 1,
     })) as Snapshot;
     expect(result.draft).toEqual(draft);
     expect(result.candidate?.title).toBe('A different page');

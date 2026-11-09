@@ -17,7 +17,7 @@ async function validate(directory) {
     throw new Error('Unexpected extension permissions.');
   if ((await readdir(directory)).includes('verify.html'))
     throw new Error('Verification entrypoint must not ship.');
-  for (const entry of ['popup.html', 'capture.html', 'options.html', manifest.background.service_worker])
+  for (const entry of ['popup.html', 'options.html', manifest.background.service_worker])
     await readFile(`${directory}/${entry}`);
   for (const host of manifest.host_permissions ?? [])
     if (!['https://login.microsoftonline.com/*', 'https://graph.microsoft.com/*'].includes(host))

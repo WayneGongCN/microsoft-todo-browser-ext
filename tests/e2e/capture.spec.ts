@@ -1,7 +1,7 @@
 import { expect, test as base } from '@playwright/test';
 import type { BrowserContext, Worker } from '@playwright/test';
 import { resolve } from 'node:path';
-import { randomUUID } from 'node:crypto';
+import type { Capture, Draft } from '../../src/core/model';
 
 const extensionId = 'gopiiihaachagcmaijfaphjijefgbgnk';
 const extensionUrl = `chrome-extension://${extensionId}`;
@@ -56,27 +56,74 @@ async function routeLists(context: BrowserContext) {
   });
 }
 
-/** 模拟右键已冻结的上下文，编辑器仍通过真实后台消息和本机存储恢复它，喵~ */
-async function openCaptured(context: BrowserContext, worker: Worker, title = '阅读这篇文章') {
-  const id = randomUUID();
-  await worker.evaluate(
-    async ({ id, title }) => {
-      await chrome.storage.session.set({
-        [`v2:capture:${id}`]: {
-          title,
-          note: '保留选中文字',
-          source: { title: 'Example article', url: 'https://example.com/article?keep=1' },
-        },
-      });
-    },
-    { id, title },
-  );
+/** 将已冻结的右键内容交给活动标签页，用普通测试页操作弹窗表单，喵~ */
+async function openCapturePopup(context: BrowserContext, worker: Worker, capture: Capture) {
   const page = await context.newPage();
-  await page.goto(`${extensionUrl}/capture.html?capture=${id}`);
+  await page.bringToFront();
+  await worker.evaluate(async (capture) => {
+    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+    await chrome.storage.session.set({ [`v2:capture-tab:${tab!.id}`]: capture });
+  }, capture);
+  await page.goto(`${extensionUrl}/popup.html`);
+  return page;
+}
+
+/** 等待收集内容和默认清单进入可编辑的弹窗草稿，喵~ */
+async function openCaptured(context: BrowserContext, worker: Worker, title = '阅读这篇文章') {
+  const page = await openCapturePopup(context, worker, {
+    title,
+    note: '保留选中文字',
+    source: { title: 'Example article', url: 'https://example.com/article?keep=1' },
+  });
   await expect(page.getByLabel('任务', { exact: true })).toHaveValue(title);
   await expect(page.locator('#target-list')).toHaveValue('list-1');
   return page;
 }
+
+test('opens the browser action popup on the source tab when capturing selected text', async ({
+  context,
+  worker,
+}) => {
+  await routeLists(context);
+  const url = 'https://example.com/selection';
+  const selectionText = '阅读选中的文字';
+  await context.route(url, (route) => route.fulfill({ body: '<title>Article</title>' }));
+  const source = await context.newPage();
+  await source.goto(url);
+  await source.bringToFront();
+  const before = await worker.evaluate(async () => (await chrome.windows.getAll()).map(({ id }) => id));
+  await worker.evaluate(
+    async ({ selectionText, url }) => {
+      const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+      const event = chrome.contextMenus.onClicked as typeof chrome.contextMenus.onClicked & {
+        dispatch(info: chrome.contextMenus.OnClickData, tab: chrome.tabs.Tab): void;
+      };
+      event.dispatch({ menuItemId: 'selection', pageUrl: url, selectionText, editable: false }, tab!);
+    },
+    { selectionText, url },
+  );
+  await expect
+    .poll(async () =>
+      worker.evaluate(async () => {
+        const [popup] = await chrome.runtime.getContexts({ contextTypes: ['POPUP'] });
+        return popup?.documentUrl;
+      }),
+    )
+    .toBe(`${extensionUrl}/popup.html`);
+  await expect
+    .poll(async () =>
+      worker.evaluate(async () => {
+        const draft = (await chrome.storage.local.get('v2:draft:test:person'))['v2:draft:test:person'] as
+          Draft | undefined;
+        return draft?.title;
+      }),
+    )
+    .toBe(selectionText);
+  expect(await worker.evaluate(async () => (await chrome.windows.getAll()).map(({ id }) => id))).toEqual(
+    before,
+  );
+  expect(source.url()).toBe(url);
+});
 
 test('creates a task with source, notes, importance and an explicit reminder', async ({
   context,
@@ -122,7 +169,7 @@ test('keeps draft text after a failed task request and after the window closes',
   await expect(page.getByLabel('任务', { exact: true })).toHaveValue('阅读这篇文章');
   await page.close();
   const reopened = await context.newPage();
-  await reopened.goto(`${extensionUrl}/capture.html`);
+  await reopened.goto(`${extensionUrl}/popup.html`);
   await expect(reopened.getByLabel('任务', { exact: true })).toHaveValue('阅读这篇文章');
   await expect(reopened.locator('[name=note]')).toHaveValue('保留选中文字');
 });
@@ -144,7 +191,7 @@ test('does not repeat a POST when its result is ambiguous', async ({ context, wo
   expect(attempts).toBe(1);
 });
 
-test('finishes a submission after its editor window closes', async ({ context, worker }) => {
+test('finishes a submission after its editor closes', async ({ context, worker }) => {
   await routeLists(context);
   let release!: () => void;
   const gate = new Promise<void>((resolve) => {
@@ -176,7 +223,7 @@ test('finishes a submission after its editor window closes', async ({ context, w
     )
     .toBe('succeeded');
   const reopened = await context.newPage();
-  await reopened.goto(`${extensionUrl}/capture.html`);
+  await reopened.goto(`${extensionUrl}/popup.html`);
   await expect(reopened.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
 });
 
@@ -185,12 +232,7 @@ test('asks before replacing an unfinished draft with a different capture', async
   const first = await openCaptured(context, worker, '原来的草稿');
   await first.getByLabel('任务', { exact: true }).fill('已修改的草稿');
   await expect(first.getByRole('status').last()).toContainText('草稿已保存在本机');
-  const id = randomUUID();
-  await worker.evaluate(async (id) => {
-    await chrome.storage.session.set({ [`v2:capture:${id}`]: { title: '新的网页', note: '' } });
-  }, id);
-  const second = await context.newPage();
-  await second.goto(`${extensionUrl}/capture.html?capture=${id}`);
+  const second = await openCapturePopup(context, worker, { title: '新的网页', note: '' });
   await expect(second.getByText('还有一份未提交的草稿。')).toBeVisible();
   await expect(second.getByLabel('任务', { exact: true })).toHaveValue('已修改的草稿');
   await second.getByRole('button', { name: '使用新内容' }).click();
@@ -208,14 +250,7 @@ for (const existingDraft of [false, true]) {
       await expect(first.getByRole('status').last()).toContainText('草稿已保存在本机');
       await first.close();
     }
-    const id = randomUUID();
-    await worker.evaluate(async (id) => {
-      await chrome.storage.session.set({
-        [`v2:capture:${id}`]: { title: '过长的选区', note: '选'.repeat(20_001) },
-      });
-    }, id);
-    const page = await context.newPage();
-    await page.goto(`${extensionUrl}/capture.html?capture=${id}`);
+    const page = await openCapturePopup(context, worker, { title: '过长的选区', note: '选'.repeat(20_001) });
     await expect(page.getByRole('alert')).toContainText('本次未导入');
     await expect(page.getByLabel('任务', { exact: true })).toHaveValue(existingDraft ? '继续编辑的草稿' : '');
     await expect(page.locator('[name=note]')).toHaveValue(existingDraft ? '保留选中文字' : '');
@@ -257,12 +292,13 @@ test('allows keyboard task creation when the popup cannot read the active page',
   expect(posted?.linkedResources).toBeUndefined();
 });
 
-test('supports English and dark mode and fits a narrow editor', async ({ context, worker }) => {
+test('supports English and dark mode and fits a narrow settings tab', async ({ context, worker }) => {
   await routeLists(context);
-  const page = await openCaptured(context, worker);
+  const page = await context.newPage();
   await page.setViewportSize({ width: 320, height: 700 });
+  await page.goto(new URL('options.html', worker.url()).href);
+  await expect(page.getByLabel('语言', { exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.getByRole('button', { name: '设置', exact: true }).click();
   await page.getByLabel('语言', { exact: true }).selectOption('en');
   await expect(page.getByLabel('Appearance')).toBeVisible();
   await page.getByLabel('Appearance').selectOption('dark');
@@ -370,7 +406,7 @@ base(
       context = await playwright.chromium.launchPersistentContext(profile, options);
       worker = context.serviceWorkers()[0] ?? (await context.waitForEvent('serviceworker'));
       const guest = await context.newPage();
-      await guest.goto(`${extensionUrl}/capture.html`);
+      await guest.goto(`${extensionUrl}/popup.html`);
       await expect(guest.getByLabel('任务', { exact: true })).toHaveValue('');
       await expect(guest.locator('#target-list')).toBeDisabled();
       expect(

@@ -14,7 +14,8 @@ Keep the extracted folder in place. If you already have the Chrome Web Store cop
 
 ## Use the extension
 
-- Open the toolbar popup or right-click a webpage, selection, or link. Review the draft and choose a To Do list before adding the task.
+- Open the toolbar popup or right-click a webpage, selection, or link to open the same popup. Review the draft, choose a To Do list, and add the task. The confirmation appears in the popup.
+- Chrome 127 or later can open the toolbar popup from the context menu. If it cannot open automatically, click the extension icon with the badge to review the capture.
 - Add notes, mark a task important, set a reminder, or remove the source link before saving.
 - Resume drafts on this device. If a new capture arrives while a draft is saved, choose which draft to keep.
 - Selections can contain up to 20,000 characters. If a selection is too long, shorten it and capture again.
@@ -61,7 +62,7 @@ The support button in Settings opens the donation page in a new tab with fixed U
 
 ## CI and publishing
 
-The extension uses WXT, React, TypeScript, and CSS Modules. `src/core` handles sign-in, Microsoft Graph, drafts, and receipts. `src/ui` is shared by the popup, capture window, and settings. CI runs type checks, linting, unit tests, and isolated Chromium tests with synthetic accounts and mocked services.
+The extension uses WXT, React, TypeScript, and CSS Modules. `src/core` handles sign-in, Microsoft Graph, drafts, and receipts. `src/ui` is shared by the toolbar popup and settings. CI runs type checks, linting, unit tests, and isolated Chromium tests with synthetic accounts and mocked services.
 
 The on-demand Chrome Web Store workflow uses the official v2 API for status, upload, review submission, and publication. It uses the repository secret `REFRESH_TOKEN`, the optional variable `CWS_CLIENT_ID`, and the optional secret `CWS_CLIENT_SECRET`. Its default action is a status check. The review step stages an update for publication after approval.
 

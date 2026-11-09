@@ -93,9 +93,9 @@
   width: 100%;
 }
 .popup {
-  width: 390px;
   max-height: 600px;
   overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 .window {
   max-width: 460px;
@@ -416,9 +416,6 @@
   clip-path: inset(50%);
 }
 @media (max-width: 380px) {
-  .popup {
-    width: 100%;
-  }
   .options {
     align-items: flex-start;
     flex-direction: column;
