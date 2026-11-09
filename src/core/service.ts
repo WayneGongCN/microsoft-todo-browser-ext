@@ -1,3 +1,4 @@
+import { ANALYTICS_CLIENT_KEY, setAnalyticsConsent, trackAnalytics } from './analytics';
 import * as auth from './auth';
 import * as graph from './graph';
 import { AppError, publicError } from './errors';
@@ -12,6 +13,8 @@ import {
 import type { Capture, Draft, Preferences, Receipt } from './model';
 import type { Request, Snapshot } from './protocol';
 import { read, remove, Transactions, write } from './storage';
+
+type BusinessRequest = Exclude<Request, { type: 'analytics_open' }>;
 
 const workerId = crypto.randomUUID();
 const transactions = new Transactions();
@@ -90,6 +93,7 @@ async function snapshot(capture?: Capture): Promise<Snapshot> {
   return {
     account,
     accountId,
+    analyticsEnabled: Boolean(await read<string>(ANALYTICS_CLIENT_KEY)),
     draft,
     preferences: prefs,
     lists: cache?.lists ?? [],
@@ -182,6 +186,7 @@ async function submit(accountId: string, draftId: string, revision: number): Pro
       }
       await write(values);
     });
+    if (receipt.status === 'succeeded') void trackAnalytics({ name: 'task_created' });
     return receipt;
   })();
   active.set(operationId, task);
@@ -218,7 +223,10 @@ export function parseRequest(value: unknown): Request {
   if (!value || typeof value !== 'object') throw new AppError('invalid');
   const raw = value as Record<string, unknown>;
   if (typeof raw.type !== 'string') throw new AppError('invalid');
-  if (['login', 'logout'].includes(raw.type)) return { type: raw.type } as Request;
+  if (raw.type === 'login' || raw.type === 'logout' || raw.type === 'analytics_open')
+    return { type: raw.type };
+  if (raw.type === 'analytics_consent' && typeof raw.enabled === 'boolean')
+    return { type: 'analytics_consent', enabled: raw.enabled };
   if (raw.type === 'bootstrap') {
     if (
       raw.captureId !== undefined &&
@@ -270,12 +278,13 @@ export function parseRequest(value: unknown): Request {
   if (
     ['submit', 'new', 'acknowledge', 'confirm_absent', 'confirm_present', 'restore_guest'].includes(raw.type)
   )
-    return { type: raw.type, ...base } as Request;
+    return { type: raw.type, ...base } as BusinessRequest;
   throw new AppError('invalid');
 }
 
 /** 分派后台命令，所有草稿写入与提交都经过账号和版本核验，喵~ */
-export async function handle(request: Request): Promise<unknown> {
+export async function handle(request: BusinessRequest): Promise<unknown> {
+  if (request.type === 'analytics_consent') return setAnalyticsConsent(request.enabled);
   if (request.type === 'login') {
     const account = await auth.login();
     return transactions.run(async () => {
