@@ -57,6 +57,8 @@ npm run package
 
 扩展直接连接微软完成登录和任务收集，按 Chrome 应用商店用户数据政策处理主动收集涉及的数据。详见[隐私政策](https://microsoft-todo-capture-site.vercel.app/zh/privacy/)和 [Limited Use 要求](https://developer.chrome.com/docs/webstore/program-policies/limited-use)。反馈请使用 [GitHub Issues](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues)，并先隐去令牌、账号详情和任务内容。
 
+设置页的赞赏按钮会在新标签页打开赞赏页，并携带标记扩展来源的固定 UTM 参数。
+
 ## CI 和发布
 
 扩展使用 WXT、React、TypeScript 和 CSS Modules。`src/core` 处理登录、Microsoft Graph、草稿和回执，`src/ui` 供工具栏弹窗、收集窗口和设置复用。CI 运行类型检查、代码检查、单测及独立 Chromium 测试。自动化测试使用合成账号和模拟服务。
