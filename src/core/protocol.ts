@@ -11,11 +11,12 @@ export interface Snapshot {
   preferences: Preferences;
   lists: TodoList[];
   receipt?: Receipt;
+  captureOrigin?: 'menu' | 'page';
   candidate?: Capture;
   guestDraft?: Draft;
 }
 export type Request =
-  | { type: 'bootstrap'; capture?: Capture; captureId?: string }
+  | { type: 'bootstrap'; tabId?: number }
   | { type: 'analytics_open' }
   | { type: 'analytics_consent'; enabled: boolean }
   | { type: 'login' }
@@ -29,7 +30,6 @@ export type Request =
       draftId: string;
       revision: number;
       capture: Capture;
-      captureId?: string;
     }
   | { type: 'preferences'; accountId: string; preferences: Preferences }
   | { type: 'new'; accountId: string; draftId: string; revision: number }

@@ -8,7 +8,7 @@ const endpoint =
     : (import.meta.env.WXT_ANALYTICS_ENDPOINT as string | undefined);
 const transactions = new Transactions();
 type Session = { id: number; lastEventAt: number };
-export type AnalyticsSurface = 'popup' | 'capture' | 'options';
+export type AnalyticsSurface = 'popup' | 'options';
 
 /** 只在主动同意后生成统计标识，撤回时同时清理会话。 */
 export async function setAnalyticsConsent(enabled: boolean): Promise<boolean> {

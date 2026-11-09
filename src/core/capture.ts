@@ -20,14 +20,19 @@ export function makeCapture(
   return { title, note: kind === 'selection' ? text : '', ...(source ? { source } : {}) };
 }
 
-/** 工具栏只读取当前窗口的活动页，并在用户授权后按需取得选区，喵~ */
-export async function captureActivePage(): Promise<Capture | undefined> {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (!tab?.id || !safeSource(tab.url)) return;
+/** 右键收集只传给来源标签页的弹窗，喵~ */
+export function pendingCaptureKey(tabId: number): string {
+  return `v2:capture-tab:${tabId}`;
+}
+
+/** 工具栏只读取打开时对应的标签页，并在用户授权后按需取得选区，喵~ */
+export async function capturePage(tabId: number): Promise<Capture | undefined> {
+  const tab = await chrome.tabs.get(tabId).catch(() => undefined);
+  if (!tab || !safeSource(tab.url)) return;
   let text = '';
   try {
     const [result] = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
+      target: { tabId },
       func: () => window.getSelection()?.toString() ?? '',
     });
     if (typeof result?.result === 'string') text = result.result;

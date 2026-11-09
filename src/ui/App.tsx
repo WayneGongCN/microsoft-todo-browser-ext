@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { ANALYTICS_CLIENT_KEY } from '../core/analytics';
-import { captureActivePage } from '../core/capture';
 import { AppError } from '../core/errors';
 import type { ErrorCode } from '../core/errors';
 import { hasContent, MAX_NOTE_LENGTH } from '../core/model';
@@ -12,7 +11,7 @@ import type { Snapshot } from '../core/protocol';
 import { messages } from './i18n';
 import styles from './App.module.css';
 
-type Mode = 'popup' | 'capture' | 'options';
+type Mode = 'popup' | 'options';
 
 const rewardUrl =
   'https://reward.waynegong.com/?utm_source=microsoft-todo-browser-ext&utm_medium=referral&utm_campaign=todo-capture-reward';
@@ -32,7 +31,7 @@ export function App({ mode }: { mode: Mode }) {
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [error, setError] = useState<AppError>();
-  const [expanded, setExpanded] = useState(mode === 'capture');
+  const [expanded, setExpanded] = useState(false);
   const [settings, setSettings] = useState(mode === 'options');
   const [accountChanged, setAccountChanged] = useState(false);
   const [pageUnavailable, setPageUnavailable] = useState(false);
@@ -308,23 +307,23 @@ export function App({ mode }: { mode: Mode }) {
       )
         localStorage.removeItem(key);
     }
-    const captureId = new URL(location.href).searchParams.get('capture') ?? undefined;
     void (async () => {
-      const capture = mode === 'popup' ? await captureActivePage().catch(() => undefined) : undefined;
-      if (mounted) setPageUnavailable(mode === 'popup' && !capture);
+      const [tab] =
+        mode === 'popup'
+          ? await chrome.tabs.query({ active: true, currentWindow: true }).catch(() => [])
+          : [];
       let snapshot: Snapshot;
       let captureFailure: AppError | undefined;
       try {
-        snapshot = await send<Snapshot>({
-          type: 'bootstrap',
-          ...(captureId ? { captureId } : { capture }),
-        });
+        snapshot = await send<Snapshot>({ type: 'bootstrap', tabId: tab?.id });
       } catch (problem) {
         if (!(problem instanceof AppError) || problem.code !== 'capture_too_large') throw problem;
         snapshot = await send<Snapshot>({ type: 'bootstrap' });
         captureFailure = problem;
       }
       if (!mounted) return;
+      setPageUnavailable(mode === 'popup' && !snapshot.captureOrigin && !captureFailure);
+      setExpanded(snapshot.captureOrigin === 'menu');
       apply(snapshot);
       void send({ type: 'analytics_open' }).catch(() => undefined);
       await loadLists(snapshot);
