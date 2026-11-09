@@ -34,7 +34,8 @@
 :global(select) {
   font: inherit;
 }
-:global(button) {
+:global(button),
+.rewardLink {
   cursor: pointer;
   color: var(--fg);
   background: var(--bg);
@@ -46,7 +47,8 @@
   opacity: 0.5;
   cursor: default;
 }
-:global(button:hover:not(:disabled)) {
+:global(button:hover:not(:disabled)),
+.rewardLink:hover {
   filter: brightness(0.96);
 }
 :global(a) {
@@ -364,6 +366,10 @@
 .settings label {
   font-size: 13px;
 }
+.rewardLink {
+  align-self: flex-start;
+  text-decoration: none;
+}
 .account {
   display: flex;
   align-items: center;
@@ -439,7 +445,8 @@
 }
 @media (pointer: coarse) {
   :global(button),
-  :global(select) {
+  :global(select),
+  .rewardLink {
     min-height: 44px;
   }
   .check {
