@@ -68,6 +68,14 @@ npm run package
 
 隐私和问题反馈请使用本仓库的 [Issues](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues)。请勿附上令牌、完整任务内容或账号隐私。
 
+扩展仅为用户主动收集 Microsoft To Do 任务处理上述数据，并遵守 Chrome 应用商店用户数据政策的 [Limited Use 要求](https://developer.chrome.com/docs/webstore/program-policies/limited-use)。
+
+### Extension privacy
+
+When you sign in, the extension uses Microsoft Identity to establish a session and Microsoft Graph to read your To Do lists. When you initiate capture, it reads the relevant page title, URL or selection. Confirming a task sends its title, notes, source link, importance and optional reminder directly to Microsoft Graph. Session tokens stay in restricted browser session storage. Drafts, list caches and submission receipts stay in local extension storage. Signing out clears the current account’s draft and list cache. You can manage submitted tasks in Microsoft To Do.
+
+To Do Capture uses this data for user-initiated task capture and follows the Chrome Web Store User Data Policy, including its [Limited Use requirements](https://developer.chrome.com/docs/webstore/program-policies/limited-use). The extension has no ads, analytics or developer-operated backend. For privacy questions, use the repository’s [Issues](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues).
+
 ## 工程与发布
 
 WXT / Vite、React、TypeScript strict、CSS Modules、原生 fetch。`src/core` 管理认证、Graph、草稿、版本核验和提交回执；`src/ui` 供 popup、右键编辑窗口及设置页面复用。
