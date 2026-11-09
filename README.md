@@ -57,6 +57,8 @@ When you start a capture, the extension reads the relevant page title, URL, or s
 
 The extension connects directly to Microsoft for sign-in and tasks. It uses this data for user-initiated capture under the Chrome Web Store User Data Policy, including its Limited Use requirements. See the [privacy policy](https://microsoft-todo-capture-site.vercel.app/privacy/) and [Limited Use requirements](https://developer.chrome.com/docs/webstore/program-policies/limited-use). For support, use [GitHub Issues](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues) and redact tokens, account details, and task contents.
 
+The support button in Settings opens the donation page in a new tab with fixed UTM tags that identify the extension as the source.
+
 ## CI and publishing
 
 The extension uses WXT, React, TypeScript, and CSS Modules. `src/core` handles sign-in, Microsoft Graph, drafts, and receipts. `src/ui` is shared by the popup, capture window, and settings. CI runs type checks, linting, unit tests, and isolated Chromium tests with synthetic accounts and mocked services.
