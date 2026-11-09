@@ -18,6 +18,13 @@ export default defineConfig({
       48: 'icons/todo-48.png',
       128: 'icons/todo-128.png',
     },
+    action: {
+      default_icon: {
+        16: 'icons/todo-16.png',
+        24: 'icons/todo-24.png',
+        32: 'icons/todo-32.png',
+      },
+    },
     ...(mode !== 'production' ? { key: developmentIdentity.key } : {}),
   }),
 });
