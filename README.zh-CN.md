@@ -63,7 +63,9 @@ npm run package
 
 扩展使用 WXT、React、TypeScript 和 CSS Modules。`src/core` 处理登录、Microsoft Graph、草稿和回执，`src/ui` 供工具栏弹窗、收集窗口和设置复用。CI 运行类型检查、代码检查、单测及独立 Chromium 测试。自动化测试使用合成账号和模拟服务。
 
-按需运行的 Chrome 商店工作流使用官方 v2 API 查询状态、上传、送审和发布。工作流读取仓库 secret `REFRESH_TOKEN`，以及可选的变量 `CWS_CLIENT_ID` 和 secret `CWS_CLIENT_SECRET`。默认执行状态查询。送审使用暂存发布，审核通过后再发布。
+在包含 Chrome 商店工作流的提交上推送新的 `v<版本号>` 标签，版本号须与 `package.json` 一致。Actions 会校验并打包标签对应的提交，再上传商店 ZIP 并送审。商店状态变为 `STAGED` 后，在同一个标签上手动运行工作流并选择 `release` 即可发布。
+
+手动运行工作流时默认执行 `status`，也可选择 `upload`、`submit` 和 `release`。若 Google 拒绝 OAuth 授权，请按[官方流程重新授权](https://developer.chrome.com/docs/webstore/using-api)，更新仓库 secret `REFRESH_TOKEN`，按需更新配套的变量 `CWS_CLIENT_ID` 和 secret `CWS_CLIENT_SECRET`，然后运行 `status` 验证访问权限。
 
 ## 许可证
 

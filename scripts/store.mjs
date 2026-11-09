@@ -1,4 +1,5 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { setTimeout } from 'node:timers/promises';
 
 const action = process.argv[2] ?? 'status';
 const item = 'ffpljgmbiankjaokoefefmkoghcgoodn';
@@ -23,6 +24,10 @@ async function accessToken() {
     signal: AbortSignal.timeout(20_000),
   });
   const result = await response.json();
+  if (result.error === 'invalid_grant')
+    throw new Error(
+      'Google OAuth returned invalid_grant. Reauthorize the publisher and update the REFRESH_TOKEN secret.',
+    );
   if (!response.ok || typeof result.access_token !== 'string')
     throw new Error(
       `OAuth refresh failed: HTTP ${response.status}, ${/^[a-z_]+$/.test(result.error ?? '') ? result.error : 'unknown_error'}`,
@@ -45,6 +50,11 @@ async function request(token, url, options = {}) {
   return result;
 }
 
+function matchesVersion(revision, version) {
+  const channels = revision?.distributionChannels;
+  return Boolean(channels?.length && channels.every((channel) => channel.crxVersion === version));
+}
+
 /** 状态查询不触发上传或提审，发布动作必须由明确的命令选择，喵~ */
 async function main() {
   if (!['status', 'upload', 'submit', 'release'].includes(action))
@@ -60,19 +70,38 @@ async function main() {
         takenDown: before.takenDown,
         published: before.publishedItemRevisionStatus,
         submitted: before.submittedItemRevisionStatus,
+        lastAsyncUploadState: before.lastAsyncUploadState,
         publicKeyAvailable: Boolean(before.publicKey),
       }),
     );
     return;
   }
+  const { version } = JSON.parse(await readFile('package.json', 'utf8'));
+  const currentSubmission = before.submittedItemRevisionStatus;
   if (action === 'release') {
-    if (before.submittedItemRevisionStatus?.state !== 'STAGED')
+    if (currentSubmission?.state !== 'STAGED')
       throw new Error('The current submission is not approved and staged.');
-    const pkg = JSON.parse(await readFile('package.json', 'utf8'));
-    const channels = before.submittedItemRevisionStatus.distributionChannels;
-    if (!channels?.length || channels.some((channel) => channel.crxVersion !== pkg.version))
+    if (!matchesVersion(currentSubmission, version))
       throw new Error('The approved version does not match this release.');
   } else {
+    if (['PENDING_REVIEW', 'STAGED'].includes(currentSubmission?.state)) {
+      if (action === 'submit' && matchesVersion(currentSubmission, version)) {
+        console.log(JSON.stringify({ phase: 'already-submitted', version, state: currentSubmission.state }));
+        return;
+      }
+      throw new Error('An update is under review or staged. Resolve it before uploading a new version.');
+    }
+    if (
+      action === 'submit' &&
+      !before.takenDown &&
+      matchesVersion(before.publishedItemRevisionStatus, version)
+    ) {
+      console.log(JSON.stringify({ phase: 'already-published', version }));
+      return;
+    }
+    if (before.lastAsyncUploadState === 'UPLOAD_IN_PROGRESS')
+      throw new Error('A package upload is in progress. Check status before retrying.');
+
     const path = process.argv[3];
     if (!path?.endsWith('.zip')) throw new Error('A validated release ZIP is required.');
     const file = await readFile(path);
@@ -81,9 +110,17 @@ async function main() {
       headers: { 'Content-Type': 'application/zip' },
       body: file,
     });
-    console.log(JSON.stringify({ phase: 'upload', uploadState: uploaded.uploadState }));
-    if (uploaded.uploadState !== 'SUCCEEDED')
-      throw new Error('Upload has not completed; query status before any publish attempt.');
+    let { uploadState } = uploaded;
+    for (let attempt = 0; uploadState === 'UPLOAD_IN_PROGRESS' && attempt < 12; attempt += 1) {
+      await setTimeout(5_000);
+      const status = await request(token, `${endpoint}:fetchStatus`);
+      uploadState = status.lastAsyncUploadState;
+    }
+    console.log(JSON.stringify({ phase: 'upload', uploadState }));
+    if (uploadState !== 'SUCCEEDED')
+      throw new Error('The package upload did not succeed. Check store status.');
+    if (uploaded.crxVersion && uploaded.crxVersion !== version)
+      throw new Error('The uploaded package version does not match package.json.');
     if (action === 'upload') return;
   }
   const submitted = await request(token, `${endpoint}:publish`, {
@@ -102,6 +139,8 @@ async function main() {
       state: submitted.state,
     }),
   );
+  if (action === 'submit' && !['PENDING_REVIEW', 'STAGED'].includes(submitted.state))
+    throw new Error('Chrome Web Store did not confirm submission for review. Check store status.');
 }
 
 main().catch((error) => {
