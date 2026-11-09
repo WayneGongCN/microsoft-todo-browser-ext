@@ -1,4 +1,4 @@
-# Microsoft To Do Capture
+# To Do Capture
 
 一个独立开源的 Chrome 扩展，将网页、选中文字和链接快速收集到 Microsoft To Do。支持选择清单、备注、重要标记、提醒、中英文和浅深色。与微软公司无关联。
 
@@ -41,6 +41,8 @@ npm run package
 ```
 
 最后在 `.output/release` 生成商店 ZIP、验收 ZIP、SHA-256 和对应源码提交信息。打包需要系统 `zip` 命令。正式上传使用相同验证流水线生成的产物。
+
+商店与工具栏图标由[项目网站的 SVG](https://microsoft-todo-capture-site.vercel.app/favicon.svg)导出。
 
 ## 认证与数据
 
