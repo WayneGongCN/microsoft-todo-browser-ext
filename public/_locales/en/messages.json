@@ -1,116 +1,17 @@
 {
   "extensionName": {
-    "message": "Microsoft To Do Browser Extension"
+    "message": "Microsoft To Do Capture"
   },
   "extensionDescription": {
-    "message": "An open source, free browser extension for Microsoft To Do that keeps you focused from work to play."
+    "message": "Quickly save webpages, selected text and links to Microsoft To Do."
   },
-  "untitle": {
-    "message": "Untitle"
+  "menu_page": {
+    "message": "Save this page to To Do"
   },
-  "addTask": {
-    "message": "Add task"
+  "menu_selection": {
+    "message": "Save selected text to To Do"
   },
-  "quickAddTask": {
-    "message": "Quick add task"
-  },
-  "success": {
-    "message": "success"
-  },
-  "openMSTODO": {
-    "message": "Open in Microsoft To Do"
-  },
-  "optionPage": {
-    "message": "Options"
-  },
-  "popupTitleText": {
-    "message": "Title"
-  },
-  "popupDescribeText": {
-    "message": "Describe"
-  },
-  "popupDateTimeText": {
-    "message": "Reminder Date"
-  },
-  "popupTaskListText": {
-    "message": "Task List"
-  },
-  "popupResetTooltip": {
-    "message": "reset"
-  },
-  "popupCreatingText": {
-    "message": "Creating"
-  },
-  "popupAddTaskBtn": {
-    "message": "Add a task"
-  },
-  "popupTitleValidation": {
-    "message": "Title is required."
-  },
-  "popupTaskListValidation": {
-    "message": "Tasklist is required."
-  },
-  "popupImportanceTooltip": {
-    "message": "Importance"
-  },
-  "popupBookmarkTooltip": {
-    "message": "Bookmark"
-  },
-  "openOptionsPageTooltip": {
-    "message": "Open options page"
-  },
-  "loadingText": {
-    "message": "Loading"
-  },
-  "loginText": {
-    "message": "Login"
-  },
-  "logoutText": {
-    "message": "Logout"
-  },
-  "loginTip": {
-    "message": "Please login"
-  },
-  "optionsEnableKeepLastTasklist": {
-    "message": "Remember the task list used last time"
-  },
-  "optionsEnableKeepLastTasklistHelp": {
-    "message": "After opening, the extension will select the task list used when the last task is added by default"
-  },
-  "optionsDefaultTasklist": {
-    "message": "Default task list"
-  },
-  "optionsDefaultTasklistHelp": {
-    "message": "The extension will always select the default task list setting"
-  },
-  "optionsEnableAutoFill": {
-    "message": "Open automatic fill"
-  },
-  "optionsEnableForceFill": {
-    "message": "Compulsory fill"
-  },
-  "optionsEnableForceFillHelp": {
-    "message": "After the compulsory fill is turned on, even if there is an unprepared task (the submitted button with the number *), the content of the current form will be covered"
-  },
-  "optionsEnableAutoFillHelp": {
-    "message": "After turning on the automatic fill, the extension will automatically fill the current selected content to the form"
-  },
-  "optionsAutoFillMode": {
-    "message": "Fill mode"
-  },
-  "optionsAutoFillModeHelp": {
-    "message": "The fill mode can specify the extension to be filled in accordance with the way"
-  },
-  "optionsAutoFillTitle": {
-    "message": "Fill in the selected content to 'title'"
-  },
-  "optionsAutoFillDesc": {
-    "message": "Fill in the selected content to 'Description'"
-  },
-  "optionsEnableAutoReset": {
-    "message": "Automatically reset task form"
-  },
-  "optionsEnableAutoResetHelp": {
-    "message": "After the task is successfully created, the content of the current form is automatically reset, which is suitable for scenarios where multiple tasks are created continuously"
+  "menu_link": {
+    "message": "Save this link to To Do"
   }
 }

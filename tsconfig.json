@@ -1,15 +1,11 @@
 {
+  "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
-    "noImplicitAny": true,
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "module": "es2020",
-    "target": "es2020",
-    "jsx": "react",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "skipLibCheck": true
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "jsx": "react-jsx",
+    "types": ["chrome", "vite/client", "node"],
+    "resolveJsonModule": true
   },
-  "include": ["types/*", "src/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "work", ".output"]
 }

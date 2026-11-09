@@ -1,48 +1,37 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: upload chrome store
-
+name: Chrome Web Store
 on:
-  push:
-    branches:
-      - "ci/gh-action"
-    tags:        
-      - v*
   workflow_dispatch:
-
+    inputs:
+      action:
+        description: Store operation
+        type: choice
+        default: status
+        options: [status, upload, submit, release]
+permissions:
+  contents: read
 jobs:
-  upload:
+  store:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Inital Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: '14'
-          cache: 'yarn'
-          cache-dependency-path: yarn.lock
-          
-      - name: Create env file
-        run: |
-            cat << EOF > .env.production
-            CHROME_CLIENT_ID="a5491fb2-111a-4c43-976c-280a507814dc"
-            EDGE_CLIENT_ID="ce33022f-91e6-470c-8ccb-fefba8207f1b"
-            FIREFOX_CLIENT_ID="15eec8a0-7d1e-4e93-aa7c-31795b3d6bac"
-            CHROME_STORE_UPLOADER_EXTENSION_ID="ffpljgmbiankjaokoefefmkoghcgoodn"
-            CHROME_STORE_UPLOADER_CLIENT_ID="846943702071-dg8uf689j8bsn816avetglmtpis4hr3m.apps.googleusercontent.com"
-            CHROME_STORE_UPLOADER_REFRESH_TOKEN=${{ secrets.REFRESH_TOKEN }}
-            EOF
-
-      - name: Install
-        uses: borales/actions-yarn@v2.3.0
+          node-version: '22'
+          cache: npm
+      - if: inputs.action == 'upload' || inputs.action == 'submit'
+        run: npm ci
+      - if: inputs.action == 'upload' || inputs.action == 'submit'
+        run: npm run check && npm run build:acceptance && npx playwright install --with-deps chromium && npm run test:e2e && npm run package
+      - name: Run requested store operation
+        env:
+          CWS_REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          CWS_CLIENT_ID: ${{ vars.CWS_CLIENT_ID }}
+          CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          STORE_ACTION: ${{ inputs.action }}
+        run: node scripts/store.mjs "$STORE_ACTION" .output/release/microsoft-todo-capture-2.0.0-chrome.zip
+      - uses: actions/upload-artifact@v7
+        if: always() && inputs.action == 'status'
         with:
-          cmd: install
-
-      - name: Build
-        run: npm run build:chrome
-
-      - name: Upload
-        run: npm run upload:chrome
+          name: store-status
+          path: .output/store-status.json
+          if-no-files-found: ignore

@@ -1,167 +1,53 @@
 {
   "name": "microsoft-todo-browser-ext",
-  "version": "1.4.0",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Capture webpages, selections and links in Microsoft To Do.",
   "repository": "https://github.com/WayneGongCN/microsoft-todo-browser-ext",
-  "author": "waynegong <Wayne.Gong.CN@hotmail.com>",
-  "homepage": "https://mstodo-ext.waynegong.cn",
+  "author": "waynegong",
   "license": "MIT",
-  "scripts": {
-    "commit": "cz",
-    "dev": "cross-env NODE_ENV=development TARGET=chrome webpack --config webpack/webpack.config.dev.js --watch",
-    "test": "jest",
-    "build": "webpack --config webpack/webpack.config.prod.js",
-    "build:chrome": "cross-env NODE_ENV=production TARGET=chrome npm run build",
-    "build:edge": "cross-env NODE_ENV=production TARGET=edge npm run build",
-    "build:firefox": "cross-env NODE_ENV=production TARGET=firefox npm run build",
-    "upload:chrome": "node scripts/chrome-store-uploader.mjs",
-    "changelog": "conventional-changelog -p angular -o CHANGELOG.md  -i CHANGELOG.md",
-    "release": "standard-version"
+  "engines": {
+    "node": ">=22.12.0"
   },
-  "devDependencies": {
-    "@babel/core": "^7.16.5",
-    "@babel/preset-env": "^7.16.5",
-    "@babel/preset-react": "^7.16.7",
-    "@babel/preset-typescript": "^7.16.5",
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
-    "@testing-library/react": "^12.1.3",
-    "@types/chrome": "0.0.128",
-    "@types/jest": "^27.4.0",
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.3",
-    "@types/react-redux": "^7.1.16",
-    "@types/react-test-renderer": "^17.0.1",
-    "@types/redux-logger": "^3.0.8",
-    "@types/uuid": "^8.3.3",
-    "@typescript-eslint/eslint-plugin": "^5.8.1",
-    "@typescript-eslint/parser": "^5.8.1",
-    "babel-jest": "^27.5.1",
-    "chrome-webstore-upload": "^1.0.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "commitizen": "^4.2.3",
-    "conventional-changelog-cli": "^2.1.1",
-    "copy-webpack-plugin": "^7.0.0",
-    "cross-env": "^7.0.3",
-    "css-loader": "^5.1.3",
-    "cz-conventional-changelog": "^3.3.0",
-    "dotenv": "^10.0.0",
-    "dotenv-webpack": "^7.0.3",
-    "eslint": "^8.6.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.22.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "eslint-webpack-plugin": "^2.4.1",
-    "html-webpack-plugin": "^5.0.0-beta.5",
-    "husky": ">=6",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.5.1",
-    "jest-chrome": "^0.7.2",
-    "lint-staged": ">=10",
-    "prettier": "2.5.1",
-    "react-test-renderer": "^17.0.2",
-    "source-map-loader": "^2.0.1",
-    "standard-version": "^9.1.1",
-    "style-loader": "^2.0.0",
-    "ts-loader": "^9.2.6",
-    "typescript": "^4.5.4",
-    "webpack": "^5.14.0",
-    "webpack-bundle-analyzer": "^4.5.0",
-    "webpack-cli": "^4.3.1",
-    "webpack-merge": "^5.8.0",
-    "zip-webpack-plugin": "^4.0.1"
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "build:acceptance": "NODE_ENV=production wxt build --mode acceptance",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "check": "npm run typecheck && npm run lint && npm run format && npm test && npm run build",
+    "postinstall": "wxt prepare",
+    "lint": "eslint src tests *.ts *.mjs scripts --max-warnings 0",
+    "format": "prettier --check src tests config scripts *.ts *.mjs *.json",
+    "package": "node scripts/package.mjs"
   },
   "dependencies": {
-    "@azure/msal-browser": "^2.9.0",
-    "@emotion/react": "^11.8.1",
-    "@emotion/styled": "^11.8.1",
-    "@mui/icons-material": "^5.4.2",
-    "@mui/lab": "^5.0.0-alpha.69",
-    "@mui/material": "^5.4.2",
-    "@mui/styles": "^5.4.2",
-    "@reduxjs/toolkit": "^1.5.1",
-    "@sentry/browser": "^6.16.1",
-    "@sentry/react": "^6.16.1",
-    "@sentry/tracing": "^6.16.1",
-    "axios": "^0.24.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-hook-form": "^7.22.2",
-    "react-redux": "^7.2.2",
-    "react-router-dom": "^6.2.1",
-    "redux": "^4.0.5",
-    "redux-logger": "^3.0.6",
-    "redux-persist": "^6.0.0",
-    "redux-persist-chrome-storage": "^1.0.6",
-    "uuid": "^8.3.2"
+    "oauth4webapi": "3.8.8",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
-  "sideEffects": false,
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "current"
-          }
-        }
-      ],
-      "@babel/preset-typescript",
-      "@babel/preset-react"
-    ]
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@playwright/test": "1.65.0",
+    "@types/chrome": "0.3.7",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@wxt-dev/module-react": "1.2.2",
+    "eslint": "9.39.5",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.14.0",
+    "prettier": "3.9.10",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
+    "vitest": "5.1.0",
+    "wxt": "0.21.5"
   },
-  "eslintConfig": {
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint",
-      "react"
-    ],
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:react/recommended",
-      "prettier"
-    ],
-    "env": {
-      "webextensions": true,
-      "browser": true,
-      "es2021": true,
-      "node": true
-    },
-    "parserOptions": {
-      "ecmaFeatures": {
-        "jsx": true
-      },
-      "ecmaVersion": 12,
-      "sourceType": "module"
+  "overrides": {
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.5"
     }
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "lint-staged": {
-    "*.ts": "eslint --cache --fix",
-    "*.{ts,css}": "prettier --write"
-  },
-  "prettier": {
-    "printWidth": 160,
-    "singleQuote": true,
-    "parser": "typescript",
-    "overrides": [
-      {
-        "files": "*.css",
-        "options": {
-          "parser": "css"
-        }
-      }
-    ]
   }
 }

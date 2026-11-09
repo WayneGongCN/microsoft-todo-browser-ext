@@ -1,2 +1,8 @@
-dist/
-node_modules/
+node_modules
+.output
+.wxt
+work
+test-results
+playwright-report
+package-lock.json
+CHANGELOG.md
