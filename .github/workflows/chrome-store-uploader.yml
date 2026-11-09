@@ -1,5 +1,7 @@
 name: Chrome Web Store
 on:
+  push:
+    tags: ['v*']
   workflow_dispatch:
     inputs:
       action:
@@ -9,30 +11,45 @@ on:
         options: [status, upload, submit, release]
 permissions:
   contents: read
+concurrency:
+  group: chrome-web-store
+  queue: max
 jobs:
   store:
+    if: github.event_name != 'push' || (github.ref_type == 'tag' && github.event.created && !github.event.deleted)
     runs-on: ubuntu-latest
+    env:
+      STORE_ACTION: ${{ github.event_name == 'push' && 'submit' || inputs.action || 'status' }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: npm
-      - if: inputs.action == 'upload' || inputs.action == 'submit'
+      - name: Check release tag against package version
+        if: github.event_name == 'push'
+        run: |
+          version=$(node -p 'require("./package.json").version')
+          if [[ "$GITHUB_REF_NAME" != "v$version" ]]; then
+            echo "::error::The release tag must match v$version from package.json."
+            exit 1
+          fi
+      - if: env.STORE_ACTION == 'upload' || env.STORE_ACTION == 'submit'
         run: npm ci
-      - if: inputs.action == 'upload' || inputs.action == 'submit'
+      - if: env.STORE_ACTION == 'upload' || env.STORE_ACTION == 'submit'
         run: npm run check && npm run build:acceptance && npx playwright install --with-deps chromium && npm run test:e2e && npm run package
       - name: Run requested store operation
         env:
           CWS_REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           CWS_CLIENT_ID: ${{ vars.CWS_CLIENT_ID }}
           CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
-          STORE_ACTION: ${{ inputs.action }}
         run: |
           version=$(node -p 'require("./package.json").version')
           node scripts/store.mjs "$STORE_ACTION" ".output/release/microsoft-todo-capture-${version}-chrome.zip"
       - uses: actions/upload-artifact@v7
-        if: always() && inputs.action == 'status'
+        if: always() && env.STORE_ACTION == 'status'
         with:
           name: store-status
           path: .output/store-status.json

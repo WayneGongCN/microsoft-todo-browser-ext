@@ -63,7 +63,9 @@ The support button in Settings opens the donation page in a new tab with fixed U
 
 The extension uses WXT, React, TypeScript, and CSS Modules. `src/core` handles sign-in, Microsoft Graph, drafts, and receipts. `src/ui` is shared by the popup, capture window, and settings. CI runs type checks, linting, unit tests, and isolated Chromium tests with synthetic accounts and mocked services.
 
-The on-demand Chrome Web Store workflow uses the official v2 API for status, upload, review submission, and publication. It uses the repository secret `REFRESH_TOKEN`, the optional variable `CWS_CLIENT_ID`, and the optional secret `CWS_CLIENT_SECRET`. Its default action is a status check. The review step stages an update for publication after approval.
+Push a new `v<version>` tag on a commit that contains the Chrome Web Store workflow. The version must match `package.json`. Actions verifies and packages the tagged commit, then uploads the store ZIP and submits it for staged review. After the store shows `STAGED`, run the workflow with `release` on the same tag to publish it.
+
+The manual workflow defaults to `status` and also offers `upload`, `submit`, and `release`. If Google rejects the OAuth grant, [reauthorize the Chrome Web Store publisher](https://developer.chrome.com/docs/webstore/using-api), update the repository secret `REFRESH_TOKEN` and the matching `CWS_CLIENT_ID` variable and `CWS_CLIENT_SECRET` secret as needed, and run `status` to verify access.
 
 ## License
 
