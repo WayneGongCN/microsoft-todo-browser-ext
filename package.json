@@ -21,7 +21,8 @@
     "postinstall": "wxt prepare",
     "lint": "eslint src tests *.ts *.mjs scripts --max-warnings 0",
     "format": "prettier --check src tests config scripts *.ts *.mjs *.json",
-    "package": "node scripts/package.mjs"
+    "package": "node scripts/package.mjs",
+    "package:edge": "wxt build --browser edge --mv3 && node scripts/package.mjs edge"
   },
   "dependencies": {
     "oauth4webapi": "3.8.8",

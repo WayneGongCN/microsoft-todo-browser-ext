@@ -325,7 +325,7 @@ export function App({ mode }: { mode: Mode }) {
       setPageUnavailable(mode === 'popup' && !snapshot.captureOrigin && !captureFailure);
       setExpanded(snapshot.captureOrigin === 'menu');
       apply(snapshot);
-      void send({ type: 'analytics_open' }).catch(() => undefined);
+      if (!import.meta.env.EDGE) void send({ type: 'analytics_open' }).catch(() => undefined);
       await loadLists(snapshot);
       if (mounted && captureFailure) setError(captureFailure);
     })().catch((problem: unknown) => {
@@ -552,20 +552,24 @@ export function App({ mode }: { mode: Mode }) {
             </label>
           )}
           <p className={styles.muted}>{text.session}</p>
-          <label className={styles.check}>
-            <input
-              type="checkbox"
-              aria-describedby="analytics-privacy"
-              checked={state.analyticsEnabled}
-              onChange={(event) => {
-                void updateAnalytics(event.target.checked);
-              }}
-            />
-            {text.analytics}
-          </label>
-          <p className={styles.muted} id="analytics-privacy">
-            {text.privacy}
-          </p>
+          {!import.meta.env.EDGE && (
+            <>
+              <label className={styles.check}>
+                <input
+                  type="checkbox"
+                  aria-describedby="analytics-privacy"
+                  checked={state.analyticsEnabled}
+                  onChange={(event) => {
+                    void updateAnalytics(event.target.checked);
+                  }}
+                />
+                {text.analytics}
+              </label>
+              <p className={styles.muted} id="analytics-privacy">
+                {text.privacy}
+              </p>
+            </>
+          )}
           <p className={styles.muted}>{text.independent}</p>
           <a
             href="https://github.com/WayneGongCN/microsoft-todo-browser-ext"

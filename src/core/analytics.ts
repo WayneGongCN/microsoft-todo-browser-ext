@@ -12,6 +12,7 @@ export type AnalyticsSurface = 'popup' | 'options';
 
 /** 只在主动同意后生成统计标识，撤回时同时清理会话。 */
 export async function setAnalyticsConsent(enabled: boolean): Promise<boolean> {
+  if (import.meta.env.EDGE) return false;
   return transactions.run(async () => {
     if (enabled) {
       if (!(await read<string>(ANALYTICS_CLIENT_KEY))) {
@@ -30,7 +31,7 @@ export async function setAnalyticsConsent(enabled: boolean): Promise<boolean> {
 export async function trackAnalytics(
   event: { name: 'extension_open'; surface: AnalyticsSurface } | { name: 'task_created' },
 ): Promise<void> {
-  if (!endpoint) return;
+  if (import.meta.env.EDGE || !endpoint) return;
   try {
     const payload = await transactions.run(async () => {
       const clientId = await read<string>(ANALYTICS_CLIENT_KEY);
