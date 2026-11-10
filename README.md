@@ -49,7 +49,8 @@ The extension uses the Microsoft OAuth authorization code flow with PKCE and val
 
 | Environment                | Microsoft app ID                       | SPA redirect URI                                            |
 | -------------------------- | -------------------------------------- | ----------------------------------------------------------- |
-| Production                 | `a5491fb2-111a-4c43-976c-280a507814dc` | `https://ffpljgmbiankjaokoefefmkoghcgoodn.chromiumapp.org/` |
+| Chrome production          | `a5491fb2-111a-4c43-976c-280a507814dc` | `https://ffpljgmbiankjaokoefefmkoghcgoodn.chromiumapp.org/` |
+| Edge production            | `ce33022f-91e6-470c-8ccb-fefba8207f1b` | `https://mhfmejfcbgojopoeakmglpgmlokpdjjg.chromiumapp.org/` |
 | Development and acceptance | `07171723-a302-4e3c-875d-197490f956eb` | `https://gopiiihaachagcmaijfaphjijefgbgnk.chromiumapp.org/` |
 
 Work or school accounts depend on organization policy and To Do availability. Sign-in lasts for the browser session. Restarting Chrome, updating the extension, or reloading it can require signing in again.

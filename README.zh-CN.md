@@ -50,6 +50,7 @@ npm run package
 | 环境       | Microsoft 应用 ID                      | SPA 回调                                                    |
 | ---------- | -------------------------------------- | ----------------------------------------------------------- |
 | 生产       | `a5491fb2-111a-4c43-976c-280a507814dc` | `https://ffpljgmbiankjaokoefefmkoghcgoodn.chromiumapp.org/` |
+| Edge 正式版 | `ce33022f-91e6-470c-8ccb-fefba8207f1b` | `https://mhfmejfcbgojopoeakmglpgmlokpdjjg.chromiumapp.org/` |
 | 开发和验收 | `07171723-a302-4e3c-875d-197490f956eb` | `https://gopiiihaachagcmaijfaphjijefgbgnk.chromiumapp.org/` |
 
 工作或学校账号受组织授权策略和 To Do 服务可用性约束。登录在本次浏览器会话中有效。重启 Chrome、更新或重载扩展后，可能需要重新登录。

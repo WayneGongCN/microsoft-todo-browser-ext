@@ -1,10 +1,11 @@
 import * as oauth from 'oauth4webapi';
 import { AppError } from './errors';
 
+const productionClientId = import.meta.env.EDGE
+  ? 'ce33022f-91e6-470c-8ccb-fefba8207f1b'
+  : 'a5491fb2-111a-4c43-976c-280a507814dc';
 export const CLIENT_ID =
-  import.meta.env.MODE === 'production'
-    ? 'a5491fb2-111a-4c43-976c-280a507814dc'
-    : '07171723-a302-4e3c-875d-197490f956eb';
+  import.meta.env.MODE === 'production' ? productionClientId : '07171723-a302-4e3c-875d-197490f956eb';
 export const SCOPES = 'openid profile offline_access https://graph.microsoft.com/Tasks.ReadWrite';
 const SESSION_KEY = 'v2:auth';
 const TRANSACTION_KEY = 'v2:authorization';
