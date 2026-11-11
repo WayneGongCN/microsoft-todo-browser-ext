@@ -69,6 +69,10 @@ npm run package
 
 手动运行工作流时默认执行 `status`，也可选择 `upload`、`submit` 和 `release`。若 Google 拒绝 OAuth 授权，请按[官方流程重新授权](https://developer.chrome.com/docs/webstore/using-api)，更新仓库 secret `REFRESH_TOKEN`，按需更新配套的变量 `CWS_CLIENT_ID` 和 secret `CWS_CLIENT_SECRET`，然后运行 `status` 验证访问权限。
 
+同一个版本标签也会触发 Microsoft Edge Add-ons 工作流。Actions 用 `npm run package:edge` 打包并上传，包校验通过后送审，微软认证通过后自动上架。可在 Partner Center 查看已上架版本，或在提交中断后先确认状态再重试。
+
+Edge 首版上架后，在 [Partner Center 启用 Publish API v1.1](https://learn.microsoft.com/en-us/microsoft-edge/extensions/update/api/using-addons-api)。从发布 API 和扩展标识页面分别取得 Client ID 和 Product ID，填入仓库变量 `EDGE_CLIENT_ID` 和 `EDGE_PRODUCT_ID`，并将 API Key 存入仓库 secret `EDGE_API_KEY`。密钥到期前更新 secret。
+
 ## 许可证
 
 [MIT](LICENSE)

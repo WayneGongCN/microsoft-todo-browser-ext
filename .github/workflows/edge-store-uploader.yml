@@ -1,0 +1,43 @@
+name: Microsoft Edge Add-ons
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+concurrency:
+  group: edge-add-ons
+  queue: max
+jobs:
+  store:
+    if: github.event.created && !github.event.deleted
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Check release tag against package version
+        run: |
+          version=$(node -p 'require("./package.json").version')
+          if [[ "$GITHUB_REF_NAME" != "v$version" ]]; then
+            echo "::error::The release tag must match v$version from package.json."
+            exit 1
+          fi
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build:acceptance
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - run: npm run package:edge
+      - name: Submit the Edge ZIP for review
+        env:
+          EDGE_CLIENT_ID: ${{ vars.EDGE_CLIENT_ID }}
+          EDGE_PRODUCT_ID: ${{ vars.EDGE_PRODUCT_ID }}
+          EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
+        run: |
+          version=$(node -p 'require("./package.json").version')
+          node scripts/edge-store.mjs ".output/release/edge/microsoft-todo-capture-${version}-edge.zip"
