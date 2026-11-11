@@ -389,6 +389,7 @@ export function App({ mode }: { mode: Mode }) {
     state?.account?.tenantId === '9188040d-6c67-4c5b-b112-36a304b66dad'
       ? 'https://to-do.live.com/tasks/'
       : 'https://to-do.office.com/tasks/';
+  const taskUrl = receipt?.taskId ? `${todoUrl}id/${encodeURIComponent(receipt.taskId)}/details` : todoUrl;
   const errorMessage = failed ? (text.errors[failed.code] ?? text.errors.network) : '';
   const draftStatus = saveFailed ? text.unsaved : saving ? text.saving : text.saved;
 
@@ -592,7 +593,7 @@ export function App({ mode }: { mode: Mode }) {
           </span>
           <h2>{text.success}</h2>
           <p>{text.successHint}</p>
-          <a className={styles.primaryLink} href={todoUrl} target="_blank" rel="noreferrer">
+          <a className={styles.primaryLink} href={taskUrl} target="_blank" rel="noreferrer">
             {text.openTodo} ↗
           </a>
           <button
