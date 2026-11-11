@@ -28,7 +28,8 @@ export function pendingCaptureKey(tabId: number): string {
 /** 工具栏只读取打开时对应的标签页，并在用户授权后按需取得选区，喵~ */
 export async function capturePage(tabId: number): Promise<Capture | undefined> {
   const tab = await chrome.tabs.get(tabId).catch(() => undefined);
-  if (!tab || !safeSource(tab.url)) return;
+  const source = safeSource(tab?.url, tab?.title);
+  if (!source) return;
   let text = '';
   try {
     const [result] = await chrome.scripting.executeScript({
@@ -37,7 +38,7 @@ export async function capturePage(tabId: number): Promise<Capture | undefined> {
     });
     if (typeof result?.result === 'string') text = result.result;
   } catch {
-    /* 受限网页仍可收集其可见标题和网址，喵~ */
+    /* 无法读取选区时仍保留网页来源，喵~ */
   }
-  return makeCapture(text ? 'selection' : 'page', { title: tab.title, url: tab.url, text });
+  return text.trim() ? makeCapture('selection', { ...source, text }) : { title: '', note: '', source };
 }

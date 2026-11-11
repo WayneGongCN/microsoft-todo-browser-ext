@@ -80,6 +80,25 @@ async function openCaptured(context: BrowserContext, worker: Worker, title = '�
   return page;
 }
 
+test('focuses a blank toolbar title and shows the current page as a source', async ({ context, worker }) => {
+  await routeLists(context);
+  // Use a host covered by the extension's permissions so no toolbar gesture is needed to grant activeTab.
+  const url = 'https://graph.microsoft.com/toolbar-capture-test';
+  await context.route(url, (route) =>
+    route.fulfill({ contentType: 'text/html', body: '<title>Article</title>' }),
+  );
+  const popup = await context.newPage();
+  const source = await context.newPage();
+  await source.goto(url);
+  await source.bringToFront();
+  await popup.goto(new URL('popup.html', worker.url()).href);
+
+  const title = popup.getByLabel('任务', { exact: true });
+  await expect(title).toHaveValue('');
+  await expect(title).toBeFocused();
+  await expect(popup.getByRole('link', { name: /Article/ })).toHaveAttribute('href', url);
+});
+
 test('opens the browser action popup on the source tab when capturing selected text', async ({
   context,
   worker,
