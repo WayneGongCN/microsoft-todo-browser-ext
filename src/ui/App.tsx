@@ -45,7 +45,9 @@ export function App({ mode }: { mode: Mode }) {
   const theme = state?.preferences.theme ?? 'system';
   const text = messages(language);
   const receipt = state?.receipt;
-  const locked = busy || accountChanged || receipt?.status === 'sending' || receipt?.status === 'unknown';
+  const adding = busy || receipt?.status === 'sending';
+  const needsAttention = accountChanged || receipt?.status === 'unknown';
+  const locked = adding || needsAttention;
   const failed =
     error ??
     (receipt?.status === 'failed'
@@ -391,6 +393,7 @@ export function App({ mode }: { mode: Mode }) {
       : 'https://to-do.office.com/tasks/';
   const taskUrl = receipt?.taskId ? `${todoUrl}id/${encodeURIComponent(receipt.taskId)}/details` : todoUrl;
   const errorMessage = failed ? (text.errors[failed.code] ?? text.errors.network) : '';
+  const draftStatus = saveFailed ? text.unsaved : saving ? text.saving : text.saved;
 
   if (!state)
     return (
@@ -644,12 +647,6 @@ export function App({ mode }: { mode: Mode }) {
               </button>
             </section>
           )}
-          {receipt?.status === 'sending' && (
-            <section className={styles.notice} role="status">
-              <strong>{text.pending}</strong>
-              <p>{text.pendingHint}</p>
-            </section>
-          )}
           <form
             className={styles.form}
             onSubmit={(event) => {
@@ -792,16 +789,13 @@ export function App({ mode }: { mode: Mode }) {
                 )
               }
             >
-              {busy || receipt?.status === 'sending'
-                ? text.adding
-                : state.account
-                  ? `＋ ${text.add}`
-                  : text.signInContinue}
+              {adding ? text.adding : state.account ? `＋ ${text.add}` : text.signInContinue}
             </button>
-            {hasContent(form) && !locked && (
+            {hasContent(form) && !needsAttention && (
               <button
                 className={styles.clear}
                 type="button"
+                disabled={locked}
                 onClick={() => {
                   void action('new');
                 }}
@@ -814,7 +808,9 @@ export function App({ mode }: { mode: Mode }) {
       )}
       <footer className={styles.footer}>
         <span>{state.account?.username || 'Microsoft To Do'}</span>
-        <span role="status">{saveFailed ? text.unsaved : saving ? text.saving : text.saved}</span>
+        <span role="status">
+          {!settings && receipt?.status === 'sending' ? text.pendingHint : draftStatus}
+        </span>
       </footer>
     </main>
   );

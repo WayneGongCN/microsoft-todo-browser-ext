@@ -73,12 +73,31 @@ async function openCaptured(context: BrowserContext, worker: Worker, title = '�
   const page = await openCapturePopup(context, worker, {
     title,
     note: '保留选中文字',
-    source: { title: 'Example article', url: 'https://example.com/article?keep=1' },
+    source: { title: 'Example article', url: 'https://example.com/article?keep=1#section' },
   });
   await expect(page.getByLabel('任务', { exact: true })).toHaveValue(title);
   await expect(page.locator('#target-list')).toHaveValue('list-1');
   return page;
 }
+
+test('focuses a blank toolbar title and shows the current page as a source', async ({ context, worker }) => {
+  await routeLists(context);
+  // Use a host covered by the extension's permissions so no toolbar gesture is needed to grant activeTab.
+  const url = 'https://graph.microsoft.com/toolbar-capture-test';
+  await context.route(url, (route) =>
+    route.fulfill({ contentType: 'text/html', body: '<title>Article</title>' }),
+  );
+  const popup = await context.newPage();
+  const source = await context.newPage();
+  await source.goto(url);
+  await source.bringToFront();
+  await popup.goto(new URL('popup.html', worker.url()).href);
+
+  const title = popup.getByLabel('任务', { exact: true });
+  await expect(title).toHaveValue('');
+  await expect(title).toBeFocused();
+  await expect(popup.getByRole('link', { name: /Article/ })).toHaveAttribute('href', url);
+});
 
 test('opens the browser action popup on the source tab when capturing selected text', async ({
   context,
@@ -150,7 +169,13 @@ test('creates a task with source, notes, importance and an explicit reminder', a
     body: { content: '保留选中文字', contentType: 'text' },
     importance: 'high',
     isReminderOn: true,
-    linkedResources: [{ webUrl: 'https://example.com/article?keep=1' }],
+    linkedResources: [
+      {
+        applicationName: 'Example article',
+        displayName: 'https://example.com/article?keep=1#section',
+        webUrl: 'https://example.com/article?keep=1#section',
+      },
+    ],
   });
   expect(body?.reminderDateTime).toMatchObject({ timeZone: 'UTC' });
   const [todo] = await Promise.all([
@@ -195,8 +220,7 @@ test('reopens the toolbar popup ready to create another task after success', asy
   await reopened.goto(`${extensionUrl}/popup.html`);
 
   const title = reopened.getByLabel('任务', { exact: true });
-  await expect(title).toBeEditable();
-  await expect(title).not.toHaveValue('阅读这篇文章');
+  await expect(title).toHaveValue('');
   await expect(title).toBeFocused();
   await expect(reopened.locator('#target-list')).toHaveValue('list-1');
   await expect(reopened.getByRole('link', { name: /Another article/ })).toHaveAttribute('href', url);
@@ -252,7 +276,10 @@ test('does not repeat a POST when its result is ambiguous', async ({ context, wo
   expect(attempts).toBe(1);
 });
 
-test('shows the result when the popup reopens during submission', async ({ context, worker }) => {
+test('keeps the popup layout stable while submitting and finishes after closing', async ({
+  context,
+  worker,
+}) => {
   await worker.evaluate(async (account) => {
     const session = (await chrome.storage.session.get('v2:auth'))['v2:auth'] as Record<string, unknown>;
     await chrome.storage.session.set({
@@ -275,10 +302,22 @@ test('shows the result when the popup reopens during submission', async ({ conte
   });
   const page = await openCaptured(context, worker);
   await page.locator('#target-list').selectOption('list-2');
+  const popup = page.getByRole('main');
+  const submit = page.getByRole('button', { name: '＋ 添加任务' });
+  await expect(submit).toBeEnabled();
+  const initialHeight = await popup.evaluate((element) => element.getBoundingClientRect().height);
+  const initialButtonBounds = await submit.boundingBox();
   const reopened = await context.newPage();
+
   try {
-    await page.getByRole('button', { name: '＋ 添加任务' }).click();
+    await submit.click();
     await received;
+    await expect(page.getByRole('status')).toContainText('关闭弹窗');
+    const adding = page.getByRole('button', { name: '正在添加…' });
+    await expect(adding).toBeDisabled();
+    await expect(page.getByRole('button', { name: '新建任务' })).toBeDisabled();
+    expect(await popup.evaluate((element) => element.getBoundingClientRect().height)).toBe(initialHeight);
+    expect(await adding.boundingBox()).toEqual(initialButtonBounds);
     await page.close();
     await reopened.goto(`${extensionUrl}/popup.html`);
     await expect(reopened.getByRole('button', { name: '正在添加…' })).toBeDisabled();
@@ -427,19 +466,33 @@ test('notifies another window about account changes without revealing old data',
   await expect(page.locator('#target-list')).toBeDisabled();
 });
 
-test('removes the source from both persistent draft and Graph payload', async ({ context, worker }) => {
-  await routeLists(context);
-  let body: Record<string, unknown> | undefined;
-  await context.route('**/lists/list-1/tasks', async (route) => {
-    body = route.request().postDataJSON();
-    await route.fulfill({ json: { id: 'task-without-source', title: body!.title } });
+for (const attachSource of [true, false]) {
+  test(`omits the source from Graph when ${attachSource ? 'removed' : 'disabled'}`, async ({
+    context,
+    worker,
+  }) => {
+    await routeLists(context);
+    let body: Record<string, unknown> | undefined;
+    await context.route('**/lists/list-1/tasks', async (route) => {
+      body = route.request().postDataJSON();
+      await route.fulfill({ json: { id: 'task-without-source', title: body!.title } });
+    });
+    if (!attachSource) {
+      await worker.evaluate(async () => {
+        await chrome.storage.local.set({
+          'v2:preferences': { language: 'zh_CN', theme: 'light', attachSource: false },
+        });
+      });
+    }
+    const page = await openCaptured(context, worker);
+    const removeSource = page.getByRole('button', { name: '移除来源网页' });
+    if (attachSource) await removeSource.click();
+    await expect(removeSource).toHaveCount(0);
+    await page.getByRole('button', { name: '＋ 添加任务' }).click();
+    await expect(page.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
+    expect(body?.linkedResources).toBeUndefined();
   });
-  const page = await openCaptured(context, worker);
-  await page.getByRole('button', { name: '移除来源网页' }).click();
-  await page.getByRole('button', { name: '＋ 添加任务' }).click();
-  await expect(page.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
-  expect(body?.linkedResources).toBeUndefined();
-});
+}
 
 test('recovers a stopped service worker without replaying a pending creation', async ({
   context,

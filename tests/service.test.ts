@@ -86,6 +86,16 @@ async function prepared() {
 }
 
 describe('background task and draft lifecycle', () => {
+  it('starts a toolbar draft with a blank task title and keeps the page as its source', async () => {
+    const service = await import('../src/core/service');
+    const result = (await service.handle({ type: 'open_popup', tabId: 1 })) as Snapshot;
+    expect(result.draft).toMatchObject({
+      title: '',
+      note: '',
+      source: { title: 'A different page', url: 'https://example.com/other' },
+    });
+  });
+
   it('keeps an existing draft when a new page is captured', async () => {
     const { service, draft } = await prepared();
     const result = (await service.handle({
@@ -93,7 +103,10 @@ describe('background task and draft lifecycle', () => {
       tabId: 1,
     })) as Snapshot;
     expect(result.draft).toEqual(draft);
-    expect(result.candidate?.title).toBe('A different page');
+    expect(result.candidate).toMatchObject({
+      title: '',
+      source: { title: 'A different page', url: 'https://example.com/other' },
+    });
   });
 
   it('preserves all fields after a definite creation failure', async () => {

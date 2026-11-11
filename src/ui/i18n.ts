@@ -63,7 +63,6 @@ const en = {
     'The connection ended before the result was confirmed. The task may already exist. Your draft is preserved.',
   absent: 'I checked: the task was not created',
   present: 'I found the task: finish',
-  pending: 'A task is being submitted',
   pendingHint: 'Submission continues if you close the popup',
   changed:
     'The Microsoft account changed in another window. Your current input is still visible. Reload to use the new account.',
@@ -151,7 +150,6 @@ const zh: typeof en = {
   unknownHint: '连接中断，暂时无法确认创建结果，任务可能已经存在。草稿仍保留在本机。',
   absent: '我已确认任务未创建，重新尝试',
   present: '我已找到任务，完成',
-  pending: '任务正在提交',
   pendingHint: '关闭弹窗后仍会继续提交',
   changed: '另一个窗口切换了微软账号。当前输入仍在，请复制未保存文字后重新载入。',
   reload: '重新载入',
