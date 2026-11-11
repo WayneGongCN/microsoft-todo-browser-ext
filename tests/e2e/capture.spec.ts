@@ -149,10 +149,12 @@ test('creates a task with source, notes, importance and an explicit reminder', a
   worker,
 }) => {
   await routeLists(context);
+  const taskUrl = 'https://to-do.live.com/tasks/id/task%2Fwith%2Bpadding%3D/details';
+  await context.route(taskUrl, (route) => route.fulfill({ body: 'Microsoft To Do task' }));
   let body: Record<string, unknown> | undefined;
   await context.route('**/lists/list-1/tasks', async (route) => {
     body = route.request().postDataJSON();
-    await route.fulfill({ json: { id: 'task-1', title: body!.title } });
+    await route.fulfill({ json: { id: 'task/with+padding=', title: body!.title } });
   });
   const page = await openCaptured(context, worker);
   await page.getByLabel('标为重要').check();
@@ -170,6 +172,12 @@ test('creates a task with source, notes, importance and an explicit reminder', a
     linkedResources: [{ webUrl: 'https://example.com/article?keep=1' }],
   });
   expect(body?.reminderDateTime).toMatchObject({ timeZone: 'UTC' });
+  const [todo] = await Promise.all([
+    page.waitForEvent('popup'),
+    page.getByRole('link', { name: /打开 Microsoft To Do/ }).click(),
+  ]);
+  await expect(todo).toHaveURL(taskUrl);
+  await todo.close();
   await page.getByRole('button', { name: '继续添加' }).click();
   await expect(page.getByLabel('任务', { exact: true })).toHaveValue('');
 });
@@ -207,10 +215,20 @@ test('does not repeat a POST when its result is ambiguous', async ({ context, wo
   expect(attempts).toBe(1);
   await page.getByRole('button', { name: '我已找到任务，完成' }).click();
   await expect(page.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
+  await expect(page.getByRole('link', { name: /打开 Microsoft To Do/ })).toHaveAttribute(
+    'href',
+    'https://to-do.live.com/tasks/',
+  );
   expect(attempts).toBe(1);
 });
 
 test('finishes a submission after its editor closes', async ({ context, worker }) => {
+  await worker.evaluate(async (account) => {
+    const session = (await chrome.storage.session.get('v2:auth'))['v2:auth'] as Record<string, unknown>;
+    await chrome.storage.session.set({
+      'v2:auth': { ...session, account: { ...account, tenantId: 'test-work-tenant' } },
+    });
+  }, account);
   await routeLists(context);
   let release!: () => void;
   const gate = new Promise<void>((resolve) => {
@@ -220,12 +238,13 @@ test('finishes a submission after its editor closes', async ({ context, worker }
   const received = new Promise<void>((resolve) => {
     reached = resolve;
   });
-  await context.route('**/lists/list-1/tasks', async (route) => {
+  await context.route('**/lists/list-2/tasks', async (route) => {
     reached();
     await gate;
     await route.fulfill({ json: { id: 'task-after-close', title: 'Test' } });
   });
   const page = await openCaptured(context, worker);
+  await page.locator('#target-list').selectOption('list-2');
   await page.getByRole('button', { name: '＋ 添加任务' }).click();
   await received;
   await page.close();
@@ -244,6 +263,10 @@ test('finishes a submission after its editor closes', async ({ context, worker }
   const reopened = await context.newPage();
   await reopened.goto(`${extensionUrl}/popup.html`);
   await expect(reopened.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
+  await expect(reopened.getByRole('link', { name: /打开 Microsoft To Do/ })).toHaveAttribute(
+    'href',
+    'https://to-do.office.com/tasks/id/task-after-close/details',
+  );
 });
 
 test('asks before replacing an unfinished draft with a different capture', async ({ context, worker }) => {
