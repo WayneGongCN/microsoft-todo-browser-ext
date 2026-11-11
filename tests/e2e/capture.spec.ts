@@ -228,7 +228,10 @@ test('does not repeat a POST when its result is ambiguous', async ({ context, wo
   expect(attempts).toBe(1);
 });
 
-test('finishes a submission after its editor closes', async ({ context, worker }) => {
+test('keeps the popup layout stable while submitting and finishes after closing', async ({
+  context,
+  worker,
+}) => {
   await worker.evaluate(async (account) => {
     const session = (await chrome.storage.session.get('v2:auth'))['v2:auth'] as Record<string, unknown>;
     await chrome.storage.session.set({
@@ -251,10 +254,25 @@ test('finishes a submission after its editor closes', async ({ context, worker }
   });
   const page = await openCaptured(context, worker);
   await page.locator('#target-list').selectOption('list-2');
-  await page.getByRole('button', { name: '＋ 添加任务' }).click();
-  await received;
-  await page.close();
-  release();
+  const popup = page.getByRole('main');
+  const submit = page.getByRole('button', { name: '＋ 添加任务' });
+  await expect(submit).toBeEnabled();
+  const initialHeight = await popup.evaluate((element) => element.getBoundingClientRect().height);
+  const initialButtonBounds = await submit.boundingBox();
+
+  try {
+    await submit.click();
+    await received;
+    await expect(page.getByRole('status')).toContainText('关闭弹窗');
+    const adding = page.getByRole('button', { name: '正在添加…' });
+    await expect(adding).toBeDisabled();
+    await expect(page.getByRole('button', { name: '新建任务' })).toBeDisabled();
+    expect(await popup.evaluate((element) => element.getBoundingClientRect().height)).toBe(initialHeight);
+    expect(await adding.boundingBox()).toEqual(initialButtonBounds);
+    await page.close();
+  } finally {
+    release();
+  }
   await expect
     .poll(() =>
       worker.evaluate(
