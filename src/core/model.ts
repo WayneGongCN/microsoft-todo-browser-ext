@@ -19,6 +19,7 @@ export interface Fields {
   source?: Source;
 }
 export const MAX_NOTE_LENGTH = 20_000;
+const MAX_SOURCE_TITLE_LENGTH = 512;
 export interface Draft extends Fields {
   id: string;
   revision: number;
@@ -57,7 +58,10 @@ export function safeSource(url: unknown, title: unknown = ''): Source | undefine
   try {
     const parsed = new URL(url);
     if (!['http:', 'https:'].includes(parsed.protocol) || parsed.username || parsed.password) return;
-    return { url: parsed.href, title: typeof title === 'string' ? title.slice(0, 512) : parsed.hostname };
+    return {
+      url: parsed.href,
+      title: typeof title === 'string' ? title.slice(0, MAX_SOURCE_TITLE_LENGTH) : parsed.hostname,
+    };
   } catch {
     return;
   }
@@ -124,14 +128,18 @@ export function taskInput(fields: Fields, now = Date.now()): TaskInput {
     body: { contentType: 'text', content: parsed.note },
     importance: parsed.important ? 'high' : 'normal',
   };
-  if (parsed.source)
+  if (parsed.source) {
+    const { url } = parsed.source;
+    const title = parsed.source.title.trim();
+    const titleIsUrl = title === url.slice(0, MAX_SOURCE_TITLE_LENGTH) || safeSource(title)?.url === url;
     task.linkedResources = [
       {
-        webUrl: parsed.source.url,
-        applicationName: 'To Do Capture',
-        displayName: parsed.source.title || new URL(parsed.source.url).hostname,
+        webUrl: url,
+        applicationName: title && !titleIsUrl ? title : new URL(url).hostname,
+        displayName: url,
       },
     ];
+  }
   if (parsed.reminder) {
     if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(parsed.reminder)) throw new AppError('invalid', 'reminder');
     const date = new Date(parsed.reminder);

@@ -73,7 +73,7 @@ async function openCaptured(context: BrowserContext, worker: Worker, title = '�
   const page = await openCapturePopup(context, worker, {
     title,
     note: '保留选中文字',
-    source: { title: 'Example article', url: 'https://example.com/article?keep=1' },
+    source: { title: 'Example article', url: 'https://example.com/article?keep=1#section' },
   });
   await expect(page.getByLabel('任务', { exact: true })).toHaveValue(title);
   await expect(page.locator('#target-list')).toHaveValue('list-1');
@@ -148,7 +148,13 @@ test('creates a task with source, notes, importance and an explicit reminder', a
     body: { content: '保留选中文字', contentType: 'text' },
     importance: 'high',
     isReminderOn: true,
-    linkedResources: [{ webUrl: 'https://example.com/article?keep=1' }],
+    linkedResources: [
+      {
+        applicationName: 'Example article',
+        displayName: 'https://example.com/article?keep=1#section',
+        webUrl: 'https://example.com/article?keep=1#section',
+      },
+    ],
   });
   expect(body?.reminderDateTime).toMatchObject({ timeZone: 'UTC' });
   await page.getByRole('button', { name: '继续添加' }).click();
@@ -323,19 +329,33 @@ test('notifies another window about account changes without revealing old data',
   await expect(page.locator('#target-list')).toBeDisabled();
 });
 
-test('removes the source from both persistent draft and Graph payload', async ({ context, worker }) => {
-  await routeLists(context);
-  let body: Record<string, unknown> | undefined;
-  await context.route('**/lists/list-1/tasks', async (route) => {
-    body = route.request().postDataJSON();
-    await route.fulfill({ json: { id: 'task-without-source', title: body!.title } });
+for (const attachSource of [true, false]) {
+  test(`omits the source from Graph when ${attachSource ? 'removed' : 'disabled'}`, async ({
+    context,
+    worker,
+  }) => {
+    await routeLists(context);
+    let body: Record<string, unknown> | undefined;
+    await context.route('**/lists/list-1/tasks', async (route) => {
+      body = route.request().postDataJSON();
+      await route.fulfill({ json: { id: 'task-without-source', title: body!.title } });
+    });
+    if (!attachSource) {
+      await worker.evaluate(async () => {
+        await chrome.storage.local.set({
+          'v2:preferences': { language: 'zh_CN', theme: 'light', attachSource: false },
+        });
+      });
+    }
+    const page = await openCaptured(context, worker);
+    const removeSource = page.getByRole('button', { name: '移除来源网页' });
+    if (attachSource) await removeSource.click();
+    await expect(removeSource).toHaveCount(0);
+    await page.getByRole('button', { name: '＋ 添加任务' }).click();
+    await expect(page.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
+    expect(body?.linkedResources).toBeUndefined();
   });
-  const page = await openCaptured(context, worker);
-  await page.getByRole('button', { name: '移除来源网页' }).click();
-  await page.getByRole('button', { name: '＋ 添加任务' }).click();
-  await expect(page.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
-  expect(body?.linkedResources).toBeUndefined();
-});
+}
 
 test('recovers a stopped service worker without replaying a pending creation', async ({
   context,
