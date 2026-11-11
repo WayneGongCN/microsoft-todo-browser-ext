@@ -14,7 +14,7 @@ Keep the extracted folder in place. If you already have the Chrome Web Store cop
 
 ## Use the extension
 
-- Open the toolbar popup or right-click a webpage, selection, or link to open the same popup. Review the draft, choose a To Do list, and add the task. The confirmation appears in the popup.
+- Open the toolbar popup or right-click a webpage, selection, or link to open the same popup. Review the draft, choose a To Do list, and add the task. The confirmation appears in the popup. After a successful submission, reopening the popup takes you directly to the task form.
 - In the confirmation, click **Open Microsoft To Do** to open the new task in its list.
 - Chrome 127 or later can open the toolbar popup from the context menu. If it cannot open automatically, click the extension icon with the badge to review the capture.
 - Add notes, mark a task important, set a reminder, or remove the source link before saving.
