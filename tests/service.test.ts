@@ -88,7 +88,7 @@ async function prepared() {
 describe('background task and draft lifecycle', () => {
   it('starts a toolbar draft with a blank task title and keeps the page as its source', async () => {
     const service = await import('../src/core/service');
-    const result = (await service.handle({ type: 'bootstrap', tabId: 1 })) as Snapshot;
+    const result = (await service.handle({ type: 'open_popup', tabId: 1 })) as Snapshot;
     expect(result.draft).toMatchObject({
       title: '',
       note: '',
@@ -99,7 +99,7 @@ describe('background task and draft lifecycle', () => {
   it('keeps an existing draft when a new page is captured', async () => {
     const { service, draft } = await prepared();
     const result = (await service.handle({
-      type: 'bootstrap',
+      type: 'open_popup',
       tabId: 1,
     })) as Snapshot;
     expect(result.draft).toEqual(draft);
@@ -159,9 +159,16 @@ describe('background task and draft lifecycle', () => {
     const receipt = (await service.handle(command)) as Receipt;
     const next = (await service.handle({ type: 'bootstrap' })) as Snapshot;
     expect(receipt.taskId).toBe('created-task');
+    expect(next.receipt).toEqual(receipt);
     expect(next.draft.id).not.toBe(draft.id);
     expect(next.draft.title).toBe('');
     expect(next.draft.listId).toBe('list-1');
+
+    const reopened = (await service.handle({ type: 'open_popup' })) as Snapshot;
+    expect(reopened.receipt).toBeUndefined();
+    expect(reopened.draft).toEqual(next.draft);
+    expect(await service.handle(command)).toEqual(receipt);
+    expect(mocks.create).toHaveBeenCalledTimes(1);
   });
 
   it('does not erase a newer draft while an older request finishes', async () => {

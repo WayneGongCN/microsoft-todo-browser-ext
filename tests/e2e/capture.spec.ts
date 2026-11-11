@@ -188,6 +188,49 @@ test('creates a task with source, notes, importance and an explicit reminder', a
   await expect(page.getByLabel('任务', { exact: true })).toHaveValue('');
 });
 
+test('reopens the toolbar popup ready to create another task after success', async ({ context, worker }) => {
+  await routeLists(context);
+  const firstResponse = Promise.withResolvers<void>();
+  const posts: Record<string, unknown>[] = [];
+  await context.route('**/lists/list-1/tasks', async (route) => {
+    const body = route.request().postDataJSON();
+    posts.push(body);
+    const id = `task-${posts.length}`;
+    if (posts.length === 1) await firstResponse.promise;
+    await route.fulfill({ json: { id, title: body.title } });
+  });
+  const first = await openCaptured(context, worker);
+  try {
+    await first.getByRole('button', { name: '＋ 添加任务' }).click();
+    await expect(first.getByRole('button', { name: '正在添加…' })).toBeDisabled();
+  } finally {
+    firstResponse.resolve();
+  }
+  await expect(first.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
+  await first.close();
+
+  const url = 'https://graph.microsoft.com/another-article';
+  await context.route(url, (route) =>
+    route.fulfill({ contentType: 'text/html', body: '<title>Another article</title>' }),
+  );
+  const reopened = await context.newPage();
+  const source = await context.newPage();
+  await source.goto(url);
+  await source.bringToFront();
+  await reopened.goto(`${extensionUrl}/popup.html`);
+
+  const title = reopened.getByLabel('任务', { exact: true });
+  await expect(title).toHaveValue('');
+  await expect(title).toBeFocused();
+  await expect(reopened.locator('#target-list')).toHaveValue('list-1');
+  await expect(reopened.getByRole('link', { name: /Another article/ })).toHaveAttribute('href', url);
+  await title.fill('下一条任务');
+  await reopened.getByRole('button', { name: '＋ 添加任务' }).click();
+  await expect(reopened.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
+  expect(posts).toHaveLength(2);
+  expect(posts[1]).toMatchObject({ title: '下一条任务', linkedResources: [{ webUrl: url }] });
+});
+
 test('keeps draft text after a failed task request and after the window closes', async ({
   context,
   worker,
@@ -217,11 +260,16 @@ test('does not repeat a POST when its result is ambiguous', async ({ context, wo
   const page = await openCaptured(context, worker);
   await page.getByRole('button', { name: '＋ 添加任务' }).click();
   await expect(page.getByRole('alert')).toContainText('暂时无法确认创建结果');
-  await expect(page.getByRole('button', { name: '＋ 添加任务' })).toBeDisabled();
+  await page.close();
+  const reopened = await context.newPage();
+  await reopened.goto(`${extensionUrl}/popup.html`);
+  await expect(reopened.getByRole('alert')).toContainText('暂时无法确认创建结果');
+  await expect(reopened.getByLabel('任务', { exact: true })).toHaveValue('阅读这篇文章');
+  await expect(reopened.getByRole('button', { name: '＋ 添加任务' })).toBeDisabled();
   expect(attempts).toBe(1);
-  await page.getByRole('button', { name: '我已找到任务，完成' }).click();
-  await expect(page.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
-  await expect(page.getByRole('link', { name: /打开 Microsoft To Do/ })).toHaveAttribute(
+  await reopened.getByRole('button', { name: '我已找到任务，完成' }).click();
+  await expect(reopened.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
+  await expect(reopened.getByRole('link', { name: /打开 Microsoft To Do/ })).toHaveAttribute(
     'href',
     'https://to-do.live.com/tasks/',
   );
@@ -259,6 +307,7 @@ test('keeps the popup layout stable while submitting and finishes after closing'
   await expect(submit).toBeEnabled();
   const initialHeight = await popup.evaluate((element) => element.getBoundingClientRect().height);
   const initialButtonBounds = await submit.boundingBox();
+  const reopened = await context.newPage();
 
   try {
     await submit.click();
@@ -270,27 +319,55 @@ test('keeps the popup layout stable while submitting and finishes after closing'
     expect(await popup.evaluate((element) => element.getBoundingClientRect().height)).toBe(initialHeight);
     expect(await adding.boundingBox()).toEqual(initialButtonBounds);
     await page.close();
+    await reopened.goto(`${extensionUrl}/popup.html`);
+    await expect(reopened.getByRole('button', { name: '正在添加…' })).toBeDisabled();
   } finally {
     release();
   }
-  await expect
-    .poll(() =>
-      worker.evaluate(
-        async () =>
-          (
-            (await chrome.storage.local.get('v2:receipt:test:person'))['v2:receipt:test:person'] as
-              { status?: string } | undefined
-          )?.status,
-      ),
-    )
-    .toBe('succeeded');
-  const reopened = await context.newPage();
-  await reopened.goto(`${extensionUrl}/popup.html`);
   await expect(reopened.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
   await expect(reopened.getByRole('link', { name: /打开 Microsoft To Do/ })).toHaveAttribute(
     'href',
     'https://to-do.office.com/tasks/id/task-after-close/details',
   );
+});
+
+test('reopens the form after a submission finishes in the background', async ({ context, worker }) => {
+  await routeLists(context);
+  const response = Promise.withResolvers<void>();
+  const requestReceived = Promise.withResolvers<void>();
+  let attempts = 0;
+  await context.route('**/lists/list-2/tasks', async (route) => {
+    attempts++;
+    requestReceived.resolve();
+    await response.promise;
+    await route.fulfill({ json: { id: 'task-after-close', title: '阅读这篇文章' } });
+  });
+  const page = await openCaptured(context, worker);
+  try {
+    await page.locator('#target-list').selectOption('list-2');
+    await page.getByRole('button', { name: '＋ 添加任务' }).click();
+    await requestReceived.promise;
+    await page.close();
+  } finally {
+    response.resolve();
+  }
+  await expect
+    .poll(() =>
+      worker.evaluate(async () => {
+        const key = 'v2:receipt:test:person';
+        const receipt = (await chrome.storage.local.get(key))[key] as { status?: string } | undefined;
+        return receipt?.status;
+      }),
+    )
+    .toBe('succeeded');
+
+  const reopened = await context.newPage();
+  await reopened.goto(`${extensionUrl}/popup.html`);
+  const title = reopened.getByLabel('任务', { exact: true });
+  await expect(title).toHaveValue('');
+  await expect(title).toBeEnabled();
+  await expect(reopened.locator('#target-list')).toHaveValue('list-2');
+  expect(attempts).toBe(1);
 });
 
 test('asks before replacing an unfinished draft with a different capture', async ({ context, worker }) => {

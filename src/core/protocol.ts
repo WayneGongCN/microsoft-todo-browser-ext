@@ -16,7 +16,8 @@ export interface Snapshot {
   guestDraft?: Draft;
 }
 export type Request =
-  | { type: 'bootstrap'; tabId?: number }
+  | { type: 'bootstrap' }
+  | { type: 'open_popup'; tabId?: number }
   | { type: 'analytics_open' }
   | { type: 'analytics_consent'; enabled: boolean }
   | { type: 'login' }

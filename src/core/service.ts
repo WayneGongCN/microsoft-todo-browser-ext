@@ -73,20 +73,20 @@ async function editable(accountId: string, draftId: string): Promise<void> {
 }
 
 /** 生成编辑器视图，凭据和其他账号数据不离开后台，喵~ */
-async function snapshot(capture?: Capture, captureOrigin?: Snapshot['captureOrigin']): Promise<Snapshot> {
+async function snapshot(opening?: {
+  capture?: Capture;
+  captureOrigin?: Snapshot['captureOrigin'];
+}): Promise<Snapshot> {
   const account = await auth.getAccount();
   const accountId = account?.id ?? 'guest';
   let draft = await draftFor(accountId);
   const prefs = await preferences(accountId);
   let receipt = await latestReceipt(accountId);
-  if (capture && receipt?.status === 'succeeded') {
-    if (captureOrigin === 'menu') {
-      await remove([`v2:receipt:${accountId}`]);
-      receipt = undefined;
-    } else {
-      capture = undefined;
-    }
+  if (opening && receipt?.status === 'succeeded') {
+    await remove([`v2:receipt:${accountId}`]);
+    receipt = undefined;
   }
+  const capture = opening?.capture;
   let candidate = capture;
   if (capture && !hasContent(draft)) {
     const fields = parseFields({
@@ -108,7 +108,7 @@ async function snapshot(capture?: Capture, captureOrigin?: Snapshot['captureOrig
     preferences: prefs,
     lists: cache?.lists ?? [],
     receipt,
-    captureOrigin,
+    captureOrigin: opening?.captureOrigin,
     guestDraft: account ? await read<Draft>(`v2:pending-guest:${accountId}`) : undefined,
     ...(candidate ? { candidate } : {}),
   };
@@ -234,16 +234,21 @@ export function parseRequest(value: unknown): Request {
   if (!value || typeof value !== 'object') throw new AppError('invalid');
   const raw = value as Record<string, unknown>;
   if (typeof raw.type !== 'string') throw new AppError('invalid');
-  if (raw.type === 'login' || raw.type === 'logout' || raw.type === 'analytics_open')
+  if (
+    raw.type === 'bootstrap' ||
+    raw.type === 'login' ||
+    raw.type === 'logout' ||
+    raw.type === 'analytics_open'
+  )
     return { type: raw.type };
   if (raw.type === 'analytics_consent' && typeof raw.enabled === 'boolean')
     return { type: 'analytics_consent', enabled: raw.enabled };
-  if (raw.type === 'bootstrap') {
-    if (raw.tabId === undefined) return { type: 'bootstrap' };
+  if (raw.type === 'open_popup') {
+    if (raw.tabId === undefined) return { type: 'open_popup' };
     if (typeof raw.tabId !== 'number' || !Number.isSafeInteger(raw.tabId) || raw.tabId < 0)
       throw new AppError('invalid');
     return {
-      type: 'bootstrap',
+      type: 'open_popup',
       tabId: raw.tabId,
     };
   }
@@ -322,9 +327,10 @@ export async function handle(request: BusinessRequest): Promise<unknown> {
       return snapshot();
     });
   }
-  if (request.type === 'bootstrap') {
+  if (request.type === 'bootstrap') return transactions.run(() => snapshot());
+  if (request.type === 'open_popup') {
     const tabId = request.tabId;
-    if (tabId === undefined) return transactions.run(() => snapshot());
+    if (tabId === undefined) return transactions.run(() => snapshot({}));
     const key = pendingCaptureKey(tabId);
     const pending = (await chrome.storage.session.get(key))[key] as Capture | undefined;
     if (pending) {
@@ -333,7 +339,10 @@ export async function handle(request: BusinessRequest): Promise<unknown> {
     }
     const capture = pending ?? (await capturePage(tabId));
     return transactions.run(() =>
-      snapshot(capture ? parseCapture(capture) : undefined, pending ? 'menu' : capture ? 'page' : undefined),
+      snapshot({
+        capture: capture ? parseCapture(capture) : undefined,
+        captureOrigin: pending ? 'menu' : capture ? 'page' : undefined,
+      }),
     );
   }
   await identity(request.accountId);

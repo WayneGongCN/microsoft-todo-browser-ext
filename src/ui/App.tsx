@@ -317,10 +317,12 @@ export function App({ mode }: { mode: Mode }) {
       let snapshot: Snapshot;
       let captureFailure: AppError | undefined;
       try {
-        snapshot = await send<Snapshot>({ type: 'bootstrap', tabId: tab?.id });
+        snapshot = await send<Snapshot>(
+          mode === 'popup' ? { type: 'open_popup', tabId: tab?.id } : { type: 'bootstrap' },
+        );
       } catch (problem) {
         if (!(problem instanceof AppError) || problem.code !== 'capture_too_large') throw problem;
-        snapshot = await send<Snapshot>({ type: 'bootstrap' });
+        snapshot = await send<Snapshot>({ type: 'open_popup' });
         captureFailure = problem;
       }
       if (!mounted) return;
@@ -398,17 +400,7 @@ export function App({ mode }: { mode: Mode }) {
       <main className={styles.boot} aria-live="polite">
         <h1>{text.app}</h1>
         <p>{errorMessage || text.loading}</p>
-        {error && (
-          <button
-            onClick={() => {
-              void send<Snapshot>({ type: 'bootstrap' })
-                .then(apply)
-                .catch(() => undefined);
-            }}
-          >
-            {text.reload}
-          </button>
-        )}
+        {error && <button onClick={() => location.reload()}>{text.reload}</button>}
       </main>
     );
 
