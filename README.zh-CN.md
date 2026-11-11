@@ -61,7 +61,7 @@ npm run package
 
 扩展直接连接微软完成登录和任务收集，按 Chrome 应用商店用户数据政策处理主动收集涉及的数据。使用统计默认关闭，可在设置中随时启用或撤回。启用后，扩展通过项目网站向 GA4 发送扩展打开和任务创建成功事件、扩展版本和随机安装标识。统计不包含任务内容、浏览数据或账号信息。详见[隐私政策](https://microsoft-todo-capture-site.vercel.app/zh/privacy/)和 [Limited Use 要求](https://developer.chrome.com/docs/webstore/program-policies/limited-use)。反馈请使用 [GitHub Issues](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues)，并先隐去令牌、账号详情和任务内容。
 
-设置页的赞赏按钮会在新标签页打开赞赏页，并携带标记扩展来源的固定 UTM 参数。
+设置页的「项目与支持」链接会打开[项目首页](https://todo-ext.waynegong.com/)。
 
 ## CI 和发布
 

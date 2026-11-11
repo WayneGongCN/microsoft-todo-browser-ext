@@ -61,7 +61,7 @@ When you start a capture, the extension reads the relevant page title, URL, or s
 
 The extension connects directly to Microsoft for sign-in and tasks. Usage analytics are off by default and can be enabled or withdrawn in Settings. The extension then sends opens and successful task creations, the extension version, and a random installation ID to GA4 through the project website. Analytics exclude task contents, browsing data, and account details. It uses this data for user-initiated capture under the Chrome Web Store User Data Policy, including its Limited Use requirements. See the [privacy policy](https://microsoft-todo-capture-site.vercel.app/privacy/) and [Limited Use requirements](https://developer.chrome.com/docs/webstore/program-policies/limited-use). For support, use [GitHub Issues](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues) and redact tokens, account details, and task contents.
 
-The support button in Settings opens the donation page in a new tab with fixed UTM tags that identify the extension as the source.
+The **Project & support** link in Settings opens the [project homepage](https://todo-ext.waynegong.com/).
 
 ## CI and publishing
 

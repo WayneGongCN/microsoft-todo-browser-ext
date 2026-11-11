@@ -13,9 +13,6 @@ import styles from './App.module.css';
 
 type Mode = 'popup' | 'options';
 
-const rewardUrl =
-  'https://reward.waynegong.com/?utm_source=microsoft-todo-browser-ext&utm_medium=referral&utm_campaign=todo-capture-reward';
-
 /** 为快速捕获和右键编辑提供同一份表单、草稿状态与提交反馈，喵~ */
 export function App({ mode }: { mode: Mode }) {
   const [state, setState] = useState<Snapshot>();
@@ -567,15 +564,8 @@ export function App({ mode }: { mode: Mode }) {
             </>
           )}
           <p className={styles.muted}>{text.independent}</p>
-          <a
-            href="https://github.com/WayneGongCN/microsoft-todo-browser-ext"
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a href="https://todo-ext.waynegong.com/" target="_blank" rel="noreferrer">
             {text.website} ↗
-          </a>
-          <a className={styles.rewardLink} href={rewardUrl} target="_blank" rel="noreferrer">
-            {text.reward}
           </a>
         </section>
       ) : receipt?.status === 'succeeded' ? (
