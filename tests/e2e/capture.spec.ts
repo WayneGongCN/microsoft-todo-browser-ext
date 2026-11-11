@@ -210,7 +210,10 @@ test('does not repeat a POST when its result is ambiguous', async ({ context, wo
   expect(attempts).toBe(1);
 });
 
-test('finishes a submission after its editor closes', async ({ context, worker }) => {
+test('keeps the popup layout stable while submitting and finishes after closing', async ({
+  context,
+  worker,
+}) => {
   await routeLists(context);
   let release!: () => void;
   const gate = new Promise<void>((resolve) => {
@@ -226,23 +229,28 @@ test('finishes a submission after its editor closes', async ({ context, worker }
     await route.fulfill({ json: { id: 'task-after-close', title: 'Test' } });
   });
   const page = await openCaptured(context, worker);
-  await page.getByRole('button', { name: '＋ 添加任务' }).click();
-  await received;
-  await page.close();
-  release();
-  await expect
-    .poll(() =>
-      worker.evaluate(
-        async () =>
-          (
-            (await chrome.storage.local.get('v2:receipt:test:person'))['v2:receipt:test:person'] as
-              { status?: string } | undefined
-          )?.status,
-      ),
-    )
-    .toBe('succeeded');
+  const popup = page.getByRole('main');
+  const submit = page.getByRole('button', { name: '＋ 添加任务' });
+  await expect(submit).toBeEnabled();
+  const initialHeight = await popup.evaluate((element) => element.getBoundingClientRect().height);
+  const initialButtonBounds = await submit.boundingBox();
   const reopened = await context.newPage();
-  await reopened.goto(`${extensionUrl}/popup.html`);
+
+  try {
+    await submit.click();
+    await received;
+    await expect(page.getByRole('status')).toContainText('关闭弹窗');
+    const adding = page.getByRole('button', { name: '正在添加…' });
+    await expect(adding).toBeDisabled();
+    await expect(page.getByRole('button', { name: '新建任务' })).toBeDisabled();
+    expect(await popup.evaluate((element) => element.getBoundingClientRect().height)).toBe(initialHeight);
+    expect(await adding.boundingBox()).toEqual(initialButtonBounds);
+    await page.close();
+    await reopened.goto(`${extensionUrl}/popup.html`);
+    await expect(reopened.getByRole('button', { name: '正在添加…' })).toBeDisabled();
+  } finally {
+    release();
+  }
   await expect(reopened.getByRole('heading', { name: '已添加到 Microsoft To Do' })).toBeVisible();
 });
 
