@@ -3,13 +3,33 @@ import { makeCapture } from '../src/core/capture';
 import { safeSource, taskInput } from '../src/core/model';
 
 describe('capture and task fields', () => {
-  it('uses the clicked link instead of its containing page', () => {
+  it.each([
+    'https://target.example/destination?keep=1#anchor',
+    `https://target.example/destination?keep=${'a'.repeat(520)}#anchor`,
+  ])('uses the clicked link and its hostname for %s', (linkUrl) => {
     const capture = makeCapture('link', {
       url: 'https://example.com/page',
-      linkUrl: 'https://example.com/destination?keep=1#anchor',
+      linkUrl,
       title: 'Containing page',
     });
-    expect(capture.source?.url).toBe('https://example.com/destination?keep=1#anchor');
+    expect(taskInput({ ...capture, listId: 'list', important: false, reminder: '' }).linkedResources).toEqual(
+      [{ applicationName: 'target.example', displayName: linkUrl, webUrl: linkUrl }],
+    );
+  });
+
+  it('uses the hostname when the captured page title is blank', () => {
+    const url = 'https://example.com/article';
+    const input = taskInput({
+      title: 'Read later',
+      note: '',
+      listId: 'list',
+      important: false,
+      reminder: '',
+      source: { title: '  ', url },
+    });
+    expect(input.linkedResources).toEqual([
+      { applicationName: 'example.com', displayName: url, webUrl: url },
+    ]);
   });
 
   it('preserves the full selection while keeping the title short', () => {
