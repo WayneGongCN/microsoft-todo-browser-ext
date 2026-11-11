@@ -71,6 +71,10 @@ Push a new `v<version>` tag on a commit that contains the Chrome Web Store workf
 
 The manual workflow defaults to `status` and also offers `upload`, `submit`, and `release`. If Google rejects the OAuth grant, [reauthorize the Chrome Web Store publisher](https://developer.chrome.com/docs/webstore/using-api), update the repository secret `REFRESH_TOKEN` and the matching `CWS_CLIENT_ID` variable and `CWS_CLIENT_SECRET` secret as needed, and run `status` to verify access.
 
+The same tag triggers Microsoft Edge Add-ons. Actions builds with `npm run package:edge`, uploads the ZIP, and submits it after the package passes validation. Microsoft publishes the update after certification. Check Partner Center for the live version and before retrying an interrupted submission.
+
+After the first Edge version is live, enable [Publish API v1.1 in Partner Center](https://learn.microsoft.com/en-us/microsoft-edge/extensions/update/api/using-addons-api). Set the repository variables `EDGE_CLIENT_ID` and `EDGE_PRODUCT_ID` from Publish API and Extension identity respectively, and save the API key as the repository secret `EDGE_API_KEY`. Replace the secret before the key expires.
+
 ## License
 
 [MIT](LICENSE)
