@@ -6,7 +6,6 @@ import { AppError } from './errors';
 export interface Snapshot {
   account?: Account;
   accountId: string;
-  analyticsEnabled: boolean;
   draft: Draft;
   preferences: Preferences;
   lists: TodoList[];
@@ -18,8 +17,6 @@ export interface Snapshot {
 export type Request =
   | { type: 'bootstrap' }
   | { type: 'open_popup'; tabId?: number }
-  | { type: 'analytics_open' }
-  | { type: 'analytics_consent'; enabled: boolean }
   | { type: 'login' }
   | { type: 'logout' }
   | { type: 'lists'; accountId: string; force?: boolean }

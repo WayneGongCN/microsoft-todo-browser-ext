@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { ANALYTICS_ENABLED_KEY } from '../core/analytics';
 import { AppError } from '../core/errors';
 import type { ErrorCode } from '../core/errors';
 import { hasContent, MAX_NOTE_LENGTH } from '../core/model';
@@ -284,17 +283,6 @@ export function App({ mode }: { mode: Mode }) {
     }
   }
 
-  /** 统计偏好独立于其他设置，旧窗口保存其他选项时不会覆盖它。 */
-  async function updateAnalytics(enabled: boolean) {
-    try {
-      const analyticsEnabled = await send<boolean>({ type: 'analytics_consent', enabled });
-      setState((previous) => (previous ? { ...previous, analyticsEnabled } : previous));
-      setError(undefined);
-    } catch (problem) {
-      setError(problem instanceof AppError ? problem : new AppError('storage'));
-    }
-  }
-
   /** 首次打开时冻结采集来源，之后切换标签页不会改写草稿，喵~ */
   useEffect(() => {
     let mounted = true;
@@ -326,7 +314,6 @@ export function App({ mode }: { mode: Mode }) {
       setPageUnavailable(mode === 'popup' && !snapshot.captureOrigin && !captureFailure);
       setExpanded(snapshot.captureOrigin === 'menu');
       apply(snapshot);
-      void send({ type: 'analytics_open' }).catch(() => undefined);
       await loadLists(snapshot);
       if (mounted && captureFailure) setError(captureFailure);
     })().catch((problem: unknown) => {
@@ -351,10 +338,6 @@ export function App({ mode }: { mode: Mode }) {
   /** 回执变更时恢复结果，账号变更只通知用户而不覆盖当前输入，喵~ */
   useEffect(() => {
     const changed = (changes: Record<string, chrome.storage.StorageChange>) => {
-      if (changes[ANALYTICS_ENABLED_KEY]) {
-        const analyticsEnabled = changes[ANALYTICS_ENABLED_KEY].newValue !== false;
-        setState((previous) => (previous ? { ...previous, analyticsEnabled } : previous));
-      }
       if (!changes[`v2:receipt:${accountRef.current}`]) return;
       void queue.current
         .then(async () => {
@@ -545,20 +528,6 @@ export function App({ mode }: { mode: Mode }) {
             </label>
           )}
           <p className={styles.muted}>{text.session}</p>
-          <label className={styles.check}>
-            <input
-              type="checkbox"
-              aria-describedby="analytics-privacy"
-              checked={state.analyticsEnabled}
-              onChange={(event) => {
-                void updateAnalytics(event.target.checked);
-              }}
-            />
-            {text.analytics}
-          </label>
-          <p className={styles.muted} id="analytics-privacy">
-            {text.privacy}
-          </p>
           <p className={styles.muted}>{text.independent}</p>
           <a href="https://todo-ext.waynegong.com/" target="_blank" rel="noreferrer">
             {text.website} ↗

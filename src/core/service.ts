@@ -1,4 +1,3 @@
-import { analyticsEnabled, initializeAnalytics, setAnalyticsConsent, trackAnalytics } from './analytics';
 import * as auth from './auth';
 import { capturePage, pendingCaptureKey } from './capture';
 import * as graph from './graph';
@@ -14,8 +13,6 @@ import {
 import type { Capture, Draft, Preferences, Receipt } from './model';
 import type { Request, Snapshot } from './protocol';
 import { read, remove, Transactions, write } from './storage';
-
-type BusinessRequest = Exclude<Request, { type: 'analytics_open' }>;
 
 const workerId = crypto.randomUUID();
 const transactions = new Transactions();
@@ -103,7 +100,6 @@ async function snapshot(opening?: {
   return {
     account,
     accountId,
-    analyticsEnabled: await analyticsEnabled(),
     draft,
     preferences: prefs,
     lists: cache?.lists ?? [],
@@ -197,7 +193,6 @@ async function submit(accountId: string, draftId: string, revision: number): Pro
       }
       await write(values);
     });
-    if (receipt.status === 'succeeded') void trackAnalytics({ name: 'task_created' });
     return receipt;
   })();
   active.set(operationId, task);
@@ -234,15 +229,7 @@ export function parseRequest(value: unknown): Request {
   if (!value || typeof value !== 'object') throw new AppError('invalid');
   const raw = value as Record<string, unknown>;
   if (typeof raw.type !== 'string') throw new AppError('invalid');
-  if (
-    raw.type === 'bootstrap' ||
-    raw.type === 'login' ||
-    raw.type === 'logout' ||
-    raw.type === 'analytics_open'
-  )
-    return { type: raw.type };
-  if (raw.type === 'analytics_consent' && typeof raw.enabled === 'boolean')
-    return { type: 'analytics_consent', enabled: raw.enabled };
+  if (raw.type === 'bootstrap' || raw.type === 'login' || raw.type === 'logout') return { type: raw.type };
   if (raw.type === 'open_popup') {
     if (raw.tabId === undefined) return { type: 'open_popup' };
     if (typeof raw.tabId !== 'number' || !Number.isSafeInteger(raw.tabId) || raw.tabId < 0)
@@ -291,13 +278,12 @@ export function parseRequest(value: unknown): Request {
   if (
     ['submit', 'new', 'acknowledge', 'confirm_absent', 'confirm_present', 'restore_guest'].includes(raw.type)
   )
-    return { type: raw.type, ...base } as BusinessRequest;
+    return { type: raw.type, ...base } as Request;
   throw new AppError('invalid');
 }
 
 /** 分派后台命令，所有草稿写入与提交都经过账号和版本核验，喵~ */
-export async function handle(request: BusinessRequest): Promise<unknown> {
-  if (request.type === 'analytics_consent') return setAnalyticsConsent(request.enabled);
+export async function handle(request: Request): Promise<unknown> {
   if (request.type === 'login') {
     const account = await auth.login();
     return transactions.run(async () => {
@@ -418,15 +404,14 @@ export async function handle(request: BusinessRequest): Promise<unknown> {
   });
 }
 
-/** 安装时删除已知旧版认证缓存，保留微软云端任务及无关存储，喵~ */
+/** 初始化时清理旧版认证缓存和停用统计留下的本地数据，喵~ */
 export async function initialize(): Promise<void> {
   await Promise.all([
     chrome.storage.session.setAccessLevel({ accessLevel: 'TRUSTED_CONTEXTS' }),
     chrome.storage.local.setAccessLevel({ accessLevel: 'TRUSTED_CONTEXTS' }),
+    chrome.storage.session.remove('v2:analytics-session'),
   ]);
-  const previouslyInitialized = (await read<boolean>('v2:migrated')) === true;
-  await initializeAnalytics(previouslyInitialized);
-  if (!previouslyInitialized) {
+  if (!(await read<boolean>('v2:migrated'))) {
     await chrome.storage.sync.remove([
       'persist:auth',
       'persist:popup',
@@ -445,5 +430,8 @@ export async function initialize(): Promise<void> {
         index >= 100 || Date.now() - Number((value as Receipt).createdAt) > 7 * 24 * 60 * 60_000,
     )
     .map(([key]) => key);
+  for (const key of ['v2:analytics-client-id', 'v2:analytics-enabled']) {
+    if (Object.hasOwn(all, key)) stale.push(key);
+  }
   if (stale.length) await remove(stale);
 }
