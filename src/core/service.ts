@@ -1,4 +1,4 @@
-import { ANALYTICS_CLIENT_KEY, setAnalyticsConsent, trackAnalytics } from './analytics';
+import { analyticsEnabled, initializeAnalytics, setAnalyticsConsent, trackAnalytics } from './analytics';
 import * as auth from './auth';
 import { capturePage, pendingCaptureKey } from './capture';
 import * as graph from './graph';
@@ -103,7 +103,7 @@ async function snapshot(opening?: {
   return {
     account,
     accountId,
-    analyticsEnabled: Boolean(await read<string>(ANALYTICS_CLIENT_KEY)),
+    analyticsEnabled: await analyticsEnabled(),
     draft,
     preferences: prefs,
     lists: cache?.lists ?? [],
@@ -424,7 +424,9 @@ export async function initialize(): Promise<void> {
     chrome.storage.session.setAccessLevel({ accessLevel: 'TRUSTED_CONTEXTS' }),
     chrome.storage.local.setAccessLevel({ accessLevel: 'TRUSTED_CONTEXTS' }),
   ]);
-  if (!(await read<boolean>('v2:migrated'))) {
+  const previouslyInitialized = (await read<boolean>('v2:migrated')) === true;
+  await initializeAnalytics(previouslyInitialized);
+  if (!previouslyInitialized) {
     await chrome.storage.sync.remove([
       'persist:auth',
       'persist:popup',

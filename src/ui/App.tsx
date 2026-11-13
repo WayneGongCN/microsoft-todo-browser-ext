@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { ANALYTICS_CLIENT_KEY } from '../core/analytics';
+import { ANALYTICS_ENABLED_KEY } from '../core/analytics';
 import { AppError } from '../core/errors';
 import type { ErrorCode } from '../core/errors';
 import { hasContent, MAX_NOTE_LENGTH } from '../core/model';
@@ -326,7 +326,7 @@ export function App({ mode }: { mode: Mode }) {
       setPageUnavailable(mode === 'popup' && !snapshot.captureOrigin && !captureFailure);
       setExpanded(snapshot.captureOrigin === 'menu');
       apply(snapshot);
-      if (!import.meta.env.EDGE) void send({ type: 'analytics_open' }).catch(() => undefined);
+      void send({ type: 'analytics_open' }).catch(() => undefined);
       await loadLists(snapshot);
       if (mounted && captureFailure) setError(captureFailure);
     })().catch((problem: unknown) => {
@@ -351,8 +351,8 @@ export function App({ mode }: { mode: Mode }) {
   /** 回执变更时恢复结果，账号变更只通知用户而不覆盖当前输入，喵~ */
   useEffect(() => {
     const changed = (changes: Record<string, chrome.storage.StorageChange>) => {
-      if (changes[ANALYTICS_CLIENT_KEY]) {
-        const analyticsEnabled = typeof changes[ANALYTICS_CLIENT_KEY].newValue === 'string';
+      if (changes[ANALYTICS_ENABLED_KEY]) {
+        const analyticsEnabled = changes[ANALYTICS_ENABLED_KEY].newValue !== false;
         setState((previous) => (previous ? { ...previous, analyticsEnabled } : previous));
       }
       if (!changes[`v2:receipt:${accountRef.current}`]) return;
@@ -545,24 +545,20 @@ export function App({ mode }: { mode: Mode }) {
             </label>
           )}
           <p className={styles.muted}>{text.session}</p>
-          {!import.meta.env.EDGE && (
-            <>
-              <label className={styles.check}>
-                <input
-                  type="checkbox"
-                  aria-describedby="analytics-privacy"
-                  checked={state.analyticsEnabled}
-                  onChange={(event) => {
-                    void updateAnalytics(event.target.checked);
-                  }}
-                />
-                {text.analytics}
-              </label>
-              <p className={styles.muted} id="analytics-privacy">
-                {text.privacy}
-              </p>
-            </>
-          )}
+          <label className={styles.check}>
+            <input
+              type="checkbox"
+              aria-describedby="analytics-privacy"
+              checked={state.analyticsEnabled}
+              onChange={(event) => {
+                void updateAnalytics(event.target.checked);
+              }}
+            />
+            {text.analytics}
+          </label>
+          <p className={styles.muted} id="analytics-privacy">
+            {text.privacy}
+          </p>
           <p className={styles.muted}>{text.independent}</p>
           <a href="https://todo-ext.waynegong.com/" target="_blank" rel="noreferrer">
             {text.website} ↗
