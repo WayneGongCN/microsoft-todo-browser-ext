@@ -59,66 +59,7 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-  vi.unstubAllEnvs();
   vi.unstubAllGlobals();
-});
-
-const analyticsPreference = 'v2:analytics-enabled';
-const legacyAnalyticsId = 'v2:analytics-client-id';
-
-for (const [browser, edge] of [
-  ['Chrome', false],
-  ['Edge', true],
-] as const) {
-  it(`${browser} reports by default and persists opt-out`, async () => {
-    vi.stubEnv('EDGE', edge ? 'true' : '');
-    vi.stubEnv('WXT_ANALYTICS_ENDPOINT', 'https://analytics.example.test/');
-    vi.stubGlobal('chrome', { ...chrome, runtime: { getManifest: () => ({ version: '2.0.5' }) } });
-    const send = vi.fn(async () => new Response(null, { status: 204 }));
-    vi.stubGlobal('fetch', send);
-    const service = await import('../src/core/service');
-    const { trackAnalytics } = await import('../src/core/analytics');
-    await service.initialize();
-    expect(await service.handle({ type: 'bootstrap' })).toMatchObject({ analyticsEnabled: true });
-    await trackAnalytics({ name: 'extension_open', surface: 'popup' });
-    expect(send).toHaveBeenCalledTimes(1);
-    expect(send).toHaveBeenCalledWith(
-      'https://analytics.example.test/',
-      expect.objectContaining({
-        body: JSON.stringify({ version: '2.0.5', event: 'extension_open', surface: 'popup' }),
-        credentials: 'omit',
-      }),
-    );
-
-    expect(await service.handle({ type: 'analytics_consent', enabled: false })).toBe(false);
-    await service.initialize();
-    expect(await service.handle({ type: 'bootstrap' })).toMatchObject({ analyticsEnabled: false });
-    await trackAnalytics({ name: 'task_created' });
-    expect(send).toHaveBeenCalledTimes(1);
-
-    expect(await service.handle({ type: 'analytics_consent', enabled: true })).toBe(true);
-    await trackAnalytics({ name: 'task_created' });
-    expect(send).toHaveBeenCalledTimes(2);
-    expect(data[legacyAnalyticsId]).toBeUndefined();
-  });
-}
-
-it.each([
-  { edge: false, legacyId: undefined, enabled: false },
-  { edge: false, legacyId: '123.456', enabled: true },
-  { edge: true, legacyId: undefined, enabled: true },
-])('migrates existing analytics preferences ($edge, $legacyId)', async ({ edge, legacyId, enabled }) => {
-  vi.stubEnv('EDGE', edge ? 'true' : '');
-  data['v2:migrated'] = true;
-  if (legacyId) data[legacyAnalyticsId] = legacyId;
-  data['v2:analytics-session'] = { id: 123 };
-  const service = await import('../src/core/service');
-  await service.initialize();
-  expect(data[analyticsPreference]).toBe(enabled);
-  expect(data[legacyAnalyticsId]).toBeUndefined();
-  expect(data['v2:analytics-session']).toBeUndefined();
-  await service.initialize();
-  expect(await service.handle({ type: 'bootstrap' })).toMatchObject({ analyticsEnabled: enabled });
 });
 
 /** 准备一个由真实保存命令持久化的草稿，喵~ */

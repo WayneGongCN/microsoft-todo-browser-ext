@@ -44,9 +44,6 @@ const en = {
   target: 'Default list',
   recent: 'Remember the last list',
   fixed: 'Always use this list',
-  analytics: 'Usage analytics',
-  privacy:
-    'Your tasks go directly to Microsoft. Drafts stay on this device. Usage analytics counts extension opens and successful task creation through Google Analytics. It is on by default and sends no installation ID, task content, or browsing data.',
   session:
     'Sign-in lasts for this browser session. Restarting the browser or updating the extension may require signing in again.',
   independent: 'An independent, open source extension. Not affiliated with Microsoft.',
@@ -132,9 +129,6 @@ const zh: typeof en = {
   target: '默认清单',
   recent: '记住上次使用的清单',
   fixed: '始终使用指定清单',
-  analytics: '使用统计',
-  privacy:
-    '任务直接发送给微软，草稿保存在本机。使用统计默认开启，通过 Google Analytics 统计扩展打开和任务创建成功次数，不发送安装标识、任务内容或浏览数据。',
   session: '登录仅在本次浏览器会话内保留。重启浏览器或更新扩展后，可能需要重新登录。',
   independent: '独立开源扩展，与微软公司无关联。',
   website: '项目与支持',
