@@ -59,7 +59,7 @@ npm run package
 
 主动收集时，扩展读取对应网页的标题、网址或选区。确认后，任务字段直接发送到 Microsoft Graph。令牌保存在受限的浏览器会话存储中，草稿、清单缓存和少量提交回执保存在本机。退出会清除当前账号的草稿和清单缓存。从 1.x 升级会开启新的本机会话，并清理已知旧缓存。云端任务仍可在 Microsoft To Do 中查看。
 
-扩展直接连接微软完成登录和任务收集，按 Chrome 应用商店用户数据政策处理主动收集涉及的数据。使用统计默认关闭，可在设置中随时启用或撤回。启用后，扩展通过项目网站向 GA4 发送扩展打开和任务创建成功事件、扩展版本和随机安装标识。统计不包含任务内容、浏览数据或账号信息。详见[隐私政策](https://microsoft-todo-capture-site.vercel.app/zh/privacy/)和 [Limited Use 要求](https://developer.chrome.com/docs/webstore/program-policies/limited-use)。反馈请使用 [GitHub Issues](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues)，并先隐去令牌、账号详情和任务内容。
+扩展直接连接微软完成登录和任务收集，按 Chrome 应用商店用户数据政策处理主动收集涉及的数据。Chrome 新安装默认开启使用统计，Edge 首次提供此设置时默认开启，可在设置中随时关闭。Chrome 旧版的统计选择会保留。扩展通过项目网站向 GA4 发送扩展打开和任务创建成功事件、扩展版本，以及打开的界面名称。统计不包含安装或会话标识、任务内容、浏览数据或账号信息。详见[隐私政策](https://microsoft-todo-capture-site.vercel.app/zh/privacy/)和 [Limited Use 要求](https://developer.chrome.com/docs/webstore/program-policies/limited-use)。反馈请使用 [GitHub Issues](https://github.com/WayneGongCN/microsoft-todo-browser-ext/issues)，并先隐去令牌、账号详情和任务内容。
 
 设置页的「项目与支持」链接会打开[项目首页](https://todo-ext.waynegong.com/)。
 
